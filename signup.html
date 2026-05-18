@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1C1A17">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<title>NEO-SUSU — Creer mon compte</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./neo-susu.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+.container{max-width:460px;}.logo-section{text-align:center;margin-bottom:30px;}
+.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
+.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
+.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
+.lang-sep{width:1px;height:16px;background:var(--stroke2);}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:white;color:#1F2937;border:none;border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;transition:all .2s;}
+.btn-google:hover{background:#f0f0f0;transform:translateY(-1px);}
+.divider-auth{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+.divider-auth::before,.divider-auth::after{content:"";flex:1;height:1px;background:var(--stroke);}
+.error-msg{background:rgba(212,82,74,.1);border:1px solid rgba(212,82,74,.3);color:#D4524A;padding:12px 16px;border-radius:14px;font-size:13px;margin-top:12px;display:none;}
+.error-msg.show{display:block;}
+.ok-msg{background:rgba(43,173,122,.1);border:1px solid rgba(43,173,122,.3);color:#2BAD7A;padding:12px 16px;border-radius:14px;font-size:13px;margin-top:12px;display:none;}
+.ok-msg.show{display:block;}
+.loading{opacity:.7;pointer-events:none;}
+.pwd-strength{height:4px;background:var(--stroke);border-radius:2px;margin-top:6px;overflow:hidden;}
+.pwd-bar{height:100%;border-radius:2px;transition:all .3s;width:0;}
+</style>
+</head>
+<body>
+<div class="lang-bar">
+  <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')">🇫🇷</span>
+  <div class="lang-sep"></div>
+  <span class="lang-flag" id="flag-en" onclick="setLang('en')">🇬🇧</span>
+</div>
+<div class="container">
+  <a href="./index.html" class="back-link" data-fr="← Retour" data-en="← Back">← Retour</a>
+  <div class="logo-section">
+    <div class="logo-icon">N</div>
+    <h1 class="page-title" data-fr="Creer mon compte" data-en="Create my account">Creer mon compte</h1>
+    <p class="page-subtitle" data-fr="Rejoins NEO-SUSU en 1 minute" data-en="Join NEO-SUSU in 1 minute">Rejoins NEO-SUSU en 1 minute</p>
+  </div>
+  <div class="error-msg" id="errMsg"></div>
+  <div class="ok-msg" id="okMsg"></div>
+  <form id="signupForm">
+    <div class="row">
+      <div class="form-group"><label data-fr="Prenom" data-en="First name">Prenom</label><input type="text" id="firstName" placeholder="Aicha" required></div>
+      <div class="form-group"><label data-fr="Nom" data-en="Last name">Nom</label><input type="text" id="lastName" placeholder="Diallo" required></div>
+    </div>
+    <div class="form-group">
+      <label data-fr="Pays" data-en="Country">Pays</label>
+      <select id="country" required>
+        <option value="" data-fr="Selectionner" data-en="Select">Selectionner</option>
+        <option value="SN">🇸🇳 Senegal</option>
+        <option value="CI">🇨🇮 Cote d'Ivoire</option>
+        <option value="NG">🇳🇬 Nigeria</option>
+        <option value="CD">🇨🇩 RD Congo</option>
+        <option value="CM">🇨🇲 Cameroun</option>
+        <option value="FR">🇫🇷 France</option>
+        <option value="BE">🇧🇪 Belgique</option>
+        <option value="GB">🇬🇧 United Kingdom</option>
+        <option value="GH">🇬🇭 Ghana</option>
+      </select>
+    </div>
+    <div class="form-group"><label data-fr="Telephone" data-en="Phone">Telephone</label><input type="tel" id="phone" placeholder="+221 77 123 45 67" required></div>
+    <div class="form-group"><label>Email</label><input type="email" id="email" placeholder="ton@email.com" required autocomplete="email"></div>
+    <div class="form-group">
+      <label data-fr="Mot de passe (min. 8 caracteres)" data-en="Password (min. 8 characters)">Mot de passe</label>
+      <input type="password" id="password" placeholder="••••••••" minlength="8" required autocomplete="new-password" oninput="checkPwd(this.value)">
+      <div class="pwd-strength"><div class="pwd-bar" id="pwdBar"></div></div>
+    </div>
+    <button type="submit" class="btn-submit" id="submitBtn" data-fr="Creer mon compte" data-en="Create my account">Creer mon compte ✦</button>
+  </form>
+  <div class="divider-auth"><span data-fr="ou s'inscrire avec" data-en="or sign up with">ou s'inscrire avec</span></div>
+  <button class="btn-google" id="googleBtn">
+    <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    <span data-fr="Continuer avec Google" data-en="Continue with Google">Continuer avec Google</span>
+  </button>
+  <div class="login-link"><span data-fr="Deja un compte ?" data-en="Already have an account?">Deja un compte ?</span> <a href="./login.html" data-fr="Se connecter" data-en="Sign in">Se connecter</a></div>
+</div>
+<script src="./supabase.js"></script>
+<script>
+let currentLang=localStorage.getItem("ns_lang")||"fr";
+function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");}
+setLang(currentLang);
+
+function showErr(m){const e=document.getElementById("errMsg");e.textContent="⚠️ "+m;e.classList.add("show");document.getElementById("okMsg").classList.remove("show");}
+function showOk(m){const e=document.getElementById("okMsg");e.textContent="✅ "+m;e.classList.add("show");document.getElementById("errMsg").classList.remove("show");}
+function setLoad(v){const b=document.getElementById("submitBtn");b.classList.toggle("loading",v);b.textContent=v?(currentLang==="en"?"Creating account...":"Creation en cours..."):(currentLang==="en"?"Create my account ✦":"Creer mon compte ✦");}
+
+function checkPwd(val){
+  const bar=document.getElementById("pwdBar");
+  const strength=val.length<6?20:val.length<8?40:val.length<12&&/[A-Z]/.test(val)&&/[0-9]/.test(val)?70:80;
+  const colors=["#D4524A","#F59E0B","#3B82F6","#2BAD7A"];
+  const idx=strength<30?0:strength<50?1:strength<70?2:3;
+  bar.style.width=strength+"%";bar.style.background=colors[idx];
+}
+
+document.getElementById("signupForm").addEventListener("submit",async(e)=>{
+  e.preventDefault();
+  const firstName=document.getElementById("firstName").value.trim();
+  const lastName=document.getElementById("lastName").value.trim();
+  const country=document.getElementById("country").value;
+  const phone=document.getElementById("phone").value.trim();
+  const email=document.getElementById("email").value.trim();
+  const pw=document.getElementById("password").value;
+  if(!firstName||!lastName||!country||!phone||!email||!pw){
+    showErr(currentLang==="en"?"Please fill in all fields":"Remplissez tous les champs");return;
+  }
+  if(pw.length<8){showErr(currentLang==="en"?"Password must be at least 8 characters":"Mot de passe trop court (8 min)");return;}
+  setLoad(true);
+  try{
+    await signUp(email,pw,firstName,lastName,phone,country);
+    showOk(currentLang==="en"?"Account created! Check your email to confirm.":"Compte cree ! Verifiez votre email pour confirmer.");
+    setLoad(false);
+    setTimeout(()=>{window.location.href="./login.html";},3000);
+  }catch(err){
+    const m={"User already registered":currentLang==="en"?"This email is already registered":"Email deja utilise","Password should be at least 6 characters":currentLang==="en"?"Password too short":"Mot de passe trop court"};
+    showErr(m[err.message]||err.message);setLoad(false);
+  }
+});
+
+document.getElementById("googleBtn").addEventListener("click",async()=>{
+  try{await signInWithGoogle();}catch(err){showErr(err.message);}
+});
+
+(async()=>{const u=await getCurrentUser();if(u)window.location.href="./dashboard.html";})();
+</script>
+</body>
+</html>

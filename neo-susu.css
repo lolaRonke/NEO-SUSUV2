@@ -1,0 +1,416 @@
+/* =====================================================================
+   NEO-SUSU — Charte graphique v2.0
+   Nouvelle palette : Jaune doré chaud · Marron clair · Gris clair
+   Polices : Cormorant Garamond (serif) + Outfit (sans-serif)
+   ===================================================================== */
+
+:root {
+  /* ── FONDS (gris chaud au lieu du noir bleuté) ── */
+  --void:    #1C1A17;   /* Fond principal — brun très foncé */
+  --deep:    #242018;   /* Fond secondaire */
+  --surf:    #2E2A22;   /* Surface */
+  --card:    #38342A;   /* Cartes */
+  --raised:  #433E32;   /* Éléments surélevés */
+
+  /* ── COULEUR PRINCIPALE : Jaune doré chaud ── */
+  --gold:      #D4940A;   /* Jaune doré principal */
+  --gold2:     #A8720A;   /* Jaune doré foncé */
+  --gold-pale: #F0C96A;   /* Jaune clair / pale */
+  --gold-warm: #E8A820;   /* Jaune chaud intermédiaire */
+
+  /* ── COULEUR SECONDAIRE : Marron clair ── */
+  --brown:     #C4956A;   /* Marron clair principal */
+  --brown2:    #A87848;   /* Marron clair foncé */
+  --brown-pale:#E8C9A0;   /* Marron très clair / beige */
+  --brown-bg:  rgba(196,149,106,0.10);
+
+  /* ── ACCENT : Gris clair chaud ── */
+  --grey:      #B8AFA0;   /* Gris clair chaud */
+  --grey2:     #8C8478;   /* Gris moyen */
+  --grey-light:#E8E0D4;   /* Gris très clair */
+  --grey-bg:   rgba(184,175,160,0.10);
+
+  /* ── ÉTATS ── */
+  --em:    #2BAD7A;   /* Vert succès (adapté au thème chaud) */
+  --em2:   #1F8A60;
+  --red:   #D4524A;   /* Rouge erreur (chaud) */
+  --sky:   #7AABCC;   /* Bleu info (désaturé, chaud) */
+  --violet:#9B7ECC;   /* Violet (désaturé) */
+
+  /* ── TEXTE ── */
+  --text:  #F0EAE0;   /* Texte principal — blanc cassé chaud */
+  --text2: #A09080;   /* Texte secondaire — gris brun */
+  --text3: #6A6058;   /* Texte tertiaire — gris foncé chaud */
+
+  /* ── BORDURES ── */
+  --stroke:  rgba(240,234,224,0.07);
+  --stroke2: rgba(240,234,224,0.14);
+  --stroke-gold: rgba(212,148,10,0.30);
+  --stroke-brown: rgba(196,149,106,0.30);
+
+  /* ── TYPOGRAPHIE ── */
+  --ff-s: "Cormorant Garamond", serif;
+  --ff-b: "Outfit", system-ui, sans-serif;
+}
+
+/* =====================================================================
+   RESET & BASE
+===================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--ff-b);
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 30px 20px 60px;
+  /* Texture légère sur le fond */
+  background-image: radial-gradient(
+    ellipse 80% 50% at 50% 0%,
+    rgba(212,148,10,0.04) 0%,
+    transparent 60%
+  );
+}
+
+.container { max-width: 500px; margin: 0 auto; }
+
+/* =====================================================================
+   NAVIGATION — RETOUR
+===================================================================== */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--brown); }
+
+/* =====================================================================
+   LOGO
+===================================================================== */
+.logo-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-s);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--void);
+  margin: 0 auto 16px;
+  box-shadow:
+    0 12px 36px rgba(212,148,10,0.35),
+    0 0 0 1px rgba(212,148,10,0.15);
+}
+
+/* =====================================================================
+   TYPOGRAPHIE
+===================================================================== */
+.page-title {
+  font-family: var(--ff-s);
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: var(--gold);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.page-subtitle {
+  color: var(--text2);
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.section-title {
+  font-family: var(--ff-b);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin: 24px 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title .badge-demo {
+  font-size: 10px;
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  color: var(--void);
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-family: var(--ff-b);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* =====================================================================
+   BOUTONS
+===================================================================== */
+.btn {
+  padding: 16px 20px;
+  border: none;
+  border-radius: 18px;
+  font-family: var(--ff-b);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  display: block;
+}
+
+/* Bouton principal — Jaune doré */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  color: var(--void);
+  box-shadow: 0 10px 28px rgba(212,148,10,0.30);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 38px rgba(212,148,10,0.42);
+}
+
+/* Bouton secondaire — Gris/Marron */
+.btn-secondary {
+  background: var(--card);
+  color: var(--brown-pale);
+  border: 1px solid var(--stroke-brown);
+}
+.btn-secondary:hover {
+  background: var(--raised);
+  transform: translateY(-2px);
+  border-color: var(--brown);
+}
+
+/* Bouton submit */
+.btn-submit {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, var(--gold-pale), var(--gold));
+  color: var(--void);
+  border: none;
+  border-radius: 18px;
+  font-family: var(--ff-b);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  box-shadow: 0 10px 28px rgba(212,148,10,0.30);
+  transition: all 0.3s;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(212,148,10,0.42); }
+
+/* Bouton déconnexion */
+.logout-btn {
+  width: 100%;
+  margin-top: 24px;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid rgba(212,82,74,0.30);
+  color: var(--red);
+  border-radius: 18px;
+  font-family: var(--ff-b);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.logout-btn:hover { background: rgba(212,82,74,0.08); }
+
+/* =====================================================================
+   FORMULAIRES
+===================================================================== */
+.form-group { margin-bottom: 16px; }
+
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-family: var(--ff-b);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--raised);
+  border: 1.5px solid var(--stroke2);
+  border-radius: 16px;
+  color: var(--text);
+  font-family: var(--ff-b);
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,148,10,0.12);
+}
+/* Fix select option background on dark mode */
+select option { background: var(--card); color: var(--text); }
+
+textarea { resize: vertical; min-height: 80px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* =====================================================================
+   BOÎTES D'INFO
+===================================================================== */
+.info-box {
+  background: rgba(212,148,10,0.08);
+  border-left: 3px solid var(--gold);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+/* Info variante marron */
+.info-box-brown {
+  background: rgba(196,149,106,0.08);
+  border-left: 3px solid var(--brown);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+/* Info variante gris */
+.info-box-grey {
+  background: rgba(184,175,160,0.08);
+  border-left: 3px solid var(--grey);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.success-msg {
+  display: none;
+  background: rgba(43,173,122,0.10);
+  border: 1px solid var(--em);
+  color: var(--em);
+  padding: 16px;
+  border-radius: 14px;
+  text-align: center;
+  margin-top: 16px;
+  font-weight: 600;
+}
+.success-msg.active { display: block; }
+
+/* =====================================================================
+   BANDEAU DÉMO
+===================================================================== */
+.demo-banner {
+  display: none;
+  background: linear-gradient(135deg, var(--brown), var(--gold));
+  color: var(--void);
+  padding: 12px 20px;
+  text-align: center;
+  font-family: var(--ff-b);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 6px 24px rgba(212,148,10,0.28);
+  margin: -30px -20px 24px;
+}
+.demo-banner.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.demo-banner .cta-signup {
+  background: var(--void);
+  color: var(--gold);
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =====================================================================
+   LIENS SECONDAIRES
+===================================================================== */
+.signup-link, .login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--text2);
+  font-size: 14px;
+}
+.signup-link a, .login-link a {
+  color: var(--brown);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.signup-link a:hover, .login-link a:hover { color: var(--gold); }
+
+/* =====================================================================
+   UTILITAIRES PALETTE
+===================================================================== */
+/* Chips */
+.chip-gold   { background: rgba(212,148,10,0.12); color: var(--gold);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-brown  { background: rgba(196,149,106,0.12); color: var(--brown); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-grey   { background: rgba(184,175,160,0.12); color: var(--grey);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-green  { background: rgba(43,173,122,0.12);  color: var(--em);   border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-red    { background: rgba(212,82,74,0.12);   color: var(--red);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+
+/* Cartes */
+.card-gold   { background: rgba(212,148,10,0.06); border: 1px solid rgba(212,148,10,0.20); border-radius: 18px; }
+.card-brown  { background: rgba(196,149,106,0.06); border: 1px solid rgba(196,149,106,0.20); border-radius: 18px; }
+.card-grey   { background: rgba(184,175,160,0.06); border: 1px solid rgba(184,175,160,0.16); border-radius: 18px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--raised); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brown2); }
+
+/* =====================================================================
+   RÉSUMÉ DE LA PALETTE v2
+   ─────────────────────────────────────────────────────────────────
+   Fond principal   #1C1A17  Brun très foncé chaud
+   Fond secondaire  #242018
+   Cartes           #38342A
+   Jaune doré       #D4940A  Couleur principale ★
+   Jaune pâle       #F0C96A  Dégradés, titres
+   Marron clair     #C4956A  Couleur secondaire ★
+   Beige/Marron     #E8C9A0  Textes, accents doux
+   Gris clair chaud #B8AFA0  Couleur tertiaire ★
+   Texte principal  #F0EAE0  Blanc cassé chaud
+   Texte secondaire #A09080  Gris brun
+   ─────────────────────────────────────────────────────────────────
+===================================================================== */

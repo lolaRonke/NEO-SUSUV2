@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1C1A17">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<title>NEO-SUSU — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./neo-susu.css">
+<style>
+  .container{max-width:600px;}
+  .admin-header{background:linear-gradient(135deg,rgba(122,171,204,.12),var(--card));border:1px solid rgba(122,171,204,.25);border-radius:24px;padding:24px;margin-bottom:24px;}
+  .admin-icon{font-size:36px;margin-bottom:8px;}
+  .admin-title{font-family:var(--ff-s);font-size:28px;font-weight:700;color:var(--sky);margin-bottom:4px;}
+  .admin-subtitle{color:var(--text2);font-size:13px;}
+  .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+  .stat-card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:20px;}
+  .stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;font-weight:700;}
+  .stat-value{font-family:var(--ff-s);font-size:32px;font-weight:700;color:var(--text);margin-bottom:4px;}
+  .stat-change{font-size:12px;color:var(--em);font-weight:600;}
+  .menu-item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--card);border:1px solid var(--stroke);border-radius:16px;margin-bottom:8px;text-decoration:none;color:var(--text);cursor:pointer;transition:all .3s;}
+  .menu-item:hover{background:var(--raised);border-color:rgba(122,171,204,.3);}
+  .menu-icon{font-size:22px;}.menu-text{flex:1;}.menu-label{font-weight:700;font-size:15px;margin-bottom:2px;}.menu-detail{font-size:12px;color:var(--text2);}.menu-arrow{color:var(--text3);font-size:18px;}
+  .badge{background:var(--red);color:white;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
+  .info-box-sky{background:rgba(122,171,204,.08);border-left:3px solid var(--sky);padding:12px 16px;border-radius:8px;margin-bottom:24px;font-size:13px;color:var(--text2);}
+</style>
+
+<style>
+.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
+.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
+.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
+.lang-sep{width:1px;height:16px;background:var(--stroke2);}
+</style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')" title="Francais">🇫🇷</span>
+  <div class="lang-sep"></div>
+  <span class="lang-flag" id="flag-en" onclick="setLang('en')" title="English">🇬🇧</span>
+</div>
+<div class="container">
+  <a href="./index.html" class="back-link" data-fr="← Retour a l\'accueil" data-en="← Back to home">← Retour a l\'accueil</a>
+  <div class="admin-header">
+    <div class="admin-icon">💻</div>
+    <div class="admin-title" data-fr="Espace Administrateur" data-en="Administrator Space">Espace Administrateur</div>
+    <div class="admin-subtitle" data-fr="Gestion et supervision de la plateforme" data-en="Platform management and supervision">Gestion et supervision de la plateforme</div>
+  </div>
+  <div class="info-box-sky">
+    🔧 <strong data-fr="Mode demo" data-en="Demo mode">Mode demo</strong> —
+    <span data-fr="Les donnees affichees sont fictives." data-en="The displayed data is fictitious.">Les donnees affichees sont fictives.</span>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label" data-fr="Utilisateurs actifs" data-en="Active users">Utilisateurs actifs</div><div class="stat-value">1 247</div><div class="stat-change" data-fr="+12% ce mois" data-en="+12% this month">↑ +12% ce mois</div></div>
+    <div class="stat-card"><div class="stat-label" data-fr="Tontines en cours" data-en="Active tontines">Tontines en cours</div><div class="stat-value">328</div><div class="stat-change" data-fr="+8% ce mois" data-en="+8% this month">↑ +8% ce mois</div></div>
+    <div class="stat-card"><div class="stat-label" data-fr="Volume mensuel" data-en="Monthly volume">Volume mensuel</div><div class="stat-value">24M</div><div class="stat-change">FCFA</div></div>
+    <div class="stat-card"><div class="stat-label" data-fr="Taux de paiement" data-en="Payment rate">Taux de paiement</div><div class="stat-value">94%</div><div class="stat-change" data-fr="Excellent" data-en="Excellent">↑ Excellent</div></div>
+  </div>
+  <div class="section-title"><span data-fr="Gestion" data-en="Management">Gestion</span></div>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">👥</span><div class="menu-text"><div class="menu-label" data-fr="Utilisateurs" data-en="Users">Utilisateurs</div><div class="menu-detail" data-fr="1 247 comptes" data-en="1,247 accounts">1 247 comptes</div></div><span class="menu-arrow">›</span></a>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">💰</span><div class="menu-text"><div class="menu-label" data-fr="Tontines" data-en="Tontines">Tontines</div><div class="menu-detail" data-fr="328 actives, 42 en attente" data-en="328 active, 42 pending">328 actives, 42 en attente</div></div><span class="menu-arrow">›</span></a>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">💳</span><div class="menu-text"><div class="menu-label" data-fr="Transactions" data-en="Transactions">Transactions</div><div class="menu-detail" data-fr="2 845 ce mois" data-en="2,845 this month">2 845 ce mois</div></div><span class="menu-arrow">›</span></a>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🔐</span><div class="menu-text"><div class="menu-label" data-fr="Verifications KYC" data-en="KYC Verifications">Verifications KYC</div><div class="menu-detail" data-fr="A traiter" data-en="To process">A traiter</div></div><span class="badge">18</span><span class="menu-arrow">›</span></a>
+  <div class="section-title"><span data-fr="Moderation" data-en="Moderation">Moderation</span></div>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🚨</span><div class="menu-text"><div class="menu-label" data-fr="Signalements" data-en="Reports">Signalements</div><div class="menu-detail" data-fr="Problemes remontes" data-en="Issues reported">Problemes remontes</div></div><span class="badge">3</span><span class="menu-arrow">›</span></a>
+  <div class="section-title"><span data-fr="Configuration" data-en="Settings">Configuration</span></div>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">⚙️</span><div class="menu-text"><div class="menu-label" data-fr="Parametres generaux" data-en="General settings">Parametres generaux</div><div class="menu-detail" data-fr="Frais, plafonds, devises" data-en="Fees, limits, currencies">Frais, plafonds, devises</div></div><span class="menu-arrow">›</span></a>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">📊</span><div class="menu-text"><div class="menu-label" data-fr="Rapports et analytics" data-en="Reports and analytics">Rapports et analytics</div><div class="menu-detail" data-fr="Export, statistiques" data-en="Export, statistics">Export, statistiques</div></div><span class="menu-arrow">›</span></a>
+</div>
+
+<script>
+let currentLang = localStorage.getItem("ns_lang") || "fr";
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem("ns_lang", lang);
+  document.getElementById("html-root").lang = lang;
+  document.querySelectorAll("[data-fr]").forEach(el => {
+    const val = el.getAttribute("data-" + lang);
+    if (val) el.textContent = val;
+  });
+  const fFr = document.getElementById("flag-fr");
+  const fEn = document.getElementById("flag-en");
+  if(fFr) fFr.classList.toggle("active", lang === "fr");
+  if(fEn) fEn.classList.toggle("active", lang === "en");
+}
+setLang(currentLang);
+</script>
+</body>
+</html>

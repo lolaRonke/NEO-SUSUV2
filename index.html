@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#07080F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>NEO-SUSU</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Fonds — brun chaud */
+  --void:#1C1A17;--deep:#242018;--surf:#2E2A22;--card:#38342A;--raised:#433E32;
+  /* Jaune dore chaud */
+  --gold:#D4940A;--gold2:#A8720A;--gold-pale:#F0C96A;--gold-warm:#E8A820;
+  /* Marron clair */
+  --brown:#C4956A;--brown2:#A87848;--brown-pale:#E8C9A0;
+  /* Gris clair chaud */
+  --grey:#B8AFA0;--grey2:#8C8478;--grey-light:#E8E0D4;
+  /* Etats */
+  --em:#2BAD7A;--red:#D4524A;--sky:#7AABCC;--violet:#9B7ECC;
+  /* Texte */
+  --text:#F0EAE0;--text2:#A09080;--text3:#6A6058;
+  /* Bordures */
+  --stroke:rgba(240,234,224,0.07);--stroke2:rgba(240,234,224,0.14);
+  --ff-s:"Cormorant Garamond",serif;--ff-b:"Outfit",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;background:var(--void);color:var(--text);font-family:var(--ff-b);}
+
+.splash-container {
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:space-between;min-height:100vh;
+  padding:50px 24px 34px;background:var(--void);
+  position:relative;overflow:hidden;
+}
+.splash-container::before {
+  content:"";position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(212,148,10,0.20) 0%,transparent 70%);
+  filter:blur(60px);z-index:0;pointer-events:none;
+}
+
+/* ── LANGUAGE SWITCHER ── */
+.lang-bar {
+  display:flex;align-items:center;gap:10px;z-index:10;
+  background:var(--card);border:1px solid var(--stroke2);
+  border-radius:40px;padding:6px 12px;
+}
+.lang-flag {
+  font-size:26px;cursor:pointer;border-radius:50%;
+  padding:4px 6px;transition:all .25s;
+  border:2px solid transparent;
+  line-height:1;
+}
+.lang-flag.active {
+  border-color:var(--gold);
+  background:rgba(212,148,10,.12);
+  transform:scale(1.15);
+}
+.lang-flag:hover:not(.active){opacity:.7;transform:scale(1.1);}
+.lang-sep{width:1px;height:20px;background:var(--stroke2);}
+
+/* ── TOP NAV (admin) ── */
+.top-nav{display:flex;justify-content:space-between;align-items:center;width:100%;z-index:10;margin-bottom:16px;}
+.switch-btn {
+  display:flex;align-items:center;gap:8px;padding:9px 18px;
+  background:var(--card);border:1px solid var(--stroke2);border-radius:30px;
+  color:var(--text);font-family:var(--ff-b);font-weight:700;font-size:13px;
+  cursor:pointer;text-decoration:none;transition:all .3s;
+}
+.switch-btn.admin{color:var(--sky);}
+.switch-btn:hover{background:var(--raised);transform:translateY(-2px);}
+
+/* ── LOGO SECTION ── */
+.logo-section {
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;flex:1;z-index:2;text-align:center;padding:16px 0;
+}
+.splash-logo {
+  width:110px;height:110px;border-radius:26px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-s);font-size:64px;font-weight:700;color:var(--void);
+  box-shadow:0 16px 48px rgba(212,148,10,.35);margin-bottom:24px;
+  animation:splPop .6s cubic-bezier(.34,1.56,.64,1) both,pulseGlow 3s ease-in-out 1s infinite;
+}
+@keyframes splPop{from{opacity:0;transform:scale(.7);}to{opacity:1;transform:none;}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 16px 48px rgba(212,148,10,.35);}50%{box-shadow:0 16px 60px rgba(212,148,10,.55);}}
+.splash-name {
+  font-family:var(--ff-s);font-size:44px;font-weight:700;
+  background:linear-gradient(135deg,var(--gold-pale),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:10px;letter-spacing:1px;
+  animation:fadeUp .8s .3s both;
+}
+.splash-sub {
+  font-size:14px;color:var(--text2);margin-bottom:24px;
+  animation:fadeUp .8s .5s both;
+}
+.flags-row {
+  display:flex;gap:18px;margin-bottom:8px;font-size:30px;
+  animation:fadeUp .8s .7s both;
+}
+.flags-row span{transition:transform .3s;cursor:default;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+/* ── ACTIONS ── */
+.actions{
+  display:flex;flex-direction:column;gap:10px;
+  width:100%;max-width:400px;z-index:2;
+}
+.btn-primary {
+  padding:17px 24px;
+  background:linear-gradient(135deg,var(--gold-pale),var(--gold));
+  color:var(--void);border:none;border-radius:18px;
+  font-family:var(--ff-b);font-size:15px;font-weight:700;
+  cursor:pointer;text-decoration:none;text-align:center;
+  box-shadow:0 16px 48px rgba(212,148,10,.35);
+  transition:all .3s;letter-spacing:.3px;display:block;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(212,168,32,.55);}
+.btn-secondary {
+  padding:17px 24px;background:var(--card);color:var(--sky);
+  border:1px solid var(--stroke2);border-radius:18px;
+  font-family:var(--ff-b);font-size:14px;font-weight:600;
+  cursor:pointer;text-decoration:none;text-align:center;
+  transition:all .3s;display:block;
+}
+.btn-secondary:hover{background:var(--raised);transform:translateY(-2px);}
+.btn-demo {
+  padding:14px 24px;background:transparent;color:var(--gold);
+  border:1.5px solid var(--gold);border-radius:18px;
+  font-family:var(--ff-b);font-size:14px;font-weight:600;
+  cursor:pointer;text-decoration:none;text-align:center;
+  transition:all .3s;display:flex;align-items:center;justify-content:center;
+  gap:8px;margin-top:4px;
+}
+.btn-demo:hover{background:rgba(212,148,10,.08);transform:translateY(-2px);}
+.btn-demo .badge{
+  background:var(--gold);color:var(--void);font-size:10px;
+  font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;
+}
+.divider{
+  display:flex;align-items:center;gap:12px;margin:6px 0 2px;
+  color:var(--text3);font-size:11px;text-transform:uppercase;
+  letter-spacing:1.2px;font-weight:700;
+}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--stroke);}
+
+/* ── LANG TRANSITION ── */
+[data-fr],[data-en]{transition:opacity .25s;}
+</style>
+</head>
+<body>
+
+<div class="splash-container">
+
+  <!-- TOP NAV -->
+  <div class="top-nav">
+    <div class="lang-bar">
+      <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')" title="Francais">🇫🇷</span>
+      <div class="lang-sep"></div>
+      <span class="lang-flag" id="flag-en" onclick="setLang('en')" title="English">🇬🇧</span>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <a href="./index.html" class="switch-btn">📱 <span data-fr="Mobile" data-en="Mobile">Mobile</span></a>
+      <a href="./admin.html" class="switch-btn admin">💻 <span data-fr="Admin" data-en="Admin">Admin</span></a>
+    </div>
+  </div>
+
+  <!-- LOGO -->
+  <div class="logo-section">
+    <div class="splash-logo">N</div>
+    <h1 class="splash-name">NEO-SUSU</h1>
+    <p class="splash-sub">
+      <span data-fr="L'epargne communautaire intelligente" data-en="Intelligent community savings">
+        L'epargne communautaire intelligente
+      </span> 🌍
+    </p>
+
+    <div class="flags-row">
+      <span title="France">🇫🇷</span>
+      <span title="Senegal">🇸🇳</span>
+      <span title="Nigeria">🇳🇬</span>
+      <span title="Cote d'Ivoire">🇨🇮</span>
+      <span title="RD Congo">🇨🇩</span>
+      <span title="United Kingdom">🇬🇧</span>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <a href="./signup.html" class="btn-primary" id="btn-signup">
+      <span data-fr="Commencer — C'est gratuit" data-en="Get started — It's free">
+        Commencer — C'est gratuit
+      </span> ✦
+    </a>
+
+    <a href="./login.html" class="btn-secondary" id="btn-login">
+      <span data-fr="Deja membre ? Se connecter" data-en="Already a member? Sign in">
+        Deja membre ? Se connecter
+      </span>
+    </a>
+
+    <div class="divider">
+      <span data-fr="ou" data-en="or">ou</span>
+    </div>
+
+    <a href="./dashboard.html?mode=demo" class="btn-demo" id="demoBtn">
+      <span>👁️ <span data-fr="Decouvrir sans compte" data-en="Explore without account">Decouvrir sans compte</span></span>
+      <span class="badge"><span data-fr="DEMO" data-en="DEMO">DEMO</span></span>
+    </a>
+
+    <a href="https://lolaronke.github.io/neo-susu/neo-susu-website.html"
+       target="_blank"
+       style="
+         padding:14px 24px;
+         background:transparent;
+         color:var(--brown);
+         border:1.5px solid var(--brown);
+         border-radius:18px;
+         font-family:var(--ff-b);
+         font-size:14px;
+         font-weight:600;
+         text-decoration:none;
+         text-align:center;
+         display:flex;
+         align-items:center;
+         justify-content:center;
+         gap:8px;
+         transition:all .3s;
+       "
+       onmouseover="this.style.background='rgba(196,149,106,.08)';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.background='transparent';this.style.transform='none'"
+    >
+      🌐 <span data-fr="Voir le site officiel" data-en="Visit the official website">Voir le site officiel</span>
+    </a>
+
+  </div>
+
+</div>
+
+<script>
+// ── LANGUAGE SYSTEM ──
+const TRANSLATIONS = {
+  fr: {
+    title: "NEO-SUSU — L'epargne communautaire intelligente",
+    sub: "L'epargne communautaire intelligente",
+    signup: "Commencer — C'est gratuit ✦",
+    login: "Deja membre ? Se connecter",
+    or: "ou",
+    demo: "Decouvrir sans compte",
+  },
+  en: {
+    title: "NEO-SUSU — Intelligent community savings",
+    sub: "Intelligent community savings",
+    signup: "Get started — It's free ✦",
+    login: "Already a member? Sign in",
+    or: "or",
+    demo: "Explore without account",
+  }
+};
+
+let currentLang = localStorage.getItem("ns_lang") || "fr";
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem("ns_lang", lang);
+
+  // Update html lang attr
+  document.getElementById("html-root").lang = lang;
+
+  // Update page title
+  document.title = lang === "en"
+    ? "NEO-SUSU — Intelligent community savings"
+    : "NEO-SUSU — L'epargne communautaire intelligente";
+
+  // Update all data-fr / data-en elements
+  document.querySelectorAll("[data-fr]").forEach(el => {
+    el.textContent = el.getAttribute("data-" + lang) || el.getAttribute("data-fr");
+  });
+
+  // Update active flag
+  document.getElementById("flag-fr").classList.toggle("active", lang === "fr");
+  document.getElementById("flag-en").classList.toggle("active", lang === "en");
+}
+
+// Apply on load
+setLang(currentLang);
+
+// PWA + demo session
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+document.getElementById("demoBtn").addEventListener("click", function() {
+  sessionStorage.setItem("neo_susu_demo_user", JSON.stringify({
+    id: "demo-" + Date.now(),
+    first_name: currentLang === "en" ? "Visitor" : "Visiteur",
+    last_name: "Demo",
+    email: "demo@neo-susu.com",
+    is_demo: true,
+    lang: currentLang
+  }));
+});
+</script>
+</body>
+</html>
