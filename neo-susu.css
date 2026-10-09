@@ -414,3 +414,9 @@ textarea { resize: vertical; min-height: 80px; }
    Texte secondaire #A09080  Gris brun
    ─────────────────────────────────────────────────────────────────
 ===================================================================== */
+
+/* ── SÉLECTEUR DE LANGUE (partagé par toutes les pages) ── */
+.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
+.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
+.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
+.lang-sep{width:1px;height:16px;background:var(--stroke2);}

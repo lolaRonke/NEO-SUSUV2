@@ -8,7 +8,9 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Mon espace</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
 <!-- Supabase SDK (charge uniquement si configure) -->
 <style>
@@ -44,10 +46,6 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .skel{background:linear-gradient(90deg,var(--card) 25%,var(--raised) 50%,var(--card) 75%);background-size:200% 100%;animation:skelAnim 1.5s infinite;border-radius:12px;}
 @keyframes skelAnim{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 /* Lang bar */
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
 .score-bar{height:5px;background:var(--stroke);border-radius:3px;overflow:hidden;margin:8px 0 4px;}
 .score-fill{height:100%;background:linear-gradient(90deg,#2BAD7A,var(--gold));border-radius:3px;transition:width 1s ease;}
 /* ── COMMISSION PLAN BANNER ── */
@@ -198,7 +196,7 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
     <div class="balance-amount" id="walletAmt">0</div>
     <div class="balance-currency">FCFA</div>
     <div class="score-bar"><div class="score-fill" id="scoreBar" style="width:50%"></div></div>
-    <div style="font-size:11px;color:rgba(255,255,255,.35);" data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite : <span id="scoreVal">50</span>/100</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.35);"><span data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite</span> : <span id="scoreVal">50</span>/100</div>
   </div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-value" id="tontineCount">0</div><div class="stat-label" data-fr="Tontines" data-en="Tontines">Tontines</div></div>
@@ -232,7 +230,6 @@ async function signOut(){sessionStorage.clear();window.location.href="./index.ht
 <script>
 let currentLang=localStorage.getItem("ns_lang")||"fr";
 function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");updatePlanUI();}
-setLang(currentLang);
 
 async function loadDashboard(){
   // ── DEMO MODE : verifie EN PREMIER avant tout appel Supabase ──
@@ -377,6 +374,8 @@ async function handleLogout(){
   try{await signOut();}catch(e){sessionStorage.removeItem("neo_susu_demo_user");window.location.href="./index.html";}
 }
 
+// Appele apres la declaration de USER_PLAN / PLANS (sinon ReferenceError)
+setLang(currentLang);
 loadDashboard();
 </script>
 </body>

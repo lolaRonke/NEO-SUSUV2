@@ -8,7 +8,9 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Detail tontine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
 <style>
   .tontine-header{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;}
@@ -26,12 +28,6 @@
   .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
 </style>
 
-<style>
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
-</style>
 </head>
 <body>
 
@@ -113,7 +109,7 @@ function setLang(lang) {
   if(fEn) fEn.classList.toggle("active", lang === "en");
 }
 setLang(currentLang);
-initCommission();
+if (typeof initCommission === "function") initCommission();
 </script>
 </body>
 </html>
