@@ -2,8 +2,6 @@
 -- Prerequis : tables public.tontines (id uuid, amount, max_members) et
 -- public.tontine_members (tontine_id uuid, user_id uuid, created_at timestamptz).
 
-alter table public.tontines add column if not exists fee_bps integer not null default 150
-  check (fee_bps between 0 and 1000);                -- commission en points de base (150 = 1,5 %)
 alter table public.tontines add column if not exists status text not null default 'open'
   check (status in ('open', 'active', 'completed'));
 

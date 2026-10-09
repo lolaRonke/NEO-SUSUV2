@@ -15,20 +15,19 @@ export async function distributeRound(db: SupabaseClient, roundId: string): Prom
     .update({ status: "distributing", last_error: null })
     .eq("id", roundId)
     .in("status", ["collecting", "failed"])
-    .select("id, tontine_id, round_number, beneficiary_id")
+    .select("id, tontine_id, round_number, beneficiary_id, fee_bps")
     .maybeSingle();
   if (lockErr) throw lockErr;
   if (!round) return { status: "skipped" };
 
   try {
-    const [{ data: tontine, error: tErr }, { data: members, error: mErr }, { data: contribs, error: cErr }] =
+    const [{ data: members, error: mErr }, { data: contribs, error: cErr }] =
       await Promise.all([
-        db.from("tontines").select("fee_bps").eq("id", round.tontine_id).single(),
         // Participants = beneficiaires des tours (liste figee au demarrage du groupe).
         db.from("tontine_rounds").select("beneficiary_id").eq("tontine_id", round.tontine_id),
         db.from("contributions").select("id, user_id, amount_cents, status").eq("round_id", round.id),
       ]);
-    if (tErr || mErr || cErr) throw tErr ?? mErr ?? cErr;
+    if (mErr || cErr) throw mErr ?? cErr;
 
     const memberIds = members!.map((m) => m.beneficiary_id as string);
     if (!isRoundReady(memberIds, contribs!)) {
@@ -50,7 +49,8 @@ export async function distributeRound(db: SupabaseClient, roundId: string): Prom
       if (!a) throw new Error(`Compte de paiement manquant pour ${c.user_id}`);
       return { ...c, wallet_id: a.wallet_id } as PaidContribution;
     });
-    const plan = planRound(round.beneficiary_id, paid, tontine!.fee_bps);
+    // Commission figee a l'ouverture du tour, selon le plan de l'organisateur (migration abonnements).
+    const plan = planRound(round.beneficiary_id, paid, round.fee_bps ?? 150);
 
     for (const t of plan.transfers) {
       const tr = await mangopay.createTransfer({

@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
+<script src="./plans.js"></script>
 <style>
   .tontine-header{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;}
   .tontine-title{font-family:var(--ff-s);font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
@@ -71,7 +72,7 @@
       <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">50,00 €</span>
     </div>
     <div style="font-size:11px;color:var(--text2);margin-top:8px;padding:8px;background:rgba(212,148,10,.05);border-radius:8px;">
-      💡 <span id="feeHint" data-fr="Passez Premium pour reduire la commission a 0,5%" data-en="Go Premium to reduce commission to 0.5%">Passez Premium pour reduire la commission a 0,5%</span>
+      💡 <span id="feeHint" data-fr="L'organisateur peut passer Essentiel (0,5 %) ou Pro (0 %) pour reduire la commission" data-en="The organiser can switch to Essentiel (0.5%) or Pro (0%) to lower the fee">L'organisateur peut passer Essentiel (0,5 %) ou Pro (0 %) pour reduire la commission</span>
     </div>
   </div>
 
@@ -98,16 +99,16 @@
 // La commission n'est pas ajoutee a la cotisation : elle est prelevee sur la cagnotte
 // versee au beneficiaire (meme regle que le serveur de paiement et que create-tontine).
 const CONTRIBUTION_EUR = 50;
-const PLAN_FEES_TD = { free: 1.5, premium: 0.5, business: 0 };
 const eur = n => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 
 function initCommission() {
-  const plan = localStorage.getItem("ns_plan") || "free";
-  const rate = PLAN_FEES_TD[plan] ?? 1.5;
-  const fee = Math.round(CONTRIBUTION_EUR * 100 * rate / 100) / 100;
+  // En production, la commission vient du tour en cours (tontine_rounds.fee_bps,
+  // figee selon le plan de l'organisateur) ; en demo, du plan stocke localement.
+  const p = neoPlan();
+  const fee = neoFee(CONTRIBUTION_EUR, p);
   const en = (localStorage.getItem("ns_lang") || "fr") === "en";
-  const planName = plan.charAt(0).toUpperCase() + plan.slice(1);
-  const pct = rate.toLocaleString(en ? "en-GB" : "fr-FR") + (en ? "%" : " %");
+  const planName = neoName(p);
+  const pct = neoPct(p.feeBps);
   document.getElementById("feeLabel").textContent = en
     ? `NEO-SUSU fee (${planName} ${pct}), deducted from the pot`
     : `Commission NEO-SUSU (${planName} ${pct}), prélevée sur la cagnotte`;
@@ -116,7 +117,7 @@ function initCommission() {
   document.getElementById("confirmSub").textContent = en
     ? `${eur(CONTRIBUTION_EUR)} by card`
     : `${eur(CONTRIBUTION_EUR)} par carte bancaire`;
-  document.getElementById("feeHint").parentElement.style.display = plan === "business" ? "none" : "";
+  document.getElementById("feeHint").parentElement.style.display = p.id === "pro" ? "none" : "";
 }
 
 function showPayConfirm() {

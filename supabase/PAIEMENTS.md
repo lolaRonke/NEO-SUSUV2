@@ -9,7 +9,7 @@
    Mangopay **du membre lui-même** : il reste à son nom tant que tout le groupe n'a pas payé.
 3. **Dès la 10e cotisation reçue**, Mangopay prévient le webhook (`mangopay-webhook`), qui :
    - transfère les 9 cotisations vers le wallet du bénéficiaire du tour, en prélevant la commission
-     NEO-SUSU (`tontines.fee_bps`, 150 = 1,5 %) au passage ;
+     NEO-SUSU au passage (taux du plan de l'organisateur, figé à l'ouverture du tour : voir `ABONNEMENTS.md`) ;
    - vire le total sur l'IBAN du bénéficiaire ;
    - ouvre le tour suivant (ou clôture la tontine après le dernier).
 

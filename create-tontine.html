@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
+<script src="./plans.js"></script>
 
 </head>
 <body>
@@ -62,6 +63,7 @@
       <div class="form-group">
         <label data-fr="Nb max membres" data-en="Max members">Nb max membres</label>
         <input type="number" id="maxMembers" placeholder="10" min="2" max="50" value="10" required>
+        <div id="membersHint" style="font-size:11px;color:var(--text2);margin-top:6px;"></div>
       </div>
     </div>
     <div class="form-group">
@@ -84,7 +86,7 @@
         <span id="prevNet" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:#2BAD7A;">0,00 €</span>
       </div>
       <div style="background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.15);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:11px;color:var(--text2);line-height:1.6;">
-        💡 <span data-fr="Passez Premium (4,99€/mois) pour reduire la commission a 0,5% et Business (14,99€) pour 0%." data-en="Go Premium (€4.99/mo) to reduce to 0.5% or Business (€14.99) for 0%.">Passez Premium (4,99€/mois) pour reduire a 0,5% — Business (14,99€) pour 0%.</span>
+        💡 <span data-fr="Essentiel (4,99 €/mois) : commission 0,5 %, 20 membres. Pro (14,99 €/mois) : 0 %, 50 membres." data-en="Essentiel (€4.99/mo): 0.5% fee, 20 members. Pro (€14.99/mo): 0% fee, 50 members.">Essentiel (4,99 €/mois) : commission 0,5 %, 20 membres. Pro (14,99 €/mois) : 0 %, 50 membres.</span>
       </div>
     </div>
 
@@ -98,9 +100,22 @@
 document.getElementById("startDate").valueAsDate = new Date();
 
 // ── COMMISSION PREVIEW ──
-const PLAN_FEES_CT = {free:1.5, premium:0.5, business:0};
-const userPlanCT = localStorage.getItem("ns_plan") || "free";
-const feeRateCT = PLAN_FEES_CT[userPlanCT] || 1.5;
+// Plan de l'organisateur (plans.js) : commission et nombre de membres autorises.
+// La base applique les memes limites (trigger enforce_plan_limits).
+const planCT = neoPlan();
+const membersInput = document.getElementById("maxMembers");
+membersInput.max = planCT.maxMembers;
+
+function updateMembersHint(){
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  const over = (parseInt(membersInput.value) || 0) > planCT.maxMembers;
+  const hint = document.getElementById("membersHint");
+  hint.style.color = over ? "#D4524A" : "var(--text2)";
+  hint.innerHTML = (en ? `${neoName(planCT)} plan: up to ${planCT.maxMembers} members.` : `Plan ${neoName(planCT)} : jusqu'a ${planCT.maxMembers} membres.`) +
+    (planCT.id !== "pro" ? ` <a href="./dashboard.html" style="color:var(--gold);">${en ? "See plans" : "Voir les abonnements"}</a>` : "");
+}
+membersInput.addEventListener("input", updateMembersHint);
+updateMembersHint();
 
 function updateCommPreview(){
   const amt = parseFloat(document.getElementById("amount").value) || 0;
@@ -110,21 +125,22 @@ function updateCommPreview(){
   if(amt <= 0){ prev.style.display="none"; return; }
   prev.style.display="block";
   // Calcul au centime pres, comme le serveur de paiement
-  const fee = Math.round(amt * 100 * feeRateCT / 100) / 100;
+  const fee = neoFee(amt, planCT);
   const net = Math.round((amt - fee) * 100) / 100;
   const lang = localStorage.getItem("ns_lang") || "fr";
   document.getElementById("prevAmt").textContent = fmt(amt);
   document.getElementById("prevFee").textContent = fmt(fee);
   document.getElementById("prevNet").textContent = fmt(net);
-  const planLabel = userPlanCT==="premium" ? "Premium 0,5%" : userPlanCT==="business" ? "Business 0%" : "Free 1,5%";
+  const planLabel = neoName(planCT) + " " + neoPct(planCT.feeBps);
   document.getElementById("prevFeeLabel").textContent = (lang==="en" ? "NEO-SUSU fee (" : "Commission NEO-SUSU (") + planLabel + ")";
-  document.getElementById("prevFee").style.color = userPlanCT==="business" ? "#2BAD7A" : userPlanCT==="premium" ? "var(--gold)" : "#D4524A";
+  document.getElementById("prevFee").style.color = planCT.feeBps === 0 ? "#2BAD7A" : planCT.feeBps <= 50 ? "var(--gold)" : "#D4524A";
 }
 document.getElementById("amount")?.addEventListener("input", updateCommPreview);
 document.getElementById("currency")?.addEventListener("change", updateCommPreview);
 
 document.getElementById("tontineForm").addEventListener("submit", function(e) {
   e.preventDefault();
+  if((parseInt(membersInput.value) || 0) > planCT.maxMembers){ updateMembersHint(); membersInput.focus(); return; }
   document.getElementById("successMsg").classList.add("active");
   setTimeout(() => { window.location.href = "./dashboard.html"; }, 2000);
 });

@@ -2,11 +2,11 @@
 // - Pages HTML : reseau d'abord (toujours a jour), cache en secours hors ligne
 // - CSS / JS / images / polices : cache d'abord, mis a jour en arriere-plan
 // - API Supabase et autres requetes : jamais mises en cache
-const CACHE = "neo-susu-v1";
+const CACHE = "neo-susu-v2";
 const PRECACHE = [
   "./", "./index.html", "./login.html", "./signup.html", "./dashboard.html",
   "./create-tontine.html", "./join-tontine.html", "./tontine-detail.html",
-  "./profile.html", "./neo-susu.css", "./manifest.json",
+  "./profile.html", "./neo-susu.css", "./plans.js", "./manifest.json",
   "./icons/icon-192.png", "./icons/icon-512.png"
 ];
 const STATIC_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com", "cdn.jsdelivr.net"];
