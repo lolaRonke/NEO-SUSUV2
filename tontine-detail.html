@@ -67,12 +67,26 @@
       <span id="feeLabel">Commission NEO-SUSU (Free 1,5 %), prélevée sur la cagnotte</span>
       <span id="feeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">0,75 €</span>
     </div>
+    <div style="display:none;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;" id="guaranteeRow">
+      <span id="guaranteeLabel">Garantie de paiement (3 %), prélevée sur la cagnotte</span>
+      <span id="guaranteeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#2BAD7A;">1,50 €</span>
+    </div>
     <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;">
       <span data-fr="Vous payez" data-en="You pay">Vous payez</span>
       <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">50,00 €</span>
     </div>
     <div style="font-size:11px;color:var(--text2);margin-top:8px;padding:8px;background:rgba(212,148,10,.05);border-radius:8px;">
       💡 <span id="feeHint" data-fr="L'organisateur peut passer Essentiel (0,5 %) ou Pro (0 %) pour reduire la commission" data-en="The organiser can switch to Essentiel (0.5%) or Pro (0%) to lower the fee">L'organisateur peut passer Essentiel (0,5 %) ou Pro (0 %) pour reduire la commission</span>
+    </div>
+  </div>
+
+  <!-- GARANTIE DE PAIEMENT -->
+  <div style="background:var(--card);border:1px solid rgba(43,173,122,.25);border-radius:16px;padding:16px;margin-top:14px;">
+    <div style="font-size:11px;font-weight:700;color:#2BAD7A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;" data-fr="🛡️ Garantie de paiement" data-en="🛡️ Payment guarantee">🛡️ Garantie de paiement</div>
+    <div id="guaranteeStatus" style="font-size:13px;line-height:1.6;margin-bottom:8px;"></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04);">
+      <span data-fr="Réserve de solidarité du groupe" data-en="Group solidarity reserve">Réserve de solidarité du groupe</span>
+      <span id="reserveAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#2BAD7A;">40,50 €</span>
     </div>
   </div>
 
@@ -118,6 +132,28 @@ function initCommission() {
     ? `${eur(CONTRIBUTION_EUR)} by card`
     : `${eur(CONTRIBUTION_EUR)} par carte bancaire`;
   document.getElementById("feeHint").parentElement.style.display = p.id === "pro" ? "none" : "";
+  initGuarantee();
+}
+
+// En production : tontine_members.guarantee (choix fige au demarrage), tontine_rounds.guarantee_bps
+// et le solde de la reserve (guarantee_ledger). En demo : choix stocke localement.
+function initGuarantee() {
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  const on = neoGuaranteeOn();
+  const share = Math.round(CONTRIBUTION_EUR * NEO_GUARANTEE_BPS / 100) / 100;
+  const othersPerPot = 9; // groupe de 10 : 9 cotisations des autres par cagnotte
+  document.getElementById("guaranteeRow").style.display = on ? "flex" : "none";
+  document.getElementById("guaranteeLabel").textContent = en
+    ? `Payment guarantee (${neoPct(NEO_GUARANTEE_BPS)}), deducted from the pot`
+    : `Garantie de paiement (${neoPct(NEO_GUARANTEE_BPS)}), prélevée sur la cagnotte`;
+  document.getElementById("guaranteeAmt").textContent = eur(share);
+  document.getElementById("guaranteeStatus").innerHTML = on
+    ? (en
+      ? `<strong style="color:#2BAD7A;">Active.</strong> If a member hasn't paid ${NEO_GUARANTEE_DELAY_DAYS} days after the due date, the reserve pays you their share (if it has enough). On your pot: ${othersPerPot} × ${eur(share)} = ${eur(othersPerPot * share)} go to the reserve; what's left at the end is returned to you.`
+      : `<strong style="color:#2BAD7A;">Activée.</strong> Si un membre n'a pas payé ${NEO_GUARANTEE_DELAY_DAYS} jours après l'échéance, la réserve vous verse sa part (si elle suffit). Sur votre cagnotte : ${othersPerPot} × ${eur(share)} = ${eur(othersPerPot * share)} vont à la réserve ; ce qui reste à la fin vous est rendu.`)
+    : (en
+      ? `<strong>Not active.</strong> The option is chosen when joining, before the group is full.`
+      : `<strong>Non activée.</strong> L'option se choisit en rejoignant la tontine, avant que le groupe soit complet.`);
 }
 
 function showPayConfirm() {

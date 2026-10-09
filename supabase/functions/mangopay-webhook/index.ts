@@ -5,6 +5,7 @@
 import { admin } from "../_shared/supabase.ts";
 import { mangopay } from "../_shared/mangopay.ts";
 import { distributeRound } from "../_shared/distribute.ts";
+import { recoverClaim } from "../_shared/guarantee.ts";
 
 const SECRET = Deno.env.get("MANGOPAY_WEBHOOK_TOKEN") ?? "";
 
@@ -30,10 +31,16 @@ Deno.serve(async (req) => {
           .update({ status: "paid", payin_id: payIn.Id, updated_at: now })
           .eq("id", contributionId)
           .in("status", ["pending", "failed"]);
-        const { data: c } = await admin.from("contributions").select("round_id").eq("id", contributionId).maybeSingle();
-        // Derniere cotisation du groupe recue -> repartition automatique. Si une notification
-        // precedente a echoue en cours de route, la relance de Mangopay reprend la repartition.
-        if (c) await distributeRound(admin, c.round_id);
+        const { data: c } = await admin.from("contributions").select("round_id, status").eq("id", contributionId).maybeSingle();
+        if (c?.status === "covered") {
+          // Paiement tardif d'une cotisation deja couverte par la reserve de garantie : il la rembourse.
+          await admin.from("contributions").update({ payin_id: payIn.Id, updated_at: now }).eq("id", contributionId);
+          await recoverClaim(admin, contributionId);
+        } else if (c) {
+          // Derniere cotisation du groupe recue -> repartition automatique. Si une notification
+          // precedente a echoue en cours de route, la relance de Mangopay reprend la repartition.
+          await distributeRound(admin, c.round_id);
+        }
       } else {
         // Un echec ne compte que pour la tentative en cours.
         await admin.from("contributions").update({ status: "failed", updated_at: now })

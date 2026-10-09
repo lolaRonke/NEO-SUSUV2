@@ -2,7 +2,7 @@
 // - Pages HTML : reseau d'abord (toujours a jour), cache en secours hors ligne
 // - CSS / JS / images / polices : cache d'abord, mis a jour en arriere-plan
 // - API Supabase et autres requetes : jamais mises en cache
-const CACHE = "neo-susu-v2";
+const CACHE = "neo-susu-v3";
 const PRECACHE = [
   "./", "./index.html", "./login.html", "./signup.html", "./dashboard.html",
   "./create-tontine.html", "./join-tontine.html", "./tontine-detail.html",

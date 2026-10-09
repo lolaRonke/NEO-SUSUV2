@@ -41,3 +41,44 @@ test("reprise apres echec partiel : les cotisations deja transferees ne sont pas
   assert.equal(plan.transfers.length, 7);
   assert.equal(plan.payout_cents, 5000 + 9 * 4925); // le montant final ne change pas
 });
+
+import { GUARANTEE_BPS, planCover, planRefunds } from "../functions/_shared/distribution.ts";
+
+test("garantie : 3 % en plus de la commission, sur les 9 cotisations des autres", () => {
+  const plan = planRound("u3", contribs(), 150, GUARANTEE_BPS);
+  assert.equal(plan.fees_cents, 9 * 75);
+  assert.equal(plan.guarantee_cents, 9 * 150); // 13,50 EUR vers la reserve
+  assert.equal(plan.payout_cents, 5000 + 9 * (5000 - 75 - 150)); // 479,75 EUR
+  assert.equal(plan.payout_cents + plan.fees_cents + plan.guarantee_cents, 10 * 5000);
+});
+
+test("sans garantie, le calcul ne change pas", () => {
+  assert.equal(planRound("u3", contribs(), 150).guarantee_cents, 0);
+  assert.equal(planRound("u3", contribs(), 150, 0).payout_cents, 5000 + 9 * 4925);
+});
+
+test("une cotisation couverte par la reserve compte comme payee, sans nouveau transfert", () => {
+  const c = contribs();
+  c[4].status = "covered";
+  assert.equal(isRoundReady(members, c), true);
+  const plan = planRound("u1", c, 150, GUARANTEE_BPS);
+  assert.equal(plan.transfers.length, 8);
+  assert.ok(!plan.transfers.some((t) => t.contribution_id === "c5"));
+  assert.equal(plan.payout_cents, 5000 + 9 * (5000 - 75 - 150));
+});
+
+test("la reserve couvre tout le manque ou rien", () => {
+  const missing = [{ user_id: "u5", amount_cents: 5000 }, { user_id: "u6", amount_cents: 5000 }];
+  assert.deepEqual(planCover(missing, 10000), { cover: true, needed_cents: 10000 });
+  assert.deepEqual(planCover(missing, 9999), { cover: false, needed_cents: 10000 });
+  assert.equal(planCover([], 10000).cover, false);
+});
+
+test("reliquat rendu au prorata, au centime pres", () => {
+  const r = planRefunds(1000, [{ user_id: "a", cents: 300 }, { user_id: "b", cents: 300 }, { user_id: "c", cents: 300 }]);
+  assert.equal(r.reduce((s, x) => s + x.cents, 0), 1000);
+  assert.deepEqual(r.map((x) => x.cents).sort(), [333, 333, 334]);
+  const r2 = planRefunds(700, [{ user_id: "a", cents: 450 }, { user_id: "b", cents: 150 }]);
+  assert.deepEqual(r2, [{ user_id: "a", cents: 525 }, { user_id: "b", cents: 175 }]);
+  assert.deepEqual(planRefunds(0, [{ user_id: "a", cents: 1 }]), []);
+});

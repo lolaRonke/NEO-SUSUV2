@@ -61,3 +61,23 @@ async function neoManageSubscription() {
   window.location.href = data.url;
   return true;
 }
+
+// ── Option garantie de paiement ──
+// 3 % preleves sur la cagnotte du membre qui l'a choisie, en plus de la commission, et verses dans la
+// reserve de solidarite du groupe. Si une cotisation manque 20 jours apres l'echeance, la reserve la
+// verse a sa place. Le reliquat est rendu aux membres en fin de tontine. Meme taux que GUARANTEE_BPS
+// (supabase/functions/_shared/distribution.ts).
+const NEO_GUARANTEE_BPS = 300;
+const NEO_GUARANTEE_DELAY_DAYS = 20;
+function neoGuaranteeOn() { try { return localStorage.getItem("ns_guarantee") === "1"; } catch (e) { return false; } }
+function neoSetGuaranteeLocal(on) { try { localStorage.setItem("ns_guarantee", on ? "1" : "0"); } catch (e) {} }
+
+// Enregistre le choix en base (uniquement avant le demarrage du groupe). En demo : choix local.
+async function neoSetGuarantee(tontineId, on) {
+  neoSetGuaranteeLocal(on);
+  const sb = window.NEO_SUPABASE;
+  if (!sb || !tontineId) return false;
+  const { error } = await sb.rpc("set_guarantee", { p_tontine_id: tontineId, p_enabled: on });
+  if (error) throw new Error(error.message);
+  return true;
+}

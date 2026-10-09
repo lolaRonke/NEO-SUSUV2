@@ -5,6 +5,7 @@ import type { SupabaseClient } from "npm:@supabase/supabase-js@2.45.4";
 import { mangopay } from "./mangopay.ts";
 import { isRoundReady, planRound, type PaidContribution } from "./distribution.ts";
 import { PAYMENT_CURRENCY } from "./supabase.ts";
+import { collectPremium, refundReserve } from "./guarantee.ts";
 
 type Payout = { id: string; round_id: string; user_id: string; amount_cents: number; attempts: number };
 
@@ -15,7 +16,7 @@ export async function distributeRound(db: SupabaseClient, roundId: string): Prom
     .update({ status: "distributing", last_error: null })
     .eq("id", roundId)
     .in("status", ["collecting", "failed"])
-    .select("id, tontine_id, round_number, beneficiary_id, fee_bps")
+    .select("id, tontine_id, round_number, beneficiary_id, fee_bps, guarantee_bps")
     .maybeSingle();
   if (lockErr) throw lockErr;
   if (!round) return { status: "skipped" };
@@ -46,11 +47,13 @@ export async function distributeRound(db: SupabaseClient, roundId: string): Prom
 
     const paid: PaidContribution[] = contribs!.map((c) => {
       const a = acc.get(c.user_id);
-      if (!a) throw new Error(`Compte de paiement manquant pour ${c.user_id}`);
-      return { ...c, wallet_id: a.wallet_id } as PaidContribution;
+      // Une cotisation couverte par la reserve ne passe pas par le wallet du membre defaillant.
+      if (!a && c.status !== "covered") throw new Error(`Compte de paiement manquant pour ${c.user_id}`);
+      return { ...c, wallet_id: a?.wallet_id ?? "" } as PaidContribution;
     });
     // Commission figee a l'ouverture du tour, selon le plan de l'organisateur (migration abonnements).
-    const plan = planRound(round.beneficiary_id, paid, round.fee_bps ?? 150);
+    // Garantie : 3 % en plus si le beneficiaire a pris l'option (taux fige a l'ouverture du tour).
+    const plan = planRound(round.beneficiary_id, paid, round.fee_bps ?? 150, round.guarantee_bps ?? 0);
 
     for (const t of plan.transfers) {
       const tr = await mangopay.createTransfer({
@@ -67,6 +70,9 @@ export async function distributeRound(db: SupabaseClient, roundId: string): Prom
         .update({ status: "transferred", transfer_id: tr.Id, fee_cents: t.fee_cents, updated_at: new Date().toISOString() })
         .eq("id", t.contribution_id);
     }
+
+    // Part garantie : du wallet du beneficiaire vers la reserve du groupe, avant le virement.
+    await collectPremium(db, round, beneficiary, plan.guarantee_cents);
 
     const { data: payout, error: pErr } = await db
       .from("payouts")
@@ -90,7 +96,12 @@ export async function distributeRound(db: SupabaseClient, roundId: string): Prom
       .eq("round_number", round.round_number + 1)
       .eq("status", "pending")
       .select("id");
-    if (!next?.length) await db.from("tontines").update({ status: "completed" }).eq("id", round.tontine_id);
+    if (!next?.length) {
+      await db.from("tontines").update({ status: "completed" }).eq("id", round.tontine_id);
+      // Reliquat de la reserve de garantie rendu aux membres. Une erreur ici ne remet pas en cause
+      // le versement du tour : elle se rejoue avec tontine-distribute { refund_tontine_id }.
+      await refundReserve(db, round.tontine_id).catch((e) => console.error("Restitution de la reserve", round.tontine_id, e));
+    }
 
     return { status: "paid" };
   } catch (e) {
