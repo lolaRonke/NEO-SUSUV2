@@ -42,8 +42,8 @@
     <div class="tontine-title" data-fr="Tontine Famille Diallo" data-en="Diallo Family Tontine">🌟 Tontine Famille Diallo</div>
     <div class="tontine-meta" data-fr="Creee le 15 janvier 2026 · Mensuelle" data-en="Created Jan 15, 2026 · Monthly">Creee le 15 janvier 2026 · Mensuelle</div>
     <div class="key-stats">
-      <div class="key-stat"><div class="key-stat-label" data-fr="Cotisation" data-en="Contribution">Cotisation</div><div class="key-stat-value">25 000 FCFA</div></div>
-      <div class="key-stat"><div class="key-stat-label" data-fr="Pot total" data-en="Total pot">Pot total</div><div class="key-stat-value">250 000 FCFA</div></div>
+      <div class="key-stat"><div class="key-stat-label" data-fr="Cotisation" data-en="Contribution">Cotisation</div><div class="key-stat-value">50 €</div></div>
+      <div class="key-stat"><div class="key-stat-label" data-fr="Pot total" data-en="Total pot">Pot total</div><div class="key-stat-value">500 €</div></div>
       <div class="key-stat"><div class="key-stat-label" data-fr="Membres" data-en="Members">Membres</div><div class="key-stat-value">8 / 10</div></div>
       <div class="key-stat"><div class="key-stat-label" data-fr="Tour actuel" data-en="Current round">Tour actuel</div><div class="key-stat-value">4 / 10</div></div>
     </div>
@@ -60,15 +60,15 @@
     <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;" data-fr="Detail du paiement" data-en="Payment breakdown">Detail du paiement</div>
     <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
       <span data-fr="Cotisation" data-en="Contribution">Cotisation</span>
-      <span style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">25 000 FCFA</span>
+      <span style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">50,00 €</span>
     </div>
     <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;" id="feeRow">
-      <span id="feeLabel">Commission NEO-SUSU (Free 1,5%)</span>
-      <span id="feeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">375 FCFA</span>
+      <span id="feeLabel">Commission NEO-SUSU (Free 1,5 %), prélevée sur la cagnotte</span>
+      <span id="feeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">0,75 €</span>
     </div>
     <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;">
-      <span data-fr="Total a payer" data-en="Total to pay">Total a payer</span>
-      <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">25 375 FCFA</span>
+      <span data-fr="Vous payez" data-en="You pay">Vous payez</span>
+      <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">50,00 €</span>
     </div>
     <div style="font-size:11px;color:var(--text2);margin-top:8px;padding:8px;background:rgba(212,148,10,.05);border-radius:8px;">
       💡 <span id="feeHint" data-fr="Passez Premium pour reduire la commission a 0,5%" data-en="Go Premium to reduce commission to 0.5%">Passez Premium pour reduire la commission a 0,5%</span>
@@ -84,7 +84,7 @@
   <div id="payConfirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;align-items:flex-end;justify-content:center;">
     <div style="background:var(--surf);border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;">
       <div style="font-family:var(--ff-s);font-size:22px;font-weight:700;margin-bottom:6px;" data-fr="Confirmer le paiement" data-en="Confirm payment">Confirmer le paiement</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:18px;" id="confirmSub">25 375 FCFA au total (dont 375 FCFA de commission)</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:18px;" id="confirmSub">50,00 € par carte bancaire</div>
       <div style="display:flex;gap:10px;">
         <button onclick="document.getElementById('payConfirm').style.display='none'" style="flex:1;padding:14px;background:var(--raised);border:1px solid var(--stroke2);color:var(--text);border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Annuler" data-en="Cancel">Annuler</button>
         <button onclick="doPayment()" style="flex:1;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);border:none;border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Confirmer" data-en="Confirm">Confirmer ✦</button>
@@ -92,6 +92,45 @@
     </div>
   </div>
 </div>
+
+<script>
+// ── COMMISSION ET PAIEMENT ──
+// La commission n'est pas ajoutee a la cotisation : elle est prelevee sur la cagnotte
+// versee au beneficiaire (meme regle que le serveur de paiement et que create-tontine).
+const CONTRIBUTION_EUR = 50;
+const PLAN_FEES_TD = { free: 1.5, premium: 0.5, business: 0 };
+const eur = n => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+
+function initCommission() {
+  const plan = localStorage.getItem("ns_plan") || "free";
+  const rate = PLAN_FEES_TD[plan] ?? 1.5;
+  const fee = Math.round(CONTRIBUTION_EUR * 100 * rate / 100) / 100;
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  const planName = plan.charAt(0).toUpperCase() + plan.slice(1);
+  const pct = rate.toLocaleString(en ? "en-GB" : "fr-FR") + (en ? "%" : " %");
+  document.getElementById("feeLabel").textContent = en
+    ? `NEO-SUSU fee (${planName} ${pct}), deducted from the pot`
+    : `Commission NEO-SUSU (${planName} ${pct}), prélevée sur la cagnotte`;
+  document.getElementById("feeAmt").textContent = eur(fee);
+  document.getElementById("totalAmt").textContent = eur(CONTRIBUTION_EUR);
+  document.getElementById("confirmSub").textContent = en
+    ? `${eur(CONTRIBUTION_EUR)} by card`
+    : `${eur(CONTRIBUTION_EUR)} par carte bancaire`;
+  document.getElementById("feeHint").parentElement.style.display = plan === "business" ? "none" : "";
+}
+
+function showPayConfirm() {
+  document.getElementById("payConfirm").style.display = "flex";
+}
+
+function doPayment() {
+  document.getElementById("payConfirm").style.display = "none";
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  alert(en
+    ? "Demo mode: no payment is made. Card payment will be enabled once Mangopay is set up."
+    : "Mode démo : aucun paiement n'est effectué. Le paiement par carte sera activé une fois Mangopay configuré.");
+}
+</script>
 
 <script>
 let currentLang = localStorage.getItem("ns_lang") || "fr";

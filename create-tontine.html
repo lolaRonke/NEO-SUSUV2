@@ -41,16 +41,12 @@
     <div class="row">
       <div class="form-group">
         <label data-fr="Montant par membre" data-en="Amount per member">Montant par membre</label>
-        <input type="number" id="amount" placeholder="25 000" required>
+        <input type="number" id="amount" placeholder="50" min="1" step="0.01" required>
       </div>
       <div class="form-group">
         <label data-fr="Devise" data-en="Currency">Devise</label>
         <select id="currency">
-          <option value="XOF">FCFA (XOF)</option>
-          <option value="XAF">FCFA (XAF)</option>
-          <option value="NGN">Naira (NGN)</option>
-          <option value="EUR">Euro (EUR)</option>
-          <option value="GBP">Pound (GBP)</option>
+          <option value="EUR" selected>Euro (EUR)</option>
         </select>
       </div>
     </div>
@@ -77,15 +73,15 @@
       <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;" data-fr="Apercu des frais par cotisation" data-en="Fee preview per contribution">Apercu des frais</div>
       <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
         <span data-fr="Cotisation membre" data-en="Member contribution">Cotisation membre</span>
-        <span id="prevAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">0 FCFA</span>
+        <span id="prevAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">0,00 €</span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
         <span id="prevFeeLabel">Commission NEO-SUSU (Free 1,5%)</span>
-        <span id="prevFee" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">0 FCFA</span>
+        <span id="prevFee" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">0,00 €</span>
       </div>
       <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;">
         <span data-fr="Montant net recu par beneficiaire" data-en="Net amount received by beneficiary">Montant net recu</span>
-        <span id="prevNet" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:#2BAD7A;">0 FCFA</span>
+        <span id="prevNet" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:#2BAD7A;">0,00 €</span>
       </div>
       <div style="background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.15);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:11px;color:var(--text2);line-height:1.6;">
         💡 <span data-fr="Passez Premium (4,99€/mois) pour reduire la commission a 0,5% et Business (14,99€) pour 0%." data-en="Go Premium (€4.99/mo) to reduce to 0.5% or Business (€14.99) for 0%.">Passez Premium (4,99€/mois) pour reduire a 0,5% — Business (14,99€) pour 0%.</span>
@@ -107,17 +103,19 @@ const userPlanCT = localStorage.getItem("ns_plan") || "free";
 const feeRateCT = PLAN_FEES_CT[userPlanCT] || 1.5;
 
 function updateCommPreview(){
-  const amt = parseInt(document.getElementById("amount").value) || 0;
-  const curr = document.getElementById("currency").value || "FCFA";
+  const amt = parseFloat(document.getElementById("amount").value) || 0;
+  const curr = document.getElementById("currency").value || "EUR";
+  const fmt = n => n.toLocaleString("fr-FR", { style: "currency", currency: curr });
   const prev = document.getElementById("commPreview");
   if(amt <= 0){ prev.style.display="none"; return; }
   prev.style.display="block";
-  const fee = Math.round(amt * feeRateCT / 100);
-  const net = amt - fee;
+  // Calcul au centime pres, comme le serveur de paiement
+  const fee = Math.round(amt * 100 * feeRateCT / 100) / 100;
+  const net = Math.round((amt - fee) * 100) / 100;
   const lang = localStorage.getItem("ns_lang") || "fr";
-  document.getElementById("prevAmt").textContent = amt.toLocaleString("fr-FR") + " " + curr;
-  document.getElementById("prevFee").textContent = fee.toLocaleString("fr-FR") + " " + curr;
-  document.getElementById("prevNet").textContent = net.toLocaleString("fr-FR") + " " + curr;
+  document.getElementById("prevAmt").textContent = fmt(amt);
+  document.getElementById("prevFee").textContent = fmt(fee);
+  document.getElementById("prevNet").textContent = fmt(net);
   const planLabel = userPlanCT==="premium" ? "Premium 0,5%" : userPlanCT==="business" ? "Business 0%" : "Free 1,5%";
   document.getElementById("prevFeeLabel").textContent = (lang==="en" ? "NEO-SUSU fee (" : "Commission NEO-SUSU (") + planLabel + ")";
   document.getElementById("prevFee").style.color = userPlanCT==="business" ? "#2BAD7A" : userPlanCT==="premium" ? "var(--gold)" : "#D4524A";

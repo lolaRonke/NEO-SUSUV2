@@ -144,26 +144,26 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 
     <!-- Simulateur de commission -->
     <div class="fee-preview">
-      <div class="fee-title" data-fr="Simulateur — Tontine de 25 000 FCFA" data-en="Simulator — 25,000 FCFA tontine">Simulateur — Tontine de 25 000 FCFA</div>
+      <div class="fee-title" data-fr="Simulateur — Cotisation de 50 €" data-en="Simulator — €50 contribution">Simulateur — Cotisation de 50 €</div>
       <div class="fee-row">
         <span data-fr="Cotisation" data-en="Contribution">Cotisation</span>
-        <span class="fee-val">25 000 FCFA</span>
+        <span class="fee-val">50,00 €</span>
       </div>
       <div class="fee-row">
         <span data-fr="Commission Free (1,5%)" data-en="Free commission (1.5%)">Commission Free (1,5%)</span>
-        <span class="fee-val" style="color:#D4524A;">375 FCFA</span>
+        <span class="fee-val" style="color:#D4524A;">0,75 €</span>
       </div>
       <div class="fee-row">
         <span data-fr="Commission Premium (0,5%)" data-en="Premium commission (0.5%)">Commission Premium (0,5%)</span>
-        <span class="fee-val" style="color:var(--gold);">125 FCFA</span>
+        <span class="fee-val" style="color:var(--gold);">0,25 €</span>
       </div>
       <div class="fee-row">
         <span data-fr="Commission Business (0%)" data-en="Business commission (0%)">Commission Business (0%)</span>
-        <span class="fee-val" style="color:#2BAD7A;">0 FCFA ✓</span>
+        <span class="fee-val" style="color:#2BAD7A;">0,00 € ✓</span>
       </div>
       <div class="fee-row" style="margin-top:6px;">
         <span style="color:var(--gold);font-size:12px;" data-fr="Economie Premium vs Free/an" data-en="Premium savings vs Free/year">Economie Premium vs Free / an</span>
-        <span class="fee-val" style="color:var(--gold);">~30 000 FCFA</span>
+        <span class="fee-val" style="color:var(--gold);">~60 €</span>
       </div>
     </div>
 
@@ -194,7 +194,7 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
   <div class="balance-card">
     <div class="balance-label" data-fr="Solde total epargne" data-en="Total savings">Solde total epargne</div>
     <div class="balance-amount" id="walletAmt">0</div>
-    <div class="balance-currency">FCFA</div>
+    <div class="balance-currency">EUR</div>
     <div class="score-bar"><div class="score-fill" id="scoreBar" style="width:50%"></div></div>
     <div style="font-size:11px;color:rgba(255,255,255,.35);"><span data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite</span> : <span id="scoreVal">50</span>/100</div>
   </div>
@@ -292,7 +292,7 @@ async function loadDashboard(){
 function loadDemoData(){
   document.getElementById("userName").textContent="Aicha Diallo";
   document.getElementById("avatarEl").textContent="A";
-  document.getElementById("walletAmt").textContent="245 000";
+  document.getElementById("walletAmt").textContent="1 250";
   document.getElementById("scoreVal").textContent="82";
   document.getElementById("scoreBar").style.width="82%";
   document.getElementById("tontineCount").textContent="3";
@@ -301,9 +301,9 @@ function loadDemoData(){
   const kycEl=document.getElementById("kycBadge");
   kycEl.textContent="👁️ Mode demo";
   const demoTontines=[
-    {name:"Tontine Famille Diallo",amount:25000,currency:"FCFA",members:8,max:10,progress:80,freq:"Mensuelle",status:"active",id:"1"},
-    {name:"Collegues du bureau",amount:50000,currency:"FCFA",members:6,max:6,progress:100,freq:"Hebdomadaire",status:"active",id:"2"},
-    {name:"Projet scolarite",amount:10000,currency:"FCFA",members:4,max:8,progress:50,freq:"Bimensuelle",status:"waiting",id:"3"}
+    {name:"Tontine Famille Diallo",amount:50,currency:"€",members:8,max:10,progress:80,freq:"Mensuelle",status:"active",id:"1"},
+    {name:"Collegues du bureau",amount:100,currency:"€",members:6,max:6,progress:100,freq:"Hebdomadaire",status:"active",id:"2"},
+    {name:"Projet scolarite",amount:20,currency:"€",members:4,max:8,progress:50,freq:"Bimensuelle",status:"waiting",id:"3"}
   ];
   renderDemoTontines(demoTontines);
   updatePlanUI();
