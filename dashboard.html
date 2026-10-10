@@ -208,7 +208,7 @@ async function signOut(){sessionStorage.clear();window.location.href="./index.ht
 </script>
 <script>
 let currentLang=localStorage.getItem("ns_lang")||"fr";
-function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");updatePlanUI();}
+function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");updatePlanUI();}
 
 async function loadDashboard(){
   // ── DEMO MODE : verifie EN PREMIER avant tout appel Supabase ──
@@ -427,8 +427,6 @@ async function manageSubscription(){
 })();
 
 async function handleLogout(){
-  const msg=currentLang==="en"?"Are you sure you want to sign out?":"Voulez-vous vraiment vous deconnecter ?";
-  if(!confirm(msg))return;
   try{await signOut();}catch(e){sessionStorage.removeItem("neo_susu_demo_user");window.location.href="./index.html";}
 }
 

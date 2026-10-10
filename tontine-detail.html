@@ -95,6 +95,8 @@
     <a href="#" class="btn btn-secondary" onclick="return false;" data-fr="📤 Inviter" data-en="📤 Invite">📤 Inviter</a>
   </div>
 
+  <div id="payNotice" hidden style="margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(127,166,224,.10);border:1px solid rgba(127,166,224,.3);color:var(--text);font-size:13px;line-height:1.5;"></div>
+
   <!-- PAY CONFIRM TOAST -->
   <div id="payConfirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;align-items:flex-end;justify-content:center;">
     <div style="background:var(--surf);border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;">
@@ -163,9 +165,12 @@ function showPayConfirm() {
 function doPayment() {
   document.getElementById("payConfirm").style.display = "none";
   const en = (localStorage.getItem("ns_lang") || "fr") === "en";
-  alert(en
+  // Message affiche dans la page (les fenetres alert() sont bloquees dans certains navigateurs integres)
+  const notice = document.getElementById("payNotice");
+  notice.textContent = en
     ? "Demo mode: no payment is made. Card payment will be enabled once Mangopay is set up."
-    : "Mode démo : aucun paiement n'est effectué. Le paiement par carte sera activé une fois Mangopay configuré.");
+    : "Mode démo : aucun paiement n'est effectué. Le paiement par carte sera activé une fois Mangopay configuré.";
+  notice.hidden = false;
 }
 </script>
 
@@ -174,7 +179,7 @@ let currentLang = localStorage.getItem("ns_lang") || "fr";
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
+  document.documentElement.lang = lang;
   document.querySelectorAll("[data-fr]").forEach(el => {
     const val = el.getAttribute("data-" + lang);
     if (val) el.textContent = val;

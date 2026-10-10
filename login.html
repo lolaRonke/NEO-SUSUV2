@@ -58,7 +58,7 @@
 <script src="./supabase.js"></script>
 <script>
 let currentLang=localStorage.getItem("ns_lang")||"fr";
-function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");}
+function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");}
 setLang(currentLang);
 
 function showErr(m){const e=document.getElementById("errMsg");e.textContent="⚠️ "+m;e.classList.add("show");document.getElementById("okMsg").classList.remove("show");}

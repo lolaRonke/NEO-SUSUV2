@@ -276,7 +276,7 @@ function setLang(lang) {
   localStorage.setItem("ns_lang", lang);
 
   // Update html lang attr
-  document.getElementById("html-root").lang = lang;
+  document.documentElement.lang = lang;
 
   // Update page title
   document.title = lang === "en"

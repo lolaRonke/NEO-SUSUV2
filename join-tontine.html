@@ -79,7 +79,7 @@ let currentLang = localStorage.getItem("ns_lang") || "fr";
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
+  document.documentElement.lang = lang;
   document.querySelectorAll("[data-fr]").forEach(el => {
     const val = el.getAttribute("data-" + lang);
     if (val) el.textContent = val;
