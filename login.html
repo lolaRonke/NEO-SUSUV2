@@ -3,21 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0E0C1A">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Connexion</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 .container{max-width:420px;}.logo-section{text-align:center;margin-bottom:30px;}
 .forgot{text-align:right;margin-top:-8px;margin-bottom:16px;}.forgot a{color:var(--sky);font-size:12px;text-decoration:none;font-weight:500;}
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
 .btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:white;color:#1F2937;border:none;border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;transition:all .2s;}
 .btn-google:hover{background:#f0f0f0;transform:translateY(-1px);}
 .divider-auth{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;}
@@ -57,10 +54,11 @@
   </button>
   <div class="signup-link"><span data-fr="Pas encore de compte ?" data-en="No account yet?">Pas encore de compte ?</span> <a href="./signup.html" data-fr="Creer un compte" data-en="Create account">Creer un compte</a></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <script src="./supabase.js"></script>
 <script>
 let currentLang=localStorage.getItem("ns_lang")||"fr";
-function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");}
+function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");}
 setLang(currentLang);
 
 function showErr(m){const e=document.getElementById("errMsg");e.textContent="⚠️ "+m;e.classList.add("show");document.getElementById("okMsg").classList.remove("show");}

@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0E0C1A">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Detail tontine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
+<script src="./plans.js"></script>
 <style>
-  .tontine-header{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;}
+  .tontine-header{background:linear-gradient(135deg,rgba(179,147,244,.12),var(--card));border:1px solid rgba(179,147,244,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;}
   .tontine-title{font-family:var(--ff-s);font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
   .tontine-meta{color:var(--text2);font-size:13px;margin-bottom:16px;}
   .key-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -22,16 +25,10 @@
   .member-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);display:flex;align-items:center;justify-content:center;font-family:var(--ff-s);font-size:20px;font-weight:700;flex-shrink:0;}
   .member-info{flex:1;}.member-name{font-weight:700;font-size:15px;margin-bottom:2px;}.member-detail{font-size:12px;color:var(--text2);}
   .member-status{font-size:10px;padding:4px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
-  .status-paid{background:rgba(43,173,122,.15);color:var(--em);}.status-pending{background:rgba(212,148,10,.15);color:var(--gold);}.status-late{background:rgba(212,82,74,.15);color:var(--red);}.status-received{background:rgba(122,171,204,.15);color:var(--sky);}
+  .status-paid{background:rgba(43,173,122,.15);color:var(--em);}.status-pending{background:rgba(179,147,244,.15);color:var(--gold);}.status-late{background:rgba(212,82,74,.15);color:var(--red);}.status-received{background:rgba(127,166,224,.15);color:var(--sky);}
   .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
 </style>
 
-<style>
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
-</style>
 </head>
 <body>
 
@@ -46,8 +43,8 @@
     <div class="tontine-title" data-fr="Tontine Famille Diallo" data-en="Diallo Family Tontine">🌟 Tontine Famille Diallo</div>
     <div class="tontine-meta" data-fr="Creee le 15 janvier 2026 · Mensuelle" data-en="Created Jan 15, 2026 · Monthly">Creee le 15 janvier 2026 · Mensuelle</div>
     <div class="key-stats">
-      <div class="key-stat"><div class="key-stat-label" data-fr="Cotisation" data-en="Contribution">Cotisation</div><div class="key-stat-value">25 000 FCFA</div></div>
-      <div class="key-stat"><div class="key-stat-label" data-fr="Pot total" data-en="Total pot">Pot total</div><div class="key-stat-value">250 000 FCFA</div></div>
+      <div class="key-stat"><div class="key-stat-label" data-fr="Cotisation" data-en="Contribution">Cotisation</div><div class="key-stat-value">50 €</div></div>
+      <div class="key-stat"><div class="key-stat-label" data-fr="Pot total" data-en="Total pot">Pot total</div><div class="key-stat-value">500 €</div></div>
       <div class="key-stat"><div class="key-stat-label" data-fr="Membres" data-en="Members">Membres</div><div class="key-stat-value">8 / 10</div></div>
       <div class="key-stat"><div class="key-stat-label" data-fr="Tour actuel" data-en="Current round">Tour actuel</div><div class="key-stat-value">4 / 10</div></div>
     </div>
@@ -64,18 +61,32 @@
     <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;" data-fr="Detail du paiement" data-en="Payment breakdown">Detail du paiement</div>
     <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
       <span data-fr="Cotisation" data-en="Contribution">Cotisation</span>
-      <span style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">25 000 FCFA</span>
+      <span style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">50,00 €</span>
     </div>
     <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;" id="feeRow">
-      <span id="feeLabel">Commission NEO-SUSU (Free 1,5%)</span>
-      <span id="feeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">375 FCFA</span>
+      <span id="feeLabel">Commission NEO-SUSU (Free 1,5 %), prélevée sur la cagnotte</span>
+      <span id="feeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">0,75 €</span>
+    </div>
+    <div style="display:none;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;" id="guaranteeRow">
+      <span id="guaranteeLabel">Garantie de paiement (3 %), prélevée sur la cagnotte</span>
+      <span id="guaranteeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#2BAD7A;">1,50 €</span>
     </div>
     <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;">
-      <span data-fr="Total a payer" data-en="Total to pay">Total a payer</span>
-      <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">25 375 FCFA</span>
+      <span data-fr="Vous payez" data-en="You pay">Vous payez</span>
+      <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">50,00 €</span>
     </div>
-    <div style="font-size:11px;color:var(--text2);margin-top:8px;padding:8px;background:rgba(212,148,10,.05);border-radius:8px;">
-      💡 <span id="feeHint" data-fr="Passez Premium pour reduire la commission a 0,5%" data-en="Go Premium to reduce commission to 0.5%">Passez Premium pour reduire la commission a 0,5%</span>
+    <div style="font-size:11px;color:var(--text2);margin-top:8px;padding:8px;background:rgba(179,147,244,.05);border-radius:8px;">
+      💡 <span id="feeHint" data-fr="L'organisateur peut passer Essentiel (0,5 %) ou Pro (0 %) pour reduire la commission" data-en="The organiser can switch to Essentiel (0.5%) or Pro (0%) to lower the fee">L'organisateur peut passer Essentiel (0,5 %) ou Pro (0 %) pour reduire la commission</span>
+    </div>
+  </div>
+
+  <!-- GARANTIE DE PAIEMENT -->
+  <div style="background:var(--card);border:1px solid rgba(43,173,122,.25);border-radius:16px;padding:16px;margin-top:14px;">
+    <div style="font-size:11px;font-weight:700;color:#2BAD7A;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;" data-fr="🛡️ Garantie de paiement" data-en="🛡️ Payment guarantee">🛡️ Garantie de paiement</div>
+    <div id="guaranteeStatus" style="font-size:13px;line-height:1.6;margin-bottom:8px;"></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04);">
+      <span data-fr="Réserve de solidarité du groupe" data-en="Group solidarity reserve">Réserve de solidarité du groupe</span>
+      <span id="reserveAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#2BAD7A;">40,50 €</span>
     </div>
   </div>
 
@@ -84,11 +95,13 @@
     <a href="#" class="btn btn-secondary" onclick="return false;" data-fr="📤 Inviter" data-en="📤 Invite">📤 Inviter</a>
   </div>
 
+  <div id="payNotice" hidden style="margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(127,166,224,.10);border:1px solid rgba(127,166,224,.3);color:var(--text);font-size:13px;line-height:1.5;"></div>
+
   <!-- PAY CONFIRM TOAST -->
   <div id="payConfirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;align-items:flex-end;justify-content:center;">
     <div style="background:var(--surf);border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;">
       <div style="font-family:var(--ff-s);font-size:22px;font-weight:700;margin-bottom:6px;" data-fr="Confirmer le paiement" data-en="Confirm payment">Confirmer le paiement</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:18px;" id="confirmSub">25 375 FCFA au total (dont 375 FCFA de commission)</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:18px;" id="confirmSub">50,00 € par carte bancaire</div>
       <div style="display:flex;gap:10px;">
         <button onclick="document.getElementById('payConfirm').style.display='none'" style="flex:1;padding:14px;background:var(--raised);border:1px solid var(--stroke2);color:var(--text);border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Annuler" data-en="Cancel">Annuler</button>
         <button onclick="doPayment()" style="flex:1;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);border:none;border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Confirmer" data-en="Confirm">Confirmer ✦</button>
@@ -98,11 +111,75 @@
 </div>
 
 <script>
+// ── COMMISSION ET PAIEMENT ──
+// La commission n'est pas ajoutee a la cotisation : elle est prelevee sur la cagnotte
+// versee au beneficiaire (meme regle que le serveur de paiement et que create-tontine).
+const CONTRIBUTION_EUR = 50;
+const eur = n => n.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+
+function initCommission() {
+  // En production, la commission vient du tour en cours (tontine_rounds.fee_bps,
+  // figee selon le plan de l'organisateur) ; en demo, du plan stocke localement.
+  const p = neoPlan();
+  const fee = neoFee(CONTRIBUTION_EUR, p);
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  const planName = neoName(p);
+  const pct = neoPct(p.feeBps);
+  document.getElementById("feeLabel").textContent = en
+    ? `NEO-SUSU fee (${planName} ${pct}), deducted from the pot`
+    : `Commission NEO-SUSU (${planName} ${pct}), prélevée sur la cagnotte`;
+  document.getElementById("feeAmt").textContent = eur(fee);
+  document.getElementById("totalAmt").textContent = eur(CONTRIBUTION_EUR);
+  document.getElementById("confirmSub").textContent = en
+    ? `${eur(CONTRIBUTION_EUR)} by card`
+    : `${eur(CONTRIBUTION_EUR)} par carte bancaire`;
+  document.getElementById("feeHint").parentElement.style.display = p.id === "pro" ? "none" : "";
+  initGuarantee();
+}
+
+// En production : tontine_members.guarantee (choix fige au demarrage), tontine_rounds.guarantee_bps
+// et le solde de la reserve (guarantee_ledger). En demo : choix stocke localement.
+function initGuarantee() {
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  const on = neoGuaranteeOn();
+  const share = Math.round(CONTRIBUTION_EUR * NEO_GUARANTEE_BPS / 100) / 100;
+  const othersPerPot = 9; // groupe de 10 : 9 cotisations des autres par cagnotte
+  document.getElementById("guaranteeRow").style.display = on ? "flex" : "none";
+  document.getElementById("guaranteeLabel").textContent = en
+    ? `Payment guarantee (${neoPct(NEO_GUARANTEE_BPS)}), deducted from the pot`
+    : `Garantie de paiement (${neoPct(NEO_GUARANTEE_BPS)}), prélevée sur la cagnotte`;
+  document.getElementById("guaranteeAmt").textContent = eur(share);
+  document.getElementById("guaranteeStatus").innerHTML = on
+    ? (en
+      ? `<strong style="color:#2BAD7A;">Active.</strong> If a member hasn't paid ${NEO_GUARANTEE_DELAY_DAYS} days after the due date, the reserve pays you their share (if it has enough). On your pot: ${othersPerPot} × ${eur(share)} = ${eur(othersPerPot * share)} go to the reserve; what's left at the end is returned to you.`
+      : `<strong style="color:#2BAD7A;">Activée.</strong> Si un membre n'a pas payé ${NEO_GUARANTEE_DELAY_DAYS} jours après l'échéance, la réserve vous verse sa part (si elle suffit). Sur votre cagnotte : ${othersPerPot} × ${eur(share)} = ${eur(othersPerPot * share)} vont à la réserve ; ce qui reste à la fin vous est rendu.`)
+    : (en
+      ? `<strong>Not active.</strong> The option is chosen when joining, before the group is full.`
+      : `<strong>Non activée.</strong> L'option se choisit en rejoignant la tontine, avant que le groupe soit complet.`);
+}
+
+function showPayConfirm() {
+  document.getElementById("payConfirm").style.display = "flex";
+}
+
+function doPayment() {
+  document.getElementById("payConfirm").style.display = "none";
+  const en = (localStorage.getItem("ns_lang") || "fr") === "en";
+  // Message affiche dans la page (les fenetres alert() sont bloquees dans certains navigateurs integres)
+  const notice = document.getElementById("payNotice");
+  notice.textContent = en
+    ? "Demo mode: no payment is made. Card payment will be enabled once Mangopay is set up."
+    : "Mode démo : aucun paiement n'est effectué. Le paiement par carte sera activé une fois Mangopay configuré.";
+  notice.hidden = false;
+}
+</script>
+
+<script>
 let currentLang = localStorage.getItem("ns_lang") || "fr";
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
+  document.documentElement.lang = lang;
   document.querySelectorAll("[data-fr]").forEach(el => {
     const val = el.getAttribute("data-" + lang);
     if (val) el.textContent = val;
@@ -113,7 +190,7 @@ function setLang(lang) {
   if(fEn) fEn.classList.toggle("active", lang === "en");
 }
 setLang(currentLang);
-initCommission();
+if (typeof initCommission === "function") initCommission();
 </script>
 </body>
 </html>

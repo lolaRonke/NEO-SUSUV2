@@ -3,27 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0E0C1A">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Rejoindre une tontine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
+<script src="./plans.js"></script>
 <style>
-  .code-input{width:100%;padding:24px;background:var(--raised);border:2px solid rgba(212,148,10,.3);border-radius:16px;color:var(--gold);font-family:var(--ff-s);font-size:32px;font-weight:700;text-align:center;letter-spacing:8px;text-transform:uppercase;}
+  .code-input{width:100%;padding:24px;background:var(--raised);border:2px solid rgba(179,147,244,.3);border-radius:16px;color:var(--gold);font-family:var(--ff-s);font-size:32px;font-weight:700;text-align:center;letter-spacing:8px;text-transform:uppercase;}
   .code-input:focus{outline:none;border-color:var(--gold);}
   .qr-section{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:24px;text-align:center;}
   .qr-icon{font-size:64px;margin-bottom:12px;}
+  .guarantee-opt{text-transform:none;letter-spacing:normal;font-weight:400;color:var(--text);display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid rgba(43,173,122,.3);border-radius:16px;padding:14px 16px;margin:16px 0;cursor:pointer;text-align:left;}
+  .guarantee-opt input{width:20px;height:20px;margin-top:2px;accent-color:#2BAD7A;flex-shrink:0;}
+  .guarantee-opt strong{display:block;font-size:14px;margin-bottom:4px;}
+  .guarantee-opt small{display:block;font-size:12px;color:var(--text2);line-height:1.5;}
   .btn-camera{display:inline-block;padding:12px 24px;background:transparent;border:1px solid var(--sky);color:var(--sky);border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:600;cursor:pointer;}
 </style>
 
-<style>
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
-</style>
 </head>
 <body>
 
@@ -35,14 +36,21 @@
 <div class="container">
   <a href="./dashboard.html" class="back-link" data-fr="← Retour" data-en="← Back">← Retour</a>
   <h1 class="page-title" data-fr="Rejoindre une tontine" data-en="Join a tontine">Rejoindre une tontine</h1>
-  <p class="page-subtitle" data-fr="Saisis le code d\'invitation recu" data-en="Enter the invitation code you received">Saisis le code d\'invitation recu</p>
+  <p class="page-subtitle" data-fr="Saisis le code d’invitation recu" data-en="Enter the invitation code you received">Saisis le code d’invitation recu</p>
   <div class="info-box">
     💡 <strong data-fr="Mode demo" data-en="Demo mode">Mode demo</strong> —
     <span data-fr="Essaie avec un code fictif." data-en="Try with a fictional code.">Essaie avec un code fictif.</span>
   </div>
   <form id="joinForm">
-    <label style="text-align:center;display:block;" data-fr="Code d\'invitation" data-en="Invitation code">Code d\'invitation</label>
+    <label style="text-align:center;display:block;" data-fr="Code d’invitation" data-en="Invitation code">Code d’invitation</label>
     <input type="text" class="code-input" id="inviteCode" placeholder="XXXXXX" maxlength="8" required>
+    <label class="guarantee-opt" for="guaranteeOpt">
+      <input type="checkbox" id="guaranteeOpt">
+      <span>
+        <strong data-fr="🛡️ Garantie de paiement (+3 %)" data-en="🛡️ Payment guarantee (+3%)">🛡️ Garantie de paiement (+3 %)</strong>
+        <small data-fr="Si un membre ne paie pas, la réserve de solidarité du groupe vous verse sa part 20 jours après l’échéance. 3 % sont prélevés sur votre cagnotte, en plus de la commission. Ce qui reste dans la réserve à la fin vous est rendu. Choix définitif une fois le groupe complet." data-en="If a member doesn’t pay, the group’s solidarity reserve pays you their share 20 days after the due date. 3% is taken from your pot, on top of the fee. Whatever is left in the reserve at the end is returned to you. Final once the group is full.">Si un membre ne paie pas, la réserve de solidarité du groupe vous verse sa part 20 jours après l’échéance. 3 % sont prélevés sur votre cagnotte, en plus de la commission. Ce qui reste dans la réserve à la fin vous est rendu. Choix définitif une fois le groupe complet.</small>
+      </span>
+    </label>
     <button type="submit" class="btn-submit" data-fr="Rejoindre" data-en="Join">Rejoindre ✦</button>
   </form>
   <div class="section-title"><span data-fr="Ou scanner un QR Code" data-en="Or scan a QR Code">Ou scanner un QR Code</span></div>
@@ -56,8 +64,11 @@
   </div>
 </div>
 <script>
+document.getElementById("guaranteeOpt").checked = neoGuaranteeOn();
 document.getElementById("joinForm").addEventListener("submit", function(e) {
   e.preventDefault();
+  // Une fois l'adhesion reelle branchee : neoSetGuarantee(idDeLaTontine, coche) apres l'ajout du membre.
+  neoSetGuaranteeLocal(document.getElementById("guaranteeOpt").checked);
   document.getElementById("successMsg").classList.add("active");
   setTimeout(() => { window.location.href = "./dashboard.html"; }, 2000);
 });
@@ -68,7 +79,7 @@ let currentLang = localStorage.getItem("ns_lang") || "fr";
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
+  document.documentElement.lang = lang;
   document.querySelectorAll("[data-fr]").forEach(el => {
     const val = el.getAttribute("data-" + lang);
     if (val) el.textContent = val;

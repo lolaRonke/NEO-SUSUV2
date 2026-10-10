@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide : Clés API & Regex TikTok oEmbed</title>
+  <style>
+    :root {
+      --bg: #0E0C1A;
+      --surface: #201C3C;
+      --text: #F4F2FB;
+      --muted: #A39FBE;
+      --accent: #A2AFD8;
+      --accent-2: #B393F4;
+      --border: #403965;
+      --code-bg: #0B0A15;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 860px; margin: 0 auto; }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { color: var(--muted); margin-bottom: 2.5rem; font-size: 0.95rem; }
+    h2 {
+      font-size: 1.35rem;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--accent);
+    }
+    h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: var(--accent-2); }
+    p { margin-bottom: 0.9rem; }
+    ol, ul { margin: 0.5rem 0 1rem 1.4rem; }
+    li { margin-bottom: 0.45rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      background: var(--code-bg);
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9em;
+      color: #E5DAFE;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 0.8rem 0 1.2rem;
+      font-size: 0.88rem;
+    }
+    pre code { background: none; padding: 0; color: var(--text); }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #0E0C1A;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+    }
+    .badge.agnes { background: var(--accent-2); }
+    .note {
+      border-left: 3px solid #E5DAFE;
+      background: rgba(179,147,244, 0.08);
+      padding: 0.7rem 1rem;
+      border-radius: 0 6px 6px 0;
+      margin: 0.8rem 0;
+      font-size: 0.92rem;
+    }
+    .regex-demo {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .regex-demo .match { background: #14532d; color: #86efac; padding: 0 2px; border-radius: 3px; }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Guide : Clés API & Regex TikTok oEmbed</h1>
+  <p class="subtitle">Mistral AI · Agnes AI · Extraction d'image depuis un oEmbed TikTok</p>
+
+  <!-- ===================== MISTRAL ===================== -->
+  <h2>🔑 Obtenir une clé API Mistral AI</h2>
+
+  <div class="card">
+    <h3><span class="badge">Mistral</span> Étapes</h3>
+    <ol>
+      <li>Créez un compte ou connectez-vous sur <a href="https://console.mistral.ai" target="_blank" rel="noopener">console.mistral.ai</a>.</li>
+      <li>Dans la barre latérale gauche, cliquez sur <strong>API Keys</strong>.</li>
+      <li>Cliquez sur <strong>Create new key</strong>.</li>
+      <li>Donnez un nom à la clé (ex. <code>mon-projet</code>) et, si vous le souhaitez, définissez une <strong>date d'expiration</strong>.</li>
+      <li>Cliquez à nouveau sur <strong>Create new key</strong>.</li>
+      <li><strong>Copiez immédiatement la clé</strong> et stockez-la dans un endroit sûr (gestionnaire de mots de passe, coffre-fort de secrets).</li>
+    </ol>
+    <div class="note">
+      ⚠️ La clé complète n'apparaît qu'une seule fois. Vous ne pourrez plus la retrouver après avoir fermé la fenêtre de confirmation.
+    </div>
+    <p>Le mode gratuit est activé par défaut, sans carte bancaire, avec des limites d'utilisation.</p>
+    <p>Test rapide avec <code>curl</code> :</p>
+    <pre><code>curl https://api.mistral.ai/v1/chat/completions \
+  -H "Authorization: Bearer $MISTRAL_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "mistral-small-latest",
+    "messages": [{"role": "user", "content": "Bonjour !"}]
+  }'</code></pre>
+    <p>Documentation officielle : <a href="https://docs.mistral.ai" target="_blank" rel="noopener">docs.mistral.ai</a>.</p>
+  </div>
+
+  <!-- ===================== AGNES ===================== -->
+  <h2>🔑 Obtenir une clé API Agnes AI</h2>
+
+  <div class="card">
+    <h3><span class="badge agnes">Agnes</span> Étapes</h3>
+    <ol>
+      <li>Rendez-vous sur la <a href="https://platform.agnes-ai.com" target="_blank" rel="noopener">plateforme internationale Agnes AI</a> et inscrivez-vous ou connectez-vous.</li>
+      <li>Ouvrez la section <strong>API Key</strong> dans la console développeur.</li>
+      <li>Créez une clé, puis <strong>copiez-la et stockez-la immédiatement</strong>. La clé complète n'est normalement affichée qu'une seule fois.</li>
+      <li>Envoyez la clé dans l'en-tête d'autorisation pour chaque requête API :
+        <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+      </li>
+    </ol>
+    <div class="note">
+      🔐 N'exposez jamais une clé API dans du code côté client, des dépôts publics, des captures d'écran ou des journaux. En cas de perte ou d'exposition, supprimez-la immédiatement et créez-en une nouvelle.
+    </div>
+
+    <h3>URL de base & endpoints</h3>
+    <p>URL de base pour le service international :</p>
+    <pre><code>https://apihub.agnes-ai.com/v1</code></pre>
+    <p>Endpoints principaux :</p>
+    <ul>
+      <li><code>/chat/completions</code> — texte</li>
+      <li><code>/images/generations</code> — images</li>
+      <li><code>/videos</code> — vidéo</li>
+    </ul>
+    <p>Exemple de requête :</p>
+    <pre><code>curl https://apihub.agnes-ai.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-2.5-flash",
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'</code></pre>
+    <p>Documentation : <a href="https://wiki.agnes-ai.com" target="_blank" rel="noopener">wiki.agnes-ai.com</a> · <a href="https://agnes-ai.com/en/docs/faqs" target="_blank" rel="noopener">FAQ</a>.</p>
+  </div>
+
+  <!-- ===================== REGEX TIKTOK OEMBED ===================== -->
+  <h2>🖼️ Extraire l'image d'un oEmbed TikTok (regex)</h2>
+
+  <div class="card">
+    <h3>1. Fonctionnement de l'API oEmbed TikTok</h3>
+    <p>L'API oEmbed de TikTok renvoie un objet JSON contenant notamment le champ <code>thumbnail_url</code>, qui est l'URL de l'image miniature de la vidéo.</p>
+    <p>Endpoint :</p>
+    <pre><code>GET https://www.tiktok.com/oembed?url={URL_DE_LA_VIDEO}</code></pre>
+    <p>Exemple de réponse (extrait) :</p>
+    <pre><code>{
+  "version": "1.0",
+  "type": "video",
+  "title": "Scramble up ur name & I'll try to guess it❤️",
+  "author_url": "https://www.tiktok.com/@scout2015",
+  "author_name": "Scout & Suki",
+  "width": "100%",
+  "height": "100%",
+  "html": "&lt;blockquote class=\"tiktok-embed\"...",
+  "thumbnail_url": "https://p16.muscdn.com/obj/tos-maliva-p-0068/06kv6rfcesljdjr45ukb0000d844090v0200010605",
+  "thumbnail_width": 720,
+  "thumbnail_height": 1280
+}</code></pre>
+
+    <h3>2. Expression régulière pour extraire <code>thumbnail_url</code></h3>
+    <p>La regex suivante capture la valeur de <code>thumbnail_url</code> dans le JSON :</p>
+    <pre><code>"thumbnail_url"\s*:\s*"([^"]+)"</code></pre>
+
+    <p><strong>Explication :</strong></p>
+    <ul>
+      <li><code>"thumbnail_url"</code> — correspond à la clé JSON exacte.</li>
+      <li><code>\s*:\s*</code> — accepte zéro ou plusieurs espaces autour des deux-points.</li>
+      <li><code>"([^"]+)"</code> — capture tout ce qui se trouve entre les guillemets (l'URL), en excluant tout guillemet interne.</li>
+    </ul>
+
+    <p><strong>Démonstration sur un JSON exemple :</strong></p>
+    <div class="regex-demo">
+      ...&nbsp;"author_name": "Scout &amp; Suki",&nbsp;
+      <span class="match">"thumbnail_url": "https://p16.muscdn.com/obj/tos-maliva-p-0068/06kv6rfcesljdjr45ukb0000d844090v0200010605"</span>,
+      &nbsp;"thumbnail_width": 720,&nbsp;...
+    </div>
+    <p>Le groupe de capture n°1 contient l'URL de l'image.</p>
+
+    <h3>3. Utilisation en JavaScript</h3>
+    <pre><code>const json = `{ "thumbnail_url": "https://p16.muscdn.com/...", "thumbnail_width": 720 }`;
+const match = json.match(/"thumbnail_url"\s*:\s*"([^"]+)"/);
+const imageUrl = match ? match[1] : null;
+console.log(imageUrl);
+// → https://p16.muscdn.com/...</code></pre>
+
+    <h3>4. Utilisation en Python</h3>
+    <pre><code>import re
+import requests
+
+url_video = "https://www.tiktok.com/@scout2015/video/6718335390845095173"
+resp = requests.get("https://www.tiktok.com/oembed", params={"url": url_video})
+data = resp.json()
+
+# Méthode directe (recommandée)
+thumbnail = data.get("thumbnail_url")
+
+# Ou via regex si vous traitez du texte brut
+match = re.search(r'"thumbnail_url"\s*:\s*"([^"]+)"', resp.text)
+if match:
+    thumbnail = match.group(1)
+
+print(thumbnail)</code></pre>
+
+    <div class="note">
+      💡 <strong>Bonne pratique :</strong> si vous parsez du JSON, utilisez directement le parseur natif de votre langage (<code>json.loads</code> en Python, <code>JSON.parse</code> en JavaScript) et accédez à la propriété <code>thumbnail_url</code>. La regex reste utile lorsque vous devez extraire la valeur depuis une chaîne HTML ou un flux non structuré. Attention : la regex ne décode pas les échappements JSON (par ex. <code>\/</code> ou <code>&</code>) que le parseur natif gère automatiquement.
+    </div>
+  </div>
+
+  <footer>
+    Page générée pour un usage éducatif — Mistral AI, Agnes AI & TikTok oEmbed.
+  </footer>
+
+</div>
+</body>
+</html>

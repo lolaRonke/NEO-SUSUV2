@@ -3,24 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0E0C1A">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Mon espace</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
+<script src="./plans.js"></script>
 <!-- Supabase SDK (charge uniquement si configure) -->
 <style>
 body{padding:0 0 40px;}.container{padding:30px 20px;}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
 .welcome-text{font-size:13px;color:var(--text2);margin-bottom:4px;font-weight:500;}
 .user-name{font-family:var(--ff-s);font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;}
-.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:24px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(212,148,10,.35);}
-.kyc-badge{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-top:6px;background:rgba(122,171,204,.15);color:var(--sky);}
+.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:24px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(179,147,244,.35);}
+.kyc-badge{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-top:6px;background:rgba(127,166,224,.15);color:var(--sky);}
 .kyc-badge.verified{background:rgba(43,173,122,.15);color:#2BAD7A;}
-.balance-card{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;position:relative;overflow:hidden;}
-.balance-card::before{content:"";position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(212,148,10,.3),transparent 70%);filter:blur(40px);}
+.balance-card{background:linear-gradient(135deg,rgba(179,147,244,.12),var(--card));border:1px solid rgba(179,147,244,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;position:relative;overflow:hidden;}
+.balance-card::before{content:"";position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(179,147,244,.3),transparent 70%);filter:blur(40px);}
 .balance-label{font-size:11px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;position:relative;z-index:1;}
 .balance-amount{font-family:var(--ff-s);font-size:44px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;position:relative;z-index:1;letter-spacing:.5px;}
 .balance-currency{font-size:13px;color:var(--text2);font-weight:500;position:relative;z-index:1;}
@@ -29,12 +32,12 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .stat-value{font-family:var(--ff-s);font-size:26px;font-weight:700;color:var(--text);margin-bottom:2px;}
 .stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
 .tontine-card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .3s;text-decoration:none;display:block;color:inherit;}
-.tontine-card:hover{transform:translateY(-2px);border-color:rgba(212,148,10,.3);background:var(--raised);}
+.tontine-card:hover{transform:translateY(-2px);border-color:rgba(179,147,244,.3);background:var(--raised);}
 .tontine-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;}
 .tontine-name{font-size:16px;font-weight:700;color:var(--text);}
 .tontine-status{font-size:10px;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
 .status-active{background:rgba(43,173,122,.15);color:#2BAD7A;}
-.status-waiting{background:rgba(212,148,10,.15);color:var(--gold);}
+.status-waiting{background:rgba(179,147,244,.15);color:var(--gold);}
 .tontine-info{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:10px;}
 .tontine-info strong{font-family:var(--ff-s);color:var(--gold);font-weight:700;font-size:14px;}
 .tontine-progress{height:6px;background:var(--raised);border-radius:10px;overflow:hidden;}
@@ -44,21 +47,17 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .skel{background:linear-gradient(90deg,var(--card) 25%,var(--raised) 50%,var(--card) 75%);background-size:200% 100%;animation:skelAnim 1.5s infinite;border-radius:12px;}
 @keyframes skelAnim{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 /* Lang bar */
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
 .score-bar{height:5px;background:var(--stroke);border-radius:3px;overflow:hidden;margin:8px 0 4px;}
 .score-fill{height:100%;background:linear-gradient(90deg,#2BAD7A,var(--gold));border-radius:3px;transition:width 1s ease;}
 /* ── COMMISSION PLAN BANNER ── */
 .plan-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:14px 18px;margin-bottom:20px;cursor:pointer;transition:all .3s;}
-.plan-banner:hover{border-color:rgba(212,148,10,.3);background:var(--raised);}
+.plan-banner:hover{border-color:rgba(179,147,244,.3);background:var(--raised);}
 .plan-ico{font-size:24px;flex-shrink:0;}
 .plan-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
 .plan-fee{font-size:11px;color:var(--text2);}
 .plan-badge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
 .badge-free{background:rgba(212,82,74,.12);color:#D4524A;}
-.badge-premium{background:rgba(212,148,10,.12);color:var(--gold);}
+.badge-premium{background:rgba(179,147,244,.12);color:var(--gold);}
 .badge-business{background:rgba(43,173,122,.12);color:#2BAD7A;}
 /* ── COMMISSION MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;display:none;align-items:flex-end;justify-content:center;}
@@ -70,7 +69,7 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .plan-row{display:flex;align-items:stretch;gap:10px;margin-bottom:10px;}
 .plan-card{flex:1;background:var(--card);border:2px solid var(--stroke);border-radius:20px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .3s;position:relative;}
 .plan-card:active{transform:scale(.97);}
-.plan-card.current{border-color:var(--gold);background:rgba(212,148,10,.06);}
+.plan-card.current{border-color:var(--gold);background:rgba(179,147,244,.06);}
 .plan-card.best{border-color:#2BAD7A;background:rgba(43,173,122,.05);}
 .plan-card .best-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#2BAD7A;color:var(--void);font-size:9px;font-weight:800;padding:2px 10px;border-radius:20px;white-space:nowrap;}
 .pc-name{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
@@ -82,8 +81,26 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .pc-cta-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);}
 .pc-cta-e{background:linear-gradient(135deg,#2BAD7A,#1F8A60);color:var(--void);}
 .pc-cta-ghost{background:var(--raised);color:var(--text2);}
+.period-toggle{display:flex;background:var(--card);border:1px solid var(--stroke);border-radius:14px;padding:4px;margin-bottom:18px;gap:4px;}
+.period-toggle button{flex:1;padding:9px 6px;border:none;border-radius:10px;background:transparent;color:var(--text2);font-family:var(--ff-b);font-size:12px;font-weight:700;cursor:pointer;}
+.period-toggle button.active{background:var(--raised);color:var(--gold);}
+.pc-feat ul{list-style:none;margin:0;padding:0;}
+.pc-old{font-size:10px;color:var(--text3);margin-bottom:8px;}
+.sim-inputs{display:flex;gap:10px;margin-bottom:8px;}
+.sim-inputs label{flex:1;font-size:11px;color:var(--text2);display:flex;flex-direction:column;gap:4px;}
+.sim-inputs input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--stroke2);background:var(--card);color:var(--text);font-family:var(--ff-b);font-size:14px;}
+#simRows .fee-row:last-child{font-weight:400;}
+.fee-row.best-row{font-weight:700;}
+.fee-row.best-row span:first-child{color:#2BAD7A;}
+.sim-note{font-size:11px;color:var(--text2);margin-top:8px;line-height:1.5;}
+.plan-legal{font-size:10px;color:var(--text3);margin-top:14px;line-height:1.5;text-align:center;}
+.manage-sub{display:block;width:100%;margin-top:10px;padding:11px;background:transparent;border:1px solid var(--stroke2);color:var(--text2);border-radius:14px;font-family:var(--ff-b);font-size:12px;font-weight:700;cursor:pointer;}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--raised);border:1px solid var(--stroke2);color:var(--text);padding:12px 18px;border-radius:14px;font-size:13px;font-weight:600;z-index:900;opacity:0;transition:all .3s;max-width:90vw;text-align:center;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:rgba(43,173,122,.4);}
+.toast.err{border-color:rgba(212,82,74,.4);}
 /* ── TRANSACTION FEE PREVIEW ── */
-.fee-preview{background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.18);border-radius:16px;padding:16px;margin-top:18px;}
+.fee-preview{background:rgba(179,147,244,.06);border:1px solid rgba(179,147,244,.18);border-radius:16px;padding:16px;margin-top:18px;}
 .fee-title{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px;}
 .fee-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
 .fee-row:last-child{border-bottom:none;font-weight:700;}
@@ -104,71 +121,31 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 <div class="modal-bg" id="planModal" onclick="if(event.target===this)closePlanModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" data-fr="Mes abonnements & commissions" data-en="Plans & commissions">Mes abonnements & commissions</div>
-    <div class="modal-sub" data-fr="Plus ton plan est eleve, moins tu paies de commission sur chaque transaction." data-en="The higher your plan, the less commission you pay per transaction.">Plus ton plan est eleve, moins tu paies de commission sur chaque transaction.</div>
+    <div class="modal-title" data-fr="Abonnements NEO-SUSU" data-en="NEO-SUSU plans">Abonnements NEO-SUSU</div>
+    <div class="modal-sub" data-fr="L'abonnement est pris par l'organisateur de la tontine : les membres n'ont rien a payer en plus de leur cotisation. La commission est prelevee sur la cagnotte versee au beneficiaire." data-en="The plan is taken by the tontine organiser: members pay nothing on top of their contribution. The fee is deducted from the pot paid to the beneficiary.">L'abonnement est pris par l'organisateur de la tontine : les membres n'ont rien a payer en plus de leur cotisation. La commission est prelevee sur la cagnotte versee au beneficiaire.</div>
 
-    <div class="plan-row">
-      <!-- FREE -->
-      <div class="plan-card current" id="pc-free">
-        <div class="pc-name">Free</div>
-        <div class="pc-price">0€</div>
-        <div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
-        <div class="pc-comm" style="color:#D4524A;">1,5% <span data-fr="par transaction" data-en="per transaction">par tx</span></div>
-        <div class="pc-feat">
-          1 tontine<br>6 membres max<br>Carte & SEPA
-        </div>
-        <button class="pc-cta pc-cta-ghost" data-fr="Plan actuel" data-en="Current plan">Plan actuel</button>
-      </div>
-      <!-- PREMIUM -->
-      <div class="plan-card best" id="pc-premium">
-        <div class="best-tag" data-fr="LE PLUS POPULAIRE" data-en="MOST POPULAR">LE PLUS POPULAIRE</div>
-        <div class="pc-name">Premium</div>
-        <div class="pc-price">4,99€</div>
-        <div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
-        <div class="pc-comm" style="color:var(--gold);">0,5% <span data-fr="par transaction" data-en="per transaction">par tx</span></div>
-        <div class="pc-feat">
-          Tontines <strong>illimitees</strong><br>20 membres<br>IA Vocale 5 langues
-        </div>
-        <button class="pc-cta pc-cta-g" onclick="showToast('Upgrade Premium bientot disponible !','ok')" data-fr="Passer Premium" data-en="Go Premium">Passer Premium</button>
-      </div>
-      <!-- BUSINESS -->
-      <div class="plan-card" id="pc-business">
-        <div class="pc-name">Business</div>
-        <div class="pc-price">14,99€</div>
-        <div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
-        <div class="pc-comm" style="color:#2BAD7A;">0% <span data-fr="inclus" data-en="included">inclus</span></div>
-        <div class="pc-feat">
-          50 membres<br>API complète<br>Support 24/7
-        </div>
-        <button class="pc-cta pc-cta-e" onclick="showToast('Contactez-nous : contact@neo-susu.com','ok')" data-fr="Contacter" data-en="Contact us">Contacter</button>
-      </div>
+    <div class="period-toggle" role="tablist">
+      <button type="button" id="periodMonth" class="active" onclick="setPeriod('month')" data-fr="Mensuel" data-en="Monthly">Mensuel</button>
+      <button type="button" id="periodYear" onclick="setPeriod('year')" data-fr="Annuel · 2 mois offerts" data-en="Yearly · 2 months free">Annuel · 2 mois offerts</button>
     </div>
 
-    <!-- Simulateur de commission -->
+    <div class="plan-row" id="planCards"></div>
+
+    <!-- Simulateur : cout reel pour le groupe sur un cycle complet -->
     <div class="fee-preview">
-      <div class="fee-title" data-fr="Simulateur — Tontine de 25 000 FCFA" data-en="Simulator — 25,000 FCFA tontine">Simulateur — Tontine de 25 000 FCFA</div>
-      <div class="fee-row">
-        <span data-fr="Cotisation" data-en="Contribution">Cotisation</span>
-        <span class="fee-val">25 000 FCFA</span>
+      <div class="fee-title" data-fr="Quel plan pour ma tontine ?" data-en="Which plan for my tontine?">Quel plan pour ma tontine ?</div>
+      <div class="sim-inputs">
+        <label><span data-fr="Cotisation / mois" data-en="Contribution / month">Cotisation / mois</span>
+          <input type="number" id="simAmount" value="50" min="1" step="1" oninput="renderSimulator()"></label>
+        <label><span data-fr="Membres" data-en="Members">Membres</span>
+          <input type="number" id="simMembers" value="10" min="2" max="50" step="1" oninput="renderSimulator()"></label>
       </div>
-      <div class="fee-row">
-        <span data-fr="Commission Free (1,5%)" data-en="Free commission (1.5%)">Commission Free (1,5%)</span>
-        <span class="fee-val" style="color:#D4524A;">375 FCFA</span>
-      </div>
-      <div class="fee-row">
-        <span data-fr="Commission Premium (0,5%)" data-en="Premium commission (0.5%)">Commission Premium (0,5%)</span>
-        <span class="fee-val" style="color:var(--gold);">125 FCFA</span>
-      </div>
-      <div class="fee-row">
-        <span data-fr="Commission Business (0%)" data-en="Business commission (0%)">Commission Business (0%)</span>
-        <span class="fee-val" style="color:#2BAD7A;">0 FCFA ✓</span>
-      </div>
-      <div class="fee-row" style="margin-top:6px;">
-        <span style="color:var(--gold);font-size:12px;" data-fr="Economie Premium vs Free/an" data-en="Premium savings vs Free/year">Economie Premium vs Free / an</span>
-        <span class="fee-val" style="color:var(--gold);">~30 000 FCFA</span>
-      </div>
+      <div id="simRows"></div>
+      <div class="sim-note" id="simNote"></div>
     </div>
 
+    <div class="plan-legal" data-fr="Prix TTC. Sans engagement : resiliable a tout moment, l'abonnement reste actif jusqu'a la fin de la periode payee." data-en="Prices include VAT. No commitment: cancel anytime, the plan stays active until the end of the paid period.">Prix TTC. Sans engagement : resiliable a tout moment, l'abonnement reste actif jusqu'a la fin de la periode payee.</div>
+    <button type="button" id="manageSubBtn" class="manage-sub" onclick="manageSubscription()" data-fr="Gerer mon abonnement et mes factures" data-en="Manage my plan and invoices">Gerer mon abonnement et mes factures</button>
     <button onclick="closePlanModal()" style="width:100%;margin-top:16px;padding:14px;background:var(--raised);border:1px solid var(--stroke2);color:var(--text);border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Fermer" data-en="Close">Fermer</button>
   </div>
 </div>
@@ -186,19 +163,19 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
   <div class="plan-banner" onclick="openPlanModal()">
     <span class="plan-ico">🏷️</span>
     <div style="flex:1;">
-      <div class="plan-name" id="planName" data-fr="Plan Free — Commission 1,5% / transaction" data-en="Free Plan — 1.5% commission / transaction">Plan Free — Commission 1,5% / transaction</div>
-      <div class="plan-fee" id="planFee" data-fr="Passez Premium a 4,99€/mois pour reduire a 0,5%" data-en="Go Premium at €4.99/mo to reduce to 0.5%">Passez Premium a 4,99€/mois pour reduire a 0,5%</div>
+      <div class="plan-name" id="planName">Plan Gratuit — Commission 1,5 % sur la cagnotte</div>
+      <div class="plan-fee" id="planFee">Essentiel a 4,99 €/mois : commission 0,5 %, 3 tontines, 20 membres</div>
     </div>
-    <span class="plan-badge badge-free" id="planBadge">FREE</span>
+    <span class="plan-badge badge-free" id="planBadge">GRATUIT</span>
     <span style="color:var(--text3);font-size:16px;">›</span>
   </div>
 
   <div class="balance-card">
     <div class="balance-label" data-fr="Solde total epargne" data-en="Total savings">Solde total epargne</div>
     <div class="balance-amount" id="walletAmt">0</div>
-    <div class="balance-currency">FCFA</div>
+    <div class="balance-currency">EUR</div>
     <div class="score-bar"><div class="score-fill" id="scoreBar" style="width:50%"></div></div>
-    <div style="font-size:11px;color:rgba(255,255,255,.35);" data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite : <span id="scoreVal">50</span>/100</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.35);"><span data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite</span> : <span id="scoreVal">50</span>/100</div>
   </div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-value" id="tontineCount">0</div><div class="stat-label" data-fr="Tontines" data-en="Tontines">Tontines</div></div>
@@ -231,8 +208,7 @@ async function signOut(){sessionStorage.clear();window.location.href="./index.ht
 </script>
 <script>
 let currentLang=localStorage.getItem("ns_lang")||"fr";
-function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");updatePlanUI();}
-setLang(currentLang);
+function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");updatePlanUI();}
 
 async function loadDashboard(){
   // ── DEMO MODE : verifie EN PREMIER avant tout appel Supabase ──
@@ -295,7 +271,7 @@ async function loadDashboard(){
 function loadDemoData(){
   document.getElementById("userName").textContent="Aicha Diallo";
   document.getElementById("avatarEl").textContent="A";
-  document.getElementById("walletAmt").textContent="245 000";
+  document.getElementById("walletAmt").textContent="1 250";
   document.getElementById("scoreVal").textContent="82";
   document.getElementById("scoreBar").style.width="82%";
   document.getElementById("tontineCount").textContent="3";
@@ -304,9 +280,9 @@ function loadDemoData(){
   const kycEl=document.getElementById("kycBadge");
   kycEl.textContent="👁️ Mode demo";
   const demoTontines=[
-    {name:"Tontine Famille Diallo",amount:25000,currency:"FCFA",members:8,max:10,progress:80,freq:"Mensuelle",status:"active",id:"1"},
-    {name:"Collegues du bureau",amount:50000,currency:"FCFA",members:6,max:6,progress:100,freq:"Hebdomadaire",status:"active",id:"2"},
-    {name:"Projet scolarite",amount:10000,currency:"FCFA",members:4,max:8,progress:50,freq:"Bimensuelle",status:"waiting",id:"3"}
+    {name:"Tontine Famille Diallo",amount:50,currency:"€",members:8,max:10,progress:80,freq:"Mensuelle",status:"active",id:"1"},
+    {name:"Collegues du bureau",amount:100,currency:"€",members:6,max:6,progress:100,freq:"Hebdomadaire",status:"active",id:"2"},
+    {name:"Projet scolarite",amount:20,currency:"€",members:4,max:8,progress:50,freq:"Bimensuelle",status:"waiting",id:"3"}
   ];
   renderDemoTontines(demoTontines);
   updatePlanUI();
@@ -341,43 +317,123 @@ function renderDemoTontines(data){
 function openPlanModal(){document.getElementById("planModal").classList.add("open");}
 function closePlanModal(){document.getElementById("planModal").classList.remove("open");}
 
-// ── USER PLAN (stocké en localStorage pour la démo) ──
-const USER_PLAN = localStorage.getItem("ns_plan") || "free";
-const PLANS = {
-  free:     { name:"Free",     fee:1.5, badge:"FREE",     color:"badge-free",     label_fr:"Plan Free — Commission 1,5% / transaction",    label_en:"Free Plan — 1.5% commission / transaction",    sub_fr:"Passez Premium a 4,99€/mois pour reduire a 0,5%", sub_en:"Go Premium at €4.99/mo to reduce to 0.5%" },
-  premium:  { name:"Premium",  fee:0.5, badge:"PREMIUM",  color:"badge-premium",  label_fr:"Plan Premium — Commission 0,5% / transaction",  label_en:"Premium Plan — 0.5% commission / transaction", sub_fr:"Vous economisez 1% vs Free sur chaque cotisation", sub_en:"You save 1% vs Free on every contribution" },
-  business: { name:"Business", fee:0,   badge:"BUSINESS", color:"badge-business", label_fr:"Plan Business — 0% de commission",              label_en:"Business Plan — 0% commission",                sub_fr:"Aucune commission sur vos transactions",          sub_en:"No commission on your transactions" }
-};
+// ── ABONNEMENTS (catalogue dans plans.js, la base fait foi) ──
+let billingPeriod = "month";
+const BADGE_CLASS = { free: "badge-free", essentiel: "badge-premium", pro: "badge-business" };
+
+function tr(fr, en){ return currentLang === "en" ? en : fr; }
+
+function showToast(msg, kind){
+  let t = document.getElementById("toast");
+  if(!t){ t = document.createElement("div"); t.id = "toast"; t.className = "toast"; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.className = "toast show " + (kind || "");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => { t.className = "toast " + (kind || ""); }, 3500);
+}
+
+function planFeatures(p){
+  const items = [
+    p.maxTontines ? tr(p.maxTontines + (p.maxTontines > 1 ? " tontines actives" : " tontine active"), p.maxTontines + (p.maxTontines > 1 ? " active tontines" : " active tontine"))
+                  : tr("Tontines illimitees", "Unlimited tontines"),
+    tr("Jusqu'a " + p.maxMembers + " membres", "Up to " + p.maxMembers + " members"),
+    tr("Versements automatiques", "Automatic payouts"),
+    tr("Relances IA des retards", "AI late-payment reminders"),
+  ];
+  return "<ul>" + items.map(i => "<li>" + i + "</li>").join("") + "</ul>";
+}
+
+function renderPlanCards(){
+  const current = neoPlanId();
+  document.getElementById("periodMonth").classList.toggle("active", billingPeriod === "month");
+  document.getElementById("periodYear").classList.toggle("active", billingPeriod === "year");
+  document.getElementById("planCards").innerHTML = NEO_PLANS.map(p => {
+    const isCurrent = p.id === current;
+    const price = billingPeriod === "year" ? p.year : p.month;
+    const per = p.month === 0 ? tr("pour toujours", "forever") : billingPeriod === "year" ? tr("par an", "per year") : tr("par mois", "per month");
+    const old = billingPeriod === "year" && p.month > 0 ? '<div class="pc-old">' + tr("soit ", "i.e. ") + neoEur(p.year / 12) + tr(" / mois", " / month") + "</div>" : '<div class="pc-old">&nbsp;</div>';
+    const commColor = p.feeBps === 0 ? "#2BAD7A" : p.feeBps <= 50 ? "var(--gold)" : "#D4524A";
+    const cta = isCurrent
+      ? '<button class="pc-cta pc-cta-ghost" disabled>' + tr("Plan actuel", "Current plan") + "</button>"
+      : p.month === 0
+        ? '<button class="pc-cta pc-cta-ghost" onclick="manageSubscription()">' + tr("Revenir au Gratuit", "Back to Free") + "</button>"
+        : '<button class="pc-cta ' + (p.popular ? "pc-cta-g" : "pc-cta-e") + '" onclick="subscribe(\'' + p.id + '\')">' + tr("Choisir ", "Choose ") + neoName(p) + "</button>";
+    return '<div class="plan-card' + (isCurrent ? " current" : "") + (p.popular && !isCurrent ? " best" : "") + '" id="pc-' + p.id + '">' +
+      (p.popular ? '<div class="best-tag">' + tr("LE PLUS CHOISI", "MOST POPULAR") + "</div>" : "") +
+      '<div class="pc-name">' + neoName(p) + "</div>" +
+      '<div class="pc-price">' + neoEur(price) + "</div>" +
+      '<div class="pc-per">' + per + "</div>" + old +
+      '<div class="pc-comm" style="color:' + commColor + ';">' + neoPct(p.feeBps) + " <span>" + tr("de commission", "fee") + "</span></div>" +
+      '<div class="pc-feat">' + planFeatures(p) + "</div>" + cta + "</div>";
+  }).join("");
+}
+
+function renderSimulator(){
+  const amount = Math.max(1, parseFloat(document.getElementById("simAmount").value) || 0);
+  const members = Math.min(50, Math.max(2, parseInt(document.getElementById("simMembers").value) || 2));
+  const costs = NEO_PLANS.map(p => ({ p, c: neoCycleCost(p, amount, members, billingPeriod) }));
+  const available = costs.filter(x => x.c);
+  const best = available.reduce((a, b) => (b.c.total < a.c.total ? b : a), available[0]);
+  document.getElementById("simRows").innerHTML = costs.map(({ p, c }) =>
+    '<div class="fee-row' + (best && p.id === best.p.id ? " best-row" : "") + '"><span>' + neoName(p) + (best && p.id === best.p.id ? " ✓" : "") + "</span>" +
+    '<span class="fee-val">' + (c ? neoEur(c.total) : tr("max " + p.maxMembers + " membres", "max " + p.maxMembers + " members")) + "</span></div>"
+  ).join("");
+  document.getElementById("simNote").textContent = best
+    ? tr("Cout total pour le groupe sur un cycle de " + members + " mois (" + members + " cagnottes de " + neoEur(amount * members) + ") : commissions + abonnement. Le moins cher ici : " + neoName(best.p) + ".",
+         "Total cost for the group over a " + members + "-month cycle (" + members + " pots of " + neoEur(amount * members) + "): fees + plan. Cheapest here: " + neoName(best.p) + ".")
+    : "";
+}
+
+function setPeriod(period){ billingPeriod = period; renderPlanCards(); renderSimulator(); }
 
 function updatePlanUI(){
-  const p = PLANS[USER_PLAN];
-  const lang = localStorage.getItem("ns_lang") || "fr";
+  const p = neoPlan();
+  const next = NEO_PLANS[NEO_PLANS.indexOf(p) + 1];
   const nameEl = document.getElementById("planName");
-  const feeEl  = document.getElementById("planFee");
-  const badge  = document.getElementById("planBadge");
-  if(nameEl) nameEl.textContent = lang === "en" ? p.label_en : p.label_fr;
-  if(feeEl)  feeEl.textContent  = lang === "en" ? p.sub_en   : p.sub_fr;
-  if(badge){ badge.textContent = p.badge; badge.className = "plan-badge " + p.color; }
-  // Highlight current plan card
-  ["free","premium","business"].forEach(pl => {
-    const el = document.getElementById("pc-"+pl);
-    if(el){ el.classList.toggle("current", pl === USER_PLAN); }
-  });
+  const feeEl = document.getElementById("planFee");
+  const badge = document.getElementById("planBadge");
+  if(nameEl) nameEl.textContent = tr("Plan " + neoName(p) + " — Commission " + neoPct(p.feeBps) + " sur la cagnotte", neoName(p) + " plan — " + neoPct(p.feeBps) + " fee on the pot");
+  if(feeEl) feeEl.textContent = next
+    ? tr(neoName(next) + " a " + neoEur(next.month) + "/mois : commission " + neoPct(next.feeBps) + ", " + (next.maxTontines ? next.maxTontines + " tontines" : "tontines illimitees") + ", " + next.maxMembers + " membres",
+         neoName(next) + " at " + neoEur(next.month) + "/mo: " + neoPct(next.feeBps) + " fee, " + (next.maxTontines ? next.maxTontines + " tontines" : "unlimited tontines") + ", " + next.maxMembers + " members")
+    : tr("Aucune commission sur vos tontines", "No fee on your tontines");
+  if(badge){ badge.textContent = neoName(p).toUpperCase(); badge.className = "plan-badge " + BADGE_CLASS[p.id]; }
+  if(document.getElementById("planCards")){ renderPlanCards(); renderSimulator(); }
 }
 
-// ── CALCUL COMMISSION ──
-function calcCommission(amount){
-  const p = PLANS[USER_PLAN];
-  return Math.round(amount * p.fee / 100);
+async function subscribe(planId){
+  try {
+    const started = await neoCheckout(planId, billingPeriod);
+    if(!started) showToast(tr("Mode demo : l'abonnement sera disponible une fois le paiement Stripe active.", "Demo mode: plans will be available once Stripe payments are enabled."), "ok");
+  } catch(e) {
+    showToast(tr("Le paiement n'a pas pu demarrer. Reessayez dans un instant.", "Payment could not start. Please try again."), "err");
+  }
 }
+
+async function manageSubscription(){
+  try {
+    const opened = await neoManageSubscription();
+    if(!opened) showToast(tr("Mode demo : aucun abonnement a gerer.", "Demo mode: no plan to manage."), "ok");
+  } catch(e) {
+    showToast(tr("Aucun abonnement actif a gerer.", "No active plan to manage."), "err");
+  }
+}
+
+// Retour de la page de paiement Stripe
+(function(){
+  const q = new URLSearchParams(location.search).get("abonnement");
+  if(q === "ok") setTimeout(() => showToast(tr("Merci ! Votre abonnement est actif.", "Thank you! Your plan is active."), "ok"), 400);
+  if(q === "annule") setTimeout(() => showToast(tr("Paiement annule : vous restez sur votre plan actuel.", "Payment cancelled: you stay on your current plan."), "err"), 400);
+})();
 
 async function handleLogout(){
-  const msg=currentLang==="en"?"Are you sure you want to sign out?":"Voulez-vous vraiment vous deconnecter ?";
-  if(!confirm(msg))return;
   try{await signOut();}catch(e){sessionStorage.removeItem("neo_susu_demo_user");window.location.href="./index.html";}
 }
 
+// Appele apres la declaration des fonctions d'abonnement (sinon ReferenceError)
+setLang(currentLang);
 loadDashboard();
+neoSyncPlan().then(updatePlanUI);
 </script>
 </body>
 </html>

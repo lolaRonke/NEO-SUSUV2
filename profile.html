@@ -3,30 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0E0C1A">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Mon profil</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
 <style>
   .profile-header{text-align:center;padding:30px 20px;background:var(--card);border:1px solid var(--stroke);border-radius:24px;margin-bottom:24px;}
-  .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:44px;font-weight:700;margin:0 auto 16px;box-shadow:0 16px 48px rgba(212,148,10,.45);}
+  .profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:44px;font-weight:700;margin:0 auto 16px;box-shadow:0 16px 48px rgba(179,147,244,.45);}
   .profile-name{font-family:var(--ff-s);font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
   .profile-email{color:var(--text2);font-size:13px;}
-  .kyc-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-top:12px;background:rgba(122,171,204,.15);color:var(--sky);}
+  .kyc-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-top:12px;background:rgba(127,166,224,.15);color:var(--sky);}
   .menu-item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--card);border:1px solid var(--stroke);border-radius:16px;margin-bottom:8px;text-decoration:none;color:var(--text);transition:all .3s;cursor:pointer;}
-  .menu-item:hover{background:var(--raised);border-color:rgba(212,148,10,.2);transform:translateX(4px);}
+  .menu-item:hover{background:var(--raised);border-color:rgba(179,147,244,.2);transform:translateX(4px);}
   .menu-icon{font-size:22px;}.menu-text{flex:1;}.menu-label{font-weight:700;font-size:15px;margin-bottom:2px;}.menu-detail{font-size:12px;color:var(--text2);}.menu-arrow{color:var(--text3);font-size:18px;}
 </style>
 
-<style>
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
-</style>
 </head>
 <body>
 
@@ -45,22 +41,22 @@
   </div>
   <div class="section-title"><span data-fr="Compte" data-en="Account">Compte</span></div>
   <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">👤</span><div class="menu-text"><div class="menu-label" data-fr="Informations personnelles" data-en="Personal information">Informations personnelles</div><div class="menu-detail" data-fr="Nom, telephone, adresse" data-en="Name, phone, address">Nom, telephone, adresse</div></div><span class="menu-arrow">›</span></a>
-  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🔐</span><div class="menu-text"><div class="menu-label" data-fr="Verification d\'identite (KYC)" data-en="Identity verification (KYC)">Verification d\'identite (KYC)</div><div class="menu-detail" data-fr="Indispensable pour les transferts" data-en="Required for transfers">Indispensable pour les transferts</div></div><span class="menu-arrow">›</span></a>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🔐</span><div class="menu-text"><div class="menu-label" data-fr="Verification d’identite (KYC)" data-en="Identity verification (KYC)">Verification d’identite (KYC)</div><div class="menu-detail" data-fr="Indispensable pour les transferts" data-en="Required for transfers">Indispensable pour les transferts</div></div><span class="menu-arrow">›</span></a>
   <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">💳</span><div class="menu-text"><div class="menu-label" data-fr="Moyens de paiement" data-en="Payment methods">Moyens de paiement</div><div class="menu-detail" data-fr="Mobile Money, carte bancaire" data-en="Mobile Money, bank card">Mobile Money, carte bancaire</div></div><span class="menu-arrow">›</span></a>
   <div class="section-title"><span data-fr="Securite" data-en="Security">Securite</span></div>
   <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🔒</span><div class="menu-text"><div class="menu-label" data-fr="Mot de passe" data-en="Password">Mot de passe</div><div class="menu-detail" data-fr="Modifier mon mot de passe" data-en="Change my password">Modifier mon mot de passe</div></div><span class="menu-arrow">›</span></a>
   <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">📱</span><div class="menu-text"><div class="menu-label" data-fr="Double authentification" data-en="Two-factor authentication">Double authentification</div><div class="menu-detail" data-fr="Proteger ton compte" data-en="Protect your account">Proteger ton compte</div></div><span class="menu-arrow">›</span></a>
   <div class="section-title"><span data-fr="Preferences" data-en="Preferences">Preferences</span></div>
   <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🔔</span><div class="menu-text"><div class="menu-label" data-fr="Notifications" data-en="Notifications">Notifications</div><div class="menu-detail" data-fr="Rappels, alertes" data-en="Reminders, alerts">Rappels, alertes</div></div><span class="menu-arrow">›</span></a>
-  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🌍</span><div class="menu-text"><div class="menu-label" data-fr="Langue et devise" data-en="Language and currency">Langue et devise</div><div class="menu-detail" data-fr="Francais · FCFA" data-en="English · FCFA">Francais · FCFA</div></div><span class="menu-arrow">›</span></a>
+  <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">🌍</span><div class="menu-text"><div class="menu-label" data-fr="Langue et devise" data-en="Language and currency">Langue et devise</div><div class="menu-detail" data-fr="Francais · Euro (€)" data-en="English · Euro (€)">Francais · Euro (€)</div></div><span class="menu-arrow">›</span></a>
   <div class="section-title"><span data-fr="Support" data-en="Support">Support</span></div>
   <a href="#" class="menu-item" onclick="return false;"><span class="menu-icon">💬</span><div class="menu-text"><div class="menu-label" data-fr="Aide et contact" data-en="Help and contact">Aide et contact</div><div class="menu-detail">contact@neo-susu.com</div></div><span class="menu-arrow">›</span></a>
   <button class="logout-btn" onclick="handleLogout()" data-fr="Se deconnecter" data-en="Sign out">Se deconnecter</button>
 </div>
 <script>
 function handleLogout() {
-  const msg = currentLang === "en" ? "Are you sure you want to sign out?" : "Voulez-vous vraiment vous deconnecter ?";
-  if (confirm(msg)) { sessionStorage.removeItem("neo_susu_demo_user"); window.location.href = "./index.html"; }
+  sessionStorage.removeItem("neo_susu_demo_user");
+  window.location.href = "./index.html";
 }
 </script>
 
@@ -69,7 +65,7 @@ let currentLang = localStorage.getItem("ns_lang") || "fr";
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
+  document.documentElement.lang = lang;
   document.querySelectorAll("[data-fr]").forEach(el => {
     const val = el.getAttribute("data-" + lang);
     if (val) el.textContent = val;
