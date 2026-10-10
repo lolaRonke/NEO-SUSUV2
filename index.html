@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#07080F">
+<meta name="theme-color" content="#0E0C1A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>NEO-SUSU</title>
@@ -15,35 +15,36 @@
 <style>
 :root {
   /* Fonds — brun chaud */
-  --void:#1C1A17;--deep:#242018;--surf:#2E2A22;--card:#38342A;--raised:#433E32;
+  --void:#0E0C1A;--deep:#191E31;--surf:#201C3C;--card:#262145;--raised:#322C52;
   /* Jaune dore chaud */
-  --gold:#D4940A;--gold2:#A8720A;--gold-pale:#F0C96A;--gold-warm:#E8A820;
+  --gold:#B393F4;--gold2:#8B6FD6;--gold-pale:#E5DAFE;--gold-warm:#C8B9F0;
   /* Marron clair */
-  --brown:#C4956A;--brown2:#A87848;--brown-pale:#E8C9A0;
+  --brown:#A2AFD8;--brown2:#748AA7;--brown-pale:#D5DCF0;
   /* Gris clair chaud */
-  --grey:#B8AFA0;--grey2:#8C8478;--grey-light:#E8E0D4;
+  --grey:#A39FBE;--grey2:#77738F;--grey-light:#E1E4F3;
   /* Etats */
-  --em:#2BAD7A;--red:#D4524A;--sky:#7AABCC;--violet:#9B7ECC;
+  --em:#2BAD7A;--red:#D4524A;--sky:#7FA6E0;--violet:#B890FD;
   /* Texte */
-  --text:#F0EAE0;--text2:#A09080;--text3:#6A6058;
+  --text:#F4F2FB;--text2:#A39FBE;--text3:#6E6A88;
   /* Bordures */
-  --stroke:rgba(240,234,224,0.07);--stroke2:rgba(240,234,224,0.14);
+  --stroke:rgba(200,185,240,0.07);--stroke2:rgba(200,185,240,0.14);
   --ff-s:"Cormorant Garamond",serif;--ff-b:"Outfit",system-ui,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{min-height:100%;background:var(--void);color:var(--text);font-family:var(--ff-b);}
+body{background:linear-gradient(160deg,#231D43 0%,var(--deep) 45%,var(--void) 100%) fixed;}
 
 .splash-container {
   display:flex;flex-direction:column;align-items:center;
   justify-content:space-between;min-height:100vh;
-  padding:50px 24px 34px;background:var(--void);
+  padding:50px 24px 34px;background:transparent;
   position:relative;overflow:hidden;
 }
 .splash-container::before {
   content:"";position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
   width:400px;height:400px;
-  background:radial-gradient(circle,rgba(212,148,10,0.20) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(179,147,244,0.20) 0%,transparent 70%);
   filter:blur(60px);z-index:0;pointer-events:none;
 }
 
@@ -61,7 +62,7 @@ html,body{min-height:100%;background:var(--void);color:var(--text);font-family:v
 }
 .lang-flag.active {
   border-color:var(--gold);
-  background:rgba(212,148,10,.12);
+  background:rgba(179,147,244,.12);
   transform:scale(1.15);
 }
 .lang-flag:hover:not(.active){opacity:.7;transform:scale(1.1);}
@@ -88,11 +89,11 @@ html,body{min-height:100%;background:var(--void);color:var(--text);font-family:v
   background:linear-gradient(135deg,var(--gold),var(--gold2));
   display:flex;align-items:center;justify-content:center;
   font-family:var(--ff-s);font-size:64px;font-weight:700;color:var(--void);
-  box-shadow:0 16px 48px rgba(212,148,10,.35);margin-bottom:24px;
+  box-shadow:0 16px 48px rgba(179,147,244,.35);margin-bottom:24px;
   animation:splPop .6s cubic-bezier(.34,1.56,.64,1) both,pulseGlow 3s ease-in-out 1s infinite;
 }
 @keyframes splPop{from{opacity:0;transform:scale(.7);}to{opacity:1;transform:none;}}
-@keyframes pulseGlow{0%,100%{box-shadow:0 16px 48px rgba(212,148,10,.35);}50%{box-shadow:0 16px 60px rgba(212,148,10,.55);}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 16px 48px rgba(179,147,244,.35);}50%{box-shadow:0 16px 60px rgba(179,147,244,.55);}}
 .splash-name {
   font-family:var(--ff-s);font-size:44px;font-weight:700;
   background:linear-gradient(135deg,var(--gold-pale),var(--gold));
@@ -122,10 +123,10 @@ html,body{min-height:100%;background:var(--void);color:var(--text);font-family:v
   color:var(--void);border:none;border-radius:18px;
   font-family:var(--ff-b);font-size:15px;font-weight:700;
   cursor:pointer;text-decoration:none;text-align:center;
-  box-shadow:0 16px 48px rgba(212,148,10,.35);
+  box-shadow:0 16px 48px rgba(179,147,244,.35);
   transition:all .3s;letter-spacing:.3px;display:block;
 }
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(212,168,32,.55);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(200,185,240,.55);}
 .btn-secondary {
   padding:17px 24px;background:var(--card);color:var(--sky);
   border:1px solid var(--stroke2);border-radius:18px;
@@ -142,7 +143,7 @@ html,body{min-height:100%;background:var(--void);color:var(--text);font-family:v
   transition:all .3s;display:flex;align-items:center;justify-content:center;
   gap:8px;margin-top:4px;
 }
-.btn-demo:hover{background:rgba(212,148,10,.08);transform:translateY(-2px);}
+.btn-demo:hover{background:rgba(179,147,244,.08);transform:translateY(-2px);}
 .btn-demo .badge{
   background:var(--gold);color:var(--void);font-size:10px;
   font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;
@@ -237,7 +238,7 @@ html,body{min-height:100%;background:var(--void);color:var(--text);font-family:v
          gap:8px;
          transition:all .3s;
        "
-       onmouseover="this.style.background='rgba(196,149,106,.08)';this.style.transform='translateY(-2px)'"
+       onmouseover="this.style.background='rgba(162,175,216,.08)';this.style.transform='translateY(-2px)'"
        onmouseout="this.style.background='transparent';this.style.transform='none'"
     >
       🌐 <span data-fr="Voir le site officiel" data-en="Visit the official website">Voir le site officiel</span>

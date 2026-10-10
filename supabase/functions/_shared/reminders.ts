@@ -92,15 +92,15 @@ export function buildEmail(level: ReminderLevel, f: ReminderFacts, draft: Draft)
   const legal = level === 3 ? LEGAL_NOTICE_LEVEL_3 : null;
   const text = [draft.body.trim(), "", ...recap, "", `Régler ma cotisation : ${f.payUrl}`, ...(legal ? ["", legal] : [])]
     .join("\n");
-  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#1C1A17">` +
+  const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#0E0C1A">` +
     draft.body.trim().split(/\n{2,}/).map((p) => `<p>${escapeHtml(p).replace(/\n/g, "<br>")}</p>`).join("") +
     `<table style="border-collapse:collapse;margin:16px 0">` +
     recap.map((r) => {
       const [k, ...v] = r.split(" : ");
-      return `<tr><td style="padding:4px 12px 4px 0;color:#6A6058">${escapeHtml(k)}</td><td style="padding:4px 0"><strong>${escapeHtml(v.join(" : "))}</strong></td></tr>`;
+      return `<tr><td style="padding:4px 12px 4px 0;color:#6E6A88">${escapeHtml(k)}</td><td style="padding:4px 0"><strong>${escapeHtml(v.join(" : "))}</strong></td></tr>`;
     }).join("") +
     `</table>` +
-    `<p><a href="${escapeHtml(f.payUrl)}" style="background:#D4940A;color:#1C1A17;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Régler ma cotisation</a></p>` +
+    `<p><a href="${escapeHtml(f.payUrl)}" style="background:#B393F4;color:#0E0C1A;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Régler ma cotisation</a></p>` +
     (legal ? `<p style="border-left:3px solid #D4524A;padding-left:12px"><strong>${escapeHtml(legal)}</strong></p>` : "") +
     `</div>`;
   return { subject: draft.subject.trim(), text, html };

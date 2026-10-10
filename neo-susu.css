@@ -1,52 +1,62 @@
 /* =====================================================================
-   NEO-SUSU — Charte graphique v2.0
-   Nouvelle palette : Jaune doré chaud · Marron clair · Gris clair
+   NEO-SUSU — Charte graphique v3.0 « Nuit violette »
+   Palette : nuit bleu-violet · lavande · bleu acier
    Polices : Cormorant Garamond (serif) + Outfit (sans-serif)
+   Les anciens noms de variables (--gold, --brown…) sont conservés pour que
+   toutes les pages suivent la charte sans réécriture : --gold = accent lavande.
    ===================================================================== */
 
 :root {
-  /* ── FONDS (gris chaud au lieu du noir bleuté) ── */
-  --void:    #1C1A17;   /* Fond principal — brun très foncé */
-  --deep:    #242018;   /* Fond secondaire */
-  --surf:    #2E2A22;   /* Surface */
-  --card:    #38342A;   /* Cartes */
-  --raised:  #433E32;   /* Éléments surélevés */
+  /* ── FONDS : nuit bleu-violet, plus claire en haut à gauche ── */
+  --night-glow: #231D43;  /* Halo violet (haut gauche des fonds) */
+  --void:    #0E0C1A;     /* Fond principal — nuit profonde */
+  --deep:    #191E31;     /* Fond secondaire — bleu nuit */
+  --surf:    #201C3C;     /* Surface */
+  --card:    #262145;     /* Cartes */
+  --raised:  #322C52;     /* Éléments surélevés, badges */
 
-  /* ── COULEUR PRINCIPALE : Jaune doré chaud ── */
-  --gold:      #D4940A;   /* Jaune doré principal */
-  --gold2:     #A8720A;   /* Jaune doré foncé */
-  --gold-pale: #F0C96A;   /* Jaune clair / pale */
-  --gold-warm: #E8A820;   /* Jaune chaud intermédiaire */
+  /* ── COULEUR PRINCIPALE : lavande ── */
+  --lavender:       #B393F4;  /* Lavande principale ★ (accents, boutons, labels) */
+  --lavender-deep:  #8B6FD6;  /* Lavande foncée (dégradés de boutons) */
+  --lavender-light: #C8B9F0;  /* Lavande claire */
+  --lavender-pale:  #E5DAFE;  /* Lavande très pâle (titres en surbrillance) */
+  --gold:      var(--lavender);
+  --gold2:     var(--lavender-deep);
+  --gold-pale: var(--lavender-pale);
+  --gold-warm: var(--lavender-light);
 
-  /* ── COULEUR SECONDAIRE : Marron clair ── */
-  --brown:     #C4956A;   /* Marron clair principal */
-  --brown2:    #A87848;   /* Marron clair foncé */
-  --brown-pale:#E8C9A0;   /* Marron très clair / beige */
-  --brown-bg:  rgba(196,149,106,0.10);
+  /* ── COULEUR SECONDAIRE : bleu acier ── */
+  --steel:       #A2AFD8;  /* Bleu acier ★ (traits, coins, liens secondaires) */
+  --steel-deep:  #748AA7;
+  --steel-pale:  #D5DCF0;
+  --brown:      var(--steel);
+  --brown2:     var(--steel-deep);
+  --brown-pale: var(--steel-pale);
+  --brown-bg:   rgba(162,175,216,0.10);
 
-  /* ── ACCENT : Gris clair chaud ── */
-  --grey:      #B8AFA0;   /* Gris clair chaud */
-  --grey2:     #8C8478;   /* Gris moyen */
-  --grey-light:#E8E0D4;   /* Gris très clair */
-  --grey-bg:   rgba(184,175,160,0.10);
+  /* ── NEUTRES : gris lavande ── */
+  --grey:      #A39FBE;
+  --grey2:     #77738F;
+  --grey-light:#E1E4F3;
+  --grey-bg:   rgba(163,159,190,0.10);
 
   /* ── ÉTATS ── */
-  --em:    #2BAD7A;   /* Vert succès (adapté au thème chaud) */
+  --em:    #2BAD7A;   /* Vert succès */
   --em2:   #1F8A60;
-  --red:   #D4524A;   /* Rouge erreur (chaud) */
-  --sky:   #7AABCC;   /* Bleu info (désaturé, chaud) */
-  --violet:#9B7ECC;   /* Violet (désaturé) */
+  --red:   #D4524A;   /* Rouge erreur */
+  --sky:   #7FA6E0;   /* Bleu info */
+  --violet:#B890FD;   /* Violet vif */
 
   /* ── TEXTE ── */
-  --text:  #F0EAE0;   /* Texte principal — blanc cassé chaud */
-  --text2: #A09080;   /* Texte secondaire — gris brun */
-  --text3: #6A6058;   /* Texte tertiaire — gris foncé chaud */
+  --text:  #F4F2FB;   /* Texte principal — blanc lavande */
+  --text2: #A39FBE;   /* Texte secondaire — gris lavande */
+  --text3: #6E6A88;   /* Texte tertiaire */
 
-  /* ── BORDURES ── */
-  --stroke:  rgba(240,234,224,0.07);
-  --stroke2: rgba(240,234,224,0.14);
-  --stroke-gold: rgba(212,148,10,0.30);
-  --stroke-brown: rgba(196,149,106,0.30);
+  /* ── BORDURES (teintées lavande) ── */
+  --stroke:  rgba(200,185,240,0.08);
+  --stroke2: rgba(200,185,240,0.16);
+  --stroke-gold: rgba(179,147,244,0.30);
+  --stroke-brown: rgba(162,175,216,0.30);
 
   /* ── TYPOGRAPHIE ── */
   --ff-s: "Cormorant Garamond", serif;
@@ -65,16 +75,13 @@
 
 body {
   font-family: var(--ff-b);
-  background: var(--void);
+  background-color: var(--void);
   color: var(--text);
   min-height: 100vh;
   padding: 30px 20px 60px;
-  /* Texture légère sur le fond */
-  background-image: radial-gradient(
-    ellipse 80% 50% at 50% 0%,
-    rgba(212,148,10,0.04) 0%,
-    transparent 60%
-  );
+  /* Fond de la charte : halo violet en haut à gauche, bleu nuit, nuit profonde en bas */
+  background-image: linear-gradient(160deg, var(--night-glow) 0%, var(--deep) 45%, var(--void) 100%);
+  background-attachment: fixed;
 }
 
 .container { max-width: 500px; margin: 0 auto; }
@@ -112,8 +119,8 @@ body {
   color: var(--void);
   margin: 0 auto 16px;
   box-shadow:
-    0 12px 36px rgba(212,148,10,0.35),
-    0 0 0 1px rgba(212,148,10,0.15);
+    0 12px 36px rgba(179,147,244,0.35),
+    0 0 0 1px rgba(179,147,244,0.15);
 }
 
 /* =====================================================================
@@ -184,11 +191,11 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--gold-pale), var(--gold));
   color: var(--void);
-  box-shadow: 0 10px 28px rgba(212,148,10,0.30);
+  box-shadow: 0 10px 28px rgba(179,147,244,0.30);
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 38px rgba(212,148,10,0.42);
+  box-shadow: 0 14px 38px rgba(179,147,244,0.42);
 }
 
 /* Bouton secondaire — Gris/Marron */
@@ -216,10 +223,10 @@ body {
   font-weight: 700;
   cursor: pointer;
   margin-top: 16px;
-  box-shadow: 0 10px 28px rgba(212,148,10,0.30);
+  box-shadow: 0 10px 28px rgba(179,147,244,0.30);
   transition: all 0.3s;
 }
-.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(212,148,10,0.42); }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(179,147,244,0.42); }
 
 /* Bouton déconnexion */
 .logout-btn {
@@ -268,7 +275,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(212,148,10,0.12);
+  box-shadow: 0 0 0 3px rgba(179,147,244,0.12);
 }
 /* Fix select option background on dark mode */
 select option { background: var(--card); color: var(--text); }
@@ -280,7 +287,7 @@ textarea { resize: vertical; min-height: 80px; }
    BOÎTES D'INFO
 ===================================================================== */
 .info-box {
-  background: rgba(212,148,10,0.08);
+  background: rgba(179,147,244,0.08);
   border-left: 3px solid var(--gold);
   padding: 12px 16px;
   border-radius: 8px;
@@ -292,7 +299,7 @@ textarea { resize: vertical; min-height: 80px; }
 
 /* Info variante marron */
 .info-box-brown {
-  background: rgba(196,149,106,0.08);
+  background: rgba(162,175,216,0.08);
   border-left: 3px solid var(--brown);
   padding: 12px 16px;
   border-radius: 8px;
@@ -303,7 +310,7 @@ textarea { resize: vertical; min-height: 80px; }
 
 /* Info variante gris */
 .info-box-grey {
-  background: rgba(184,175,160,0.08);
+  background: rgba(163,159,190,0.08);
   border-left: 3px solid var(--grey);
   padding: 12px 16px;
   border-radius: 8px;
@@ -341,7 +348,7 @@ textarea { resize: vertical; min-height: 80px; }
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 6px 24px rgba(212,148,10,0.28);
+  box-shadow: 0 6px 24px rgba(179,147,244,0.28);
   margin: -30px -20px 24px;
 }
 .demo-banner.active {
@@ -382,16 +389,16 @@ textarea { resize: vertical; min-height: 80px; }
    UTILITAIRES PALETTE
 ===================================================================== */
 /* Chips */
-.chip-gold   { background: rgba(212,148,10,0.12); color: var(--gold);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
-.chip-brown  { background: rgba(196,149,106,0.12); color: var(--brown); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
-.chip-grey   { background: rgba(184,175,160,0.12); color: var(--grey);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-gold   { background: rgba(179,147,244,0.12); color: var(--gold);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-brown  { background: rgba(162,175,216,0.12); color: var(--brown); border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.chip-grey   { background: rgba(163,159,190,0.12); color: var(--grey);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
 .chip-green  { background: rgba(43,173,122,0.12);  color: var(--em);   border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
 .chip-red    { background: rgba(212,82,74,0.12);   color: var(--red);  border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
 
 /* Cartes */
-.card-gold   { background: rgba(212,148,10,0.06); border: 1px solid rgba(212,148,10,0.20); border-radius: 18px; }
-.card-brown  { background: rgba(196,149,106,0.06); border: 1px solid rgba(196,149,106,0.20); border-radius: 18px; }
-.card-grey   { background: rgba(184,175,160,0.06); border: 1px solid rgba(184,175,160,0.16); border-radius: 18px; }
+.card-gold   { background: rgba(179,147,244,0.06); border: 1px solid rgba(179,147,244,0.20); border-radius: 18px; }
+.card-brown  { background: rgba(162,175,216,0.06); border: 1px solid rgba(162,175,216,0.20); border-radius: 18px; }
+.card-grey   { background: rgba(163,159,190,0.06); border: 1px solid rgba(163,159,190,0.16); border-radius: 18px; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
@@ -400,23 +407,23 @@ textarea { resize: vertical; min-height: 80px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--brown2); }
 
 /* =====================================================================
-   RÉSUMÉ DE LA PALETTE v2
+   RÉSUMÉ DE LA PALETTE v3 « Nuit violette »
    ─────────────────────────────────────────────────────────────────
-   Fond principal   #1C1A17  Brun très foncé chaud
-   Fond secondaire  #242018
-   Cartes           #38342A
-   Jaune doré       #D4940A  Couleur principale ★
-   Jaune pâle       #F0C96A  Dégradés, titres
-   Marron clair     #C4956A  Couleur secondaire ★
-   Beige/Marron     #E8C9A0  Textes, accents doux
-   Gris clair chaud #B8AFA0  Couleur tertiaire ★
-   Texte principal  #F0EAE0  Blanc cassé chaud
-   Texte secondaire #A09080  Gris brun
+   Halo violet        #231D43  Haut des fonds (dégradé)
+   Fond secondaire    #191E31  Bleu nuit
+   Fond principal     #0E0C1A  Nuit profonde
+   Cartes / badges    #262145 / #322C52
+   Lavande            #B393F4  Couleur principale ★
+   Lavande pâle       #E5DAFE  Titres en surbrillance
+   Bleu acier         #A2AFD8  Couleur secondaire ★ (traits, coins)
+   Gris lavande       #A39FBE  Textes secondaires
+   Texte principal    #F4F2FB  Blanc lavande
+   Succès / erreur    #2BAD7A / #D4524A
    ─────────────────────────────────────────────────────────────────
 ===================================================================== */
 
 /* ── SÉLECTEUR DE LANGUE (partagé par toutes les pages) ── */
 .lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
 .lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
+.lang-flag.active{border-color:var(--gold);background:rgba(179,147,244,.12);transform:scale(1.12);}
 .lang-sep{width:1px;height:16px;background:var(--stroke2);}

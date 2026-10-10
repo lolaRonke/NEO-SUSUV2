@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0E0C1A">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
@@ -19,11 +19,11 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
 .welcome-text{font-size:13px;color:var(--text2);margin-bottom:4px;font-weight:500;}
 .user-name{font-family:var(--ff-s);font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;}
-.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:24px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(212,148,10,.35);}
-.kyc-badge{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-top:6px;background:rgba(122,171,204,.15);color:var(--sky);}
+.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:24px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(179,147,244,.35);}
+.kyc-badge{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-top:6px;background:rgba(127,166,224,.15);color:var(--sky);}
 .kyc-badge.verified{background:rgba(43,173,122,.15);color:#2BAD7A;}
-.balance-card{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;position:relative;overflow:hidden;}
-.balance-card::before{content:"";position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(212,148,10,.3),transparent 70%);filter:blur(40px);}
+.balance-card{background:linear-gradient(135deg,rgba(179,147,244,.12),var(--card));border:1px solid rgba(179,147,244,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;position:relative;overflow:hidden;}
+.balance-card::before{content:"";position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(179,147,244,.3),transparent 70%);filter:blur(40px);}
 .balance-label{font-size:11px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;position:relative;z-index:1;}
 .balance-amount{font-family:var(--ff-s);font-size:44px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;position:relative;z-index:1;letter-spacing:.5px;}
 .balance-currency{font-size:13px;color:var(--text2);font-weight:500;position:relative;z-index:1;}
@@ -32,12 +32,12 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .stat-value{font-family:var(--ff-s);font-size:26px;font-weight:700;color:var(--text);margin-bottom:2px;}
 .stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
 .tontine-card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .3s;text-decoration:none;display:block;color:inherit;}
-.tontine-card:hover{transform:translateY(-2px);border-color:rgba(212,148,10,.3);background:var(--raised);}
+.tontine-card:hover{transform:translateY(-2px);border-color:rgba(179,147,244,.3);background:var(--raised);}
 .tontine-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;}
 .tontine-name{font-size:16px;font-weight:700;color:var(--text);}
 .tontine-status{font-size:10px;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
 .status-active{background:rgba(43,173,122,.15);color:#2BAD7A;}
-.status-waiting{background:rgba(212,148,10,.15);color:var(--gold);}
+.status-waiting{background:rgba(179,147,244,.15);color:var(--gold);}
 .tontine-info{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:10px;}
 .tontine-info strong{font-family:var(--ff-s);color:var(--gold);font-weight:700;font-size:14px;}
 .tontine-progress{height:6px;background:var(--raised);border-radius:10px;overflow:hidden;}
@@ -51,13 +51,13 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .score-fill{height:100%;background:linear-gradient(90deg,#2BAD7A,var(--gold));border-radius:3px;transition:width 1s ease;}
 /* ── COMMISSION PLAN BANNER ── */
 .plan-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:14px 18px;margin-bottom:20px;cursor:pointer;transition:all .3s;}
-.plan-banner:hover{border-color:rgba(212,148,10,.3);background:var(--raised);}
+.plan-banner:hover{border-color:rgba(179,147,244,.3);background:var(--raised);}
 .plan-ico{font-size:24px;flex-shrink:0;}
 .plan-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
 .plan-fee{font-size:11px;color:var(--text2);}
 .plan-badge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
 .badge-free{background:rgba(212,82,74,.12);color:#D4524A;}
-.badge-premium{background:rgba(212,148,10,.12);color:var(--gold);}
+.badge-premium{background:rgba(179,147,244,.12);color:var(--gold);}
 .badge-business{background:rgba(43,173,122,.12);color:#2BAD7A;}
 /* ── COMMISSION MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;display:none;align-items:flex-end;justify-content:center;}
@@ -69,7 +69,7 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .plan-row{display:flex;align-items:stretch;gap:10px;margin-bottom:10px;}
 .plan-card{flex:1;background:var(--card);border:2px solid var(--stroke);border-radius:20px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .3s;position:relative;}
 .plan-card:active{transform:scale(.97);}
-.plan-card.current{border-color:var(--gold);background:rgba(212,148,10,.06);}
+.plan-card.current{border-color:var(--gold);background:rgba(179,147,244,.06);}
 .plan-card.best{border-color:#2BAD7A;background:rgba(43,173,122,.05);}
 .plan-card .best-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#2BAD7A;color:var(--void);font-size:9px;font-weight:800;padding:2px 10px;border-radius:20px;white-space:nowrap;}
 .pc-name{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
@@ -100,7 +100,7 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
 .toast.ok{border-color:rgba(43,173,122,.4);}
 .toast.err{border-color:rgba(212,82,74,.4);}
 /* ── TRANSACTION FEE PREVIEW ── */
-.fee-preview{background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.18);border-radius:16px;padding:16px;margin-top:18px;}
+.fee-preview{background:rgba(179,147,244,.06);border:1px solid rgba(179,147,244,.18);border-radius:16px;padding:16px;margin-top:18px;}
 .fee-title{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px;}
 .fee-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
 .fee-row:last-child{border-bottom:none;font-weight:700;}
