@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Club A7 — Maquette</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+  :root{
+    --bleu-principal:#0A4D9C;
+    --bleu-secondaire:#2E86DE;
+    --bleu-clair:#EAF3FF;
+    --blanc:#FFFFFF;
+    --gris:#F5F7FA;
+    --texte:#1B1F24;
+    --texte-doux:#6B7684;
+    --vert:#27AE60;
+    --rouge:#E74C3C;
+  }
+  body{background:#E5EAF2;padding:40px;}
+
+  .page{
+    width:1122px;               /* A4 paysage @96dpi */
+    min-height:794px;
+    background:#fff;
+    margin:0 auto 40px;
+    padding:50px;
+    box-shadow:0 4px 20px rgba(10,77,156,.15);
+    position:relative;
+    page-break-after:always;
+  }
+
+  /* ---- COVER ---- */
+  .cover{background:linear-gradient(160deg,#0A4D9C 0%,#2E86DE 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+  .cover .badge{width:120px;height:120px;border-radius:50%;background:#fff;color:var(--bleu-principal);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:50px;letter-spacing:-2px;margin-bottom:30px;}
+  .cover h1{font-size:72px;font-weight:900;letter-spacing:-2px;}
+  .cover h2{font-size:22px;font-weight:400;opacity:.85;margin-top:10px;letter-spacing:2px;text-transform:uppercase;}
+  .cover .meta{margin-top:60px;font-size:14px;opacity:.7;}
+
+  /* ---- HEADERS ---- */
+  .page-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--bleu-principal);padding-bottom:12px;margin-bottom:36px;}
+  .page-head h2{font-size:28px;color:var(--bleu-principal);font-weight:800;}
+  .page-head .num{font-size:13px;color:var(--texte-doux);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+
+  /* ---- SCREENS GRID ---- */
+  .screens{display:grid;grid-template-columns:repeat(4, 1fr);gap:20px;}
+  .screen-wrap{text-align:center;}
+  .screen-label{font-size:12px;font-weight:700;color:var(--bleu-principal);text-transform:uppercase;letter-spacing:1px;margin-top:10px;}
+
+  /* ---- PHONE ---- */
+  .phone{
+    width:100%;height:520px;
+    background:var(--blanc);
+    border-radius:24px;
+    border:6px solid #1B1F24;
+    overflow:hidden;
+    position:relative;
+    text-align:left;
+    box-shadow:0 6px 20px rgba(10,77,156,.2);
+  }
+
+  /* Login */
+  .ph-login{background:linear-gradient(160deg,var(--bleu-principal),var(--bleu-secondaire));padding:20px 14px;display:flex;flex-direction:column;justify-content:center;height:100%;color:#fff;}
+  .ph-login .logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:4px;}
+  .ph-login .logo b{width:28px;height:28px;border-radius:50%;background:#fff;color:var(--bleu-principal);display:flex;align-items:center;justify-content:center;font-size:11px;}
+  .ph-login .slog{font-size:9px;opacity:.8;margin-bottom:14px;}
+  .ph-login .field{background:rgba(255,255,255,.95);border-radius:6px;padding:7px 8px;font-size:9px;color:var(--texte);margin-bottom:5px;}
+  .ph-login .lab{font-size:8px;font-weight:700;margin:6px 0 4px;}
+  .ph-login .roles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px;}
+  .ph-login .role{background:rgba(255,255,255,.15);border-radius:5px;padding:5px 2px;text-align:center;font-size:6px;font-weight:700;border:1.5px solid transparent;}
+  .ph-login .role.actif{background:#fff;color:var(--bleu-principal);border-color:#fff;}
+  .ph-login .role span{font-size:11px;display:block;margin-bottom:1px;}
+  .ph-login .cta{background:#fff;color:var(--bleu-principal);text-align:center;padding:8px;border-radius:6px;font-weight:800;font-size:9px;margin-top:6px;}
+
+  /* App shell */
+  .ph-head{background:var(--bleu-principal);color:#fff;padding:12px 14px 14px;border-radius:0 0 14px 14px;}
+  .ph-head .top{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:900;}
+  .ph-head .top b{width:18px;height:18px;border-radius:50%;background:#fff;color:var(--bleu-principal);display:inline-flex;align-items:center;justify-content:center;font-size:7px;margin-right:4px;vertical-align:middle;}
+  .ph-head .av{width:18px;height:18px;border-radius:50%;background:var(--bleu-secondaire);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;}
+  .ph-head h1{font-size:13px;margin-top:10px;font-weight:700;}
+  .ph-head p{font-size:8px;opacity:.85;margin-top:2px;}
+
+  .ph-body{padding:10px 12px;}
+  .ph-card{background:#fff;border:1px solid var(--bleu-clair);border-radius:8px;padding:8px;margin-bottom:7px;box-shadow:0 1px 3px rgba(10,77,156,.06);}
+  .ph-card.hl{background:var(--bleu-clair);border-color:var(--bleu-secondaire);}
+  .ph-card .t{font-weight:700;font-size:9px;color:var(--texte);margin-bottom:2px;}
+  .ph-card .s{font-size:7px;color:var(--texte-doux);}
+  .ph-btn{background:var(--bleu-principal);color:#fff;padding:7px;border-radius:6px;text-align:center;font-size:8px;font-weight:700;margin-bottom:6px;}
+  .ph-btn.sec{background:#fff;color:var(--bleu-principal);border:1.5px solid var(--bleu-principal);}
+  .ph-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+  .ph-titre{font-size:9px;font-weight:800;color:var(--bleu-principal);margin:8px 0 5px;}
+
+  /* Slots */
+  .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:5px;}
+  .slot{padding:5px;border-radius:4px;font-size:7px;font-weight:700;text-align:center;border:1.5px solid var(--bleu-clair);}
+  .slot.dispo{background:#fff;color:var(--texte);}
+  .slot.sel{background:var(--bleu-principal);color:#fff;border-color:var(--bleu-principal);}
+  .slot.indispo{background:var(--gris);color:#bbb;text-decoration:line-through;}
+
+  /* Filters */
+  .ph-filtres{display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap;}
+  .ph-filtre{padding:3px 6px;border-radius:10px;background:var(--bleu-clair);color:var(--bleu-principal);font-size:6px;font-weight:700;}
+  .ph-filtre.actif{background:var(--bleu-principal);color:#fff;}
+
+  /* Match */
+  .ph-match{display:flex;justify-content:space-between;align-items:center;gap:4px;}
+  .ph-match .i{flex:1;}
+  .places{background:var(--vert);color:#fff;padding:2px 6px;border-radius:8px;font-size:6px;font-weight:700;white-space:nowrap;}
+  .places.complet{background:var(--rouge);}
+
+  /* Profil */
+  .ph-profil-head{text-align:center;padding:6px 0 10px;}
+  .ph-profil-head .big{width:40px;height:40px;border-radius:50%;background:var(--bleu-principal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;margin:0 auto 6px;}
+  .ph-profil-head h3{font-size:11px;}
+  .ph-profil-head p{font-size:7px;color:var(--texte-doux);margin-top:2px;}
+  .ph-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:6px 0;}
+  .ph-stat{background:var(--bleu-clair);border-radius:6px;padding:6px;text-align:center;}
+  .ph-stat .v{font-size:11px;font-weight:800;color:var(--bleu-principal);}
+  .ph-stat .l{font-size:5px;color:var(--texte-doux);text-transform:uppercase;margin-top:1px;}
+
+  .ph-nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bleu-clair);display:flex;justify-content:space-around;padding:5px 0 7px;font-size:6px;}
+  .ph-nav div{display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--texte-doux);font-weight:700;}
+  .ph-nav div.actif{color:var(--bleu-principal);}
+  .ph-nav .ic{font-size:11px;}
+
+  /* ---- CHARTE ---- */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:30px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+
+  .color-card{border-radius:14px;padding:20px;color:#fff;}
+  .color-card .nom{font-size:13px;font-weight:700;opacity:.9;}
+  .color-card .hex{font-size:20px;font-weight:900;margin-top:4px;font-family:'Courier New',monospace;}
+  .color-card .role{font-size:10px;opacity:.75;margin-top:6px;}
+
+  .typo-sample{border:1px solid var(--bleu-clair);border-radius:12px;padding:20px;margin-bottom:14px;}
+  .typo-sample .lbl{font-size:10px;color:var(--texte-doux);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+
+  .comp-showcase{background:var(--gris);border-radius:14px;padding:24px;text-align:center;}
+  .comp-showcase .item{margin-bottom:14px;}
+
+  .btn-preview{background:var(--bleu-principal);color:#fff;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;display:inline-block;margin:4px;}
+  .btn-preview.sec{background:#fff;color:var(--bleu-principal);border:2px solid var(--bleu-principal);}
+  .btn-preview.vert{background:var(--vert);color:#fff;}
+  .btn-preview.rouge{background:var(--rouge);color:#fff;}
+
+  .chip{display:inline-block;background:var(--bleu-clair);color:var(--bleu-principal);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;margin:3px;}
+  .chip.actif{background:var(--bleu-principal);color:#fff;}
+
+  /* Print */
+  @media print{
+    body{background:#fff;padding:0;}
+    .page{box-shadow:none;margin:0;page-break-after:always;}
+    @page{size:A4 landscape;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =================== PAGE 1 : COUVERTURE =================== -->
+<div class="page cover">
+  <div class="badge">A7</div>
+  <h1>Club A7</h1>
+  <h2>Réservez. Jouez. Partagez.</h2>
+  <div class="meta">Maquette UI · Application mobile & Web · v1.0</div>
+</div>
+
+<!-- =================== PAGE 2 : ÉCRANS PRINCIPAUX =================== -->
+<div class="page">
+  <div class="page-head">
+    <h2>Écrans principaux</h2>
+    <span class="num">01 / Écrans</span>
+  </div>
+
+  <div class="screens">
+
+    <!-- LOGIN -->
+    <div class="screen-wrap">
+      <div class="phone">
+        <div class="ph-login">
+          <div class="logo"><b>A7</b>Club A7</div>
+          <div class="slog">Réservez. Jouez. Partagez.</div>
+          <div class="field">Jean Dupont</div>
+          <div class="field">jean@clubA7.fr</div>
+          <div class="lab">Je suis…</div>
+          <div class="roles">
+            <div class="role actif"><span>⚽</span>Joueur</div>
+            <div class="role"><span>📋</span>Coach</div>
+            <div class="role"><span>🏟️</span>Gestion.</div>
+          </div>
+          <div class="cta">Se connecter</div>
+        </div>
+      </div>
+      <div class="screen-label">Connexion</div>
+    </div>
+
+    <!-- ACCUEIL -->
+    <div class="screen-wrap">
+      <div class="phone">
+        <div class="ph-head">
+          <div class="top"><div><b>A7</b>Club A7</div><div class="av">JD</div></div>
+          <h1>Bonjour Jean 👋</h1>
+          <p>Prêt pour votre prochain match ?</p>
+        </div>
+        <div class="ph-body">
+          <div class="ph-card hl">
+            <div class="t">⚽ Prochaine réservation</div>
+            <div class="s">Samedi 2 nov · 18h · Terrain A</div>
+          </div>
+          <div class="ph-row">
+            <div class="ph-btn">Réserver</div>
+            <div class="ph-btn sec">Rejoindre</div>
+          </div>
+          <div class="ph-titre">Actualités du club</div>
+          <div class="ph-card">
+            <div class="t">Nouveau créneau le lundi</div>
+            <div class="s">Terrain supplémentaire à 20h.</div>
+          </div>
+          <div class="ph-card">
+            <div class="t">Tournoi interne Club A7</div>
+            <div class="s">Inscriptions jusqu'au 15 nov.</div>
+          </div>
+        </div>
+        <div class="ph-nav">
+          <div class="actif"><span class="ic">🏠</span>Accueil</div>
+          <div><span class="ic">📅</span>Réserver</div>
+          <div><span class="ic">⚽</span>Matchs</div>
+          <div><span class="ic">👤</span>Profil</div>
+        </div>
+      </div>
+      <div class="screen-label">Accueil</div>
+    </div>
+
+    <!-- RESERVER -->
+    <div class="screen-wrap">
+      <div class="phone">
+        <div class="ph-head">
+          <div class="top"><div><b>A7</b>Club A7</div><div class="av">JD</div></div>
+          <h1>Réserver un terrain</h1>
+          <p>Choisissez votre créneau</p>
+        </div>
+        <div class="ph-body">
+          <div class="ph-titre">Jour</div>
+          <div class="ph-filtres">
+            <span class="ph-filtre actif">Auj. 28</span>
+            <span class="ph-filtre">Dem. 29</span>
+            <span class="ph-filtre">Jeu.</span>
+            <span class="ph-filtre">Ven.</span>
+          </div>
+          <div class="ph-titre">Format</div>
+          <div class="ph-filtres">
+            <span class="ph-filtre actif">7 vs 7</span>
+            <span class="ph-filtre">5 vs 5</span>
+          </div>
+          <div class="ph-titre">Créneaux</div>
+          <div class="ph-card">
+            <div class="t">Terrain A · Synthétique</div>
+            <div class="s">30 € / heure</div>
+            <div class="slots">
+              <div class="slot indispo">17h</div>
+              <div class="slot sel">18h</div>
+              <div class="slot dispo">19h</div>
+              <div class="slot dispo">20h</div>
+              <div class="slot indispo">21h</div>
+              <div class="slot dispo">22h</div>
+            </div>
+          </div>
+          <div class="ph-card">
+            <div class="t">Terrain B · Stabilisé</div>
+            <div class="s">25 € / heure</div>
+            <div class="slots">
+              <div class="slot dispo">18h</div>
+              <div class="slot dispo">19h</div>
+              <div class="slot dispo">20h</div>
+              <div class="slot dispo">21h</div>
+            </div>
+          </div>
+          <div class="ph-btn">Confirmer la réservation</div>
+        </div>
+        <div class="ph-nav">
+          <div><span class="ic">🏠</span>Accueil</div>
+          <div class="actif"><span class="ic">📅</span>Réserver</div>
+          <div><span class="ic">⚽</span>Matchs</div>
+          <div><span class="ic">👤</span>Profil</div>
+        </div>
+      </div>
+      <div class="screen-label">Réservation</div>
+    </div>
+
+    <!-- PROFIL -->
+    <div class="screen-wrap">
+      <div class="phone">
+        <div class="ph-head">
+          <div class="top"><div><b>A7</b>Club A7</div><div class="av">JD</div></div>
+          <h1>Mon profil</h1>
+          <p>Gérez vos informations</p>
+        </div>
+        <div class="ph-body">
+          <div class="ph-profil-head">
+            <div class="big">JD</div>
+            <h3>Jean Dupont</h3>
+            <p>Joueur · Niveau intermédiaire</p>
+          </div>
+          <div class="ph-stats">
+            <div class="ph-stat"><div class="v">24</div><div class="l">Résa</div></div>
+            <div class="ph-stat"><div class="v">12</div><div class="l">Buts</div></div>
+            <div class="ph-stat"><div class="v">8</div><div class="l">Passes</div></div>
+          </div>
+          <div class="ph-titre">Mes réservations</div>
+          <div class="ph-card">
+            <div class="ph-match">
+              <div class="i">
+                <div class="t">Terrain A · 18h</div>
+                <div class="s">Aujourd'hui · 7v7</div>
+              </div>
+            </div>
+          </div>
+          <div class="ph-titre">Paramètres</div>
+          <div class="ph-card">
+            <div class="t">Nom</div>
+            <div class="s" style="background:var(--gris);padding:4px;border-radius:3px;margin-top:3px;">Jean Dupont</div>
+          </div>
+        </div>
+        <div class="ph-nav">
+          <div><span class="ic">🏠</span>Accueil</div>
+          <div><span class="ic">📅</span>Réserver</div>
+          <div><span class="ic">⚽</span>Matchs</div>
+          <div class="actif"><span class="ic">👤</span>Profil</div>
+        </div>
+      </div>
+      <div class="screen-label">Profil</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =================== PAGE 3 : MATCHS + PARCOURS =================== -->
+<div class="page">
+  <div class="page-head">
+    <h2>Matchs & parcours utilisateur</h2>
+    <span class="num">02 / Écrans</span>
+  </div>
+
+  <div class="grid-2">
+    <!-- MATCHS -->
+    <div>
+      <div class="phone" style="height:520px;">
+        <div class="ph-head">
+          <div class="top"><div><b>A7</b>Club A7</div><div class="av">JD</div></div>
+          <h1>Les matchs</h1>
+          <p>Rejoignez ou créez une partie</p>
+        </div>
+        <div class="ph-body">
+          <div class="ph-btn">+ Créer un match</div>
+          <div class="ph-titre">Matchs ouverts</div>
+          <div class="ph-card">
+            <div class="ph-match">
+              <div class="i">
+                <div class="t">Foot à 7 · Intermédiaire</div>
+                <div class="s">Aujourd'hui · 19h · Terrain A</div>
+              </div>
+              <div class="places">3 places</div>
+            </div>
+          </div>
+          <div class="ph-card">
+            <div class="ph-match">
+              <div class="i">
+                <div class="t">Foot à 7 · Débutant</div>
+                <div class="s">Demain · 20h · Terrain B</div>
+              </div>
+              <div class="places">5 places</div>
+            </div>
+          </div>
+          <div class="ph-card">
+            <div class="ph-match">
+              <div class="i">
+                <div class="t">Foot à 7 · Confirmé</div>
+                <div class="s">Samedi · 18h · Terrain A</div>
+              </div>
+              <div class="places complet">Complet</div>
+            </div>
+          </div>
+        </div>
+        <div class="ph-nav">
+          <div><span class="ic">🏠</span>Accueil</div>
+          <div><span class="ic">📅</span>Réserver</div>
+          <div class="actif"><span class="ic">⚽</span>Matchs</div>
+          <div><span class="ic">👤</span>Profil</div>
+        </div>
+      </div>
+      <div class="screen-label" style="text-align:center;">Matchs ouverts</div>
+    </div>
+
+    <!-- PARCOURS -->
+    <div style="padding-top:20px;">
+      <div style="font-size:14px;font-weight:800;color:var(--bleu-principal);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">Parcours utilisateur clé</div>
+
+      <div style="background:var(--bleu-clair);border-radius:12px;padding:18px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:800;color:var(--bleu-principal);margin-bottom:6px;">🎯 Réserver un terrain</div>
+        <div style="font-size:12px;color:var(--texte);line-height:1.6;">
+          Connexion → Écran Réserver → Choix du jour & format → Sélection d'un créneau → Confirmation → Toast vert
+        </div>
+      </div>
+
+      <div style="background:var(--bleu-clair);border-radius:12px;padding:18px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:800;color:var(--bleu-principal);margin-bottom:6px;">⚽ Rejoindre un match</div>
+        <div style="font-size:12px;color:var(--texte);line-height:1.6;">
+          Écran Matchs → Liste des matchs ouverts → Bouton « Rejoindre » → Places décrémentées → Toast succès
+        </div>
+      </div>
+
+      <div style="background:var(--bleu-clair);border-radius:12px;padding:18px;margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:800;color:var(--bleu-principal);margin-bottom:6px;">📋 Gérer son profil</div>
+        <div style="font-size:12px;color:var(--texte);line-height:1.6;">
+          Écran Profil → Historique des réservations → Annulation possible → Modification nom & niveau → Enregistrer
+        </div>
+      </div>
+
+      <div style="background:var(--bleu-principal);color:#fff;border-radius:12px;padding:18px;">
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;">💾 Persistance & PWA</div>
+        <div style="font-size:12px;line-height:1.6;opacity:.9;">
+          Toutes les données sont sauvegardées en localStorage. L'app est installable sur mobile et fonctionne hors-ligne grâce au Service Worker.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== PAGE 4 : CHARTE GRAPHIQUE =================== -->
+<div class="page">
+  <div class="page-head">
+    <h2>Charte graphique</h2>
+    <span class="num">03 / Identité</span>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:36px;">
+    <div class="color-card" style="background:var(--bleu-principal);">
+      <div class="nom">Bleu principal</div>
+      <div class="hex">#0A4D9C</div>
+      <div class="role">Couleur de marque, headers, CTA</div>
+    </div>
+    <div class="color-card" style="background:var(--bleu-secondaire);">
+      <div class="nom">Bleu secondaire</div>
+      <div class="hex">#2E86DE</div>
+      <div class="role">Accents, hover, dégradés</div>
+    </div>
+    <div class="color-card" style="background:var(--bleu-clair);color:var(--bleu-principal);border:1px solid var(--bleu-secondaire);">
+      <div class="nom">Bleu clair</div>
+      <div class="hex">#EAF3FF</div>
+      <div class="role">Fonds de cartes, filtres</div>
+    </div>
+    <div class="color-card" style="background:var(--vert);">
+      <div class="nom">Vert validation</div>
+      <div class="hex">#27AE60</div>
+      <div class="role">Places dispo, succès</div>
+    </div>
+    <div class="color-card" style="background:var(--rouge);">
+      <div class="nom">Rouge alerte</div>
+      <div class="hex">#E74C3C</div>
+      <div class="role">Annulation, erreur</div>
+    </div>
+    <div class="color-card" style="background:var(--gris);color:var(--texte);border:1px solid #ddd;">
+      <div class="nom">Gris neutre</div>
+      <div class="hex">#F5F7FA</div>
+      <div class="role">Fonds, séparateurs</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- TYPO -->
+    <div>
+      <div style="font-size:14px;font-weight:800;color:var(--bleu-principal);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">Typographie · Inter</div>
+
+      <div class="typo-sample">
+        <div class="lbl">Titre principal · 32px Bold</div>
+        <div style="font-size:32px;font-weight:800;color:var(--bleu-principal);">Club A7 — Réservez</div>
+      </div>
+
+      <div class="typo-sample">
+        <div class="lbl">Sous-titre · 20px Semi-bold</div>
+        <div style="font-size:20px;font-weight:700;">Choisissez votre créneau</div>
+      </div>
+
+      <div class="typo-sample">
+        <div class="lbl">Corps de texte · 15px Regular</div>
+        <div style="font-size:15px;line-height:1.6;color:var(--texte);">
+          Réservez un terrain de football à 7 en quelques clics et invitez vos amis à rejoindre le match.
+        </div>
+      </div>
+
+      <div class="typo-sample">
+        <div class="lbl">Légende · 12px Regular gris</div>
+        <div style="font-size:12px;color:var(--texte-doux);">30 € / heure · Format 7 vs 7</div>
+      </div>
+    </div>
+
+    <!-- COMPOSANTS -->
+    <div>
+      <div style="font-size:14px;font-weight:800;color:var(--bleu-principal);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">Composants UI</div>
+
+      <div class="comp-showcase">
+        <div class="item">
+          <div class="lbl" style="font-size:10px;color:var(--texte-doux);margin-bottom:8px;text-transform:uppercase;">Boutons</div>
+          <div class="btn-preview">Bouton principal</div>
+          <div class="btn-preview sec">Secondaire</div>
+          <div class="btn-preview vert">Succès</div>
+          <div class="btn-preview rouge">Annuler</div>
+        </div>
+      </div>
+
+      <div class="comp-showcase" style="margin-top:14px;">
+        <div class="lbl" style="font-size:10px;color:var(--texte-doux);margin-bottom:8px;text-transform:uppercase;">Filtres / Chips</div>
+        <span class="chip actif">Aujourd'hui</span>
+        <span class="chip">Demain</span>
+        <span class="chip">7 vs 7</span>
+        <span class="chip">5 vs 5</span>
+      </div>
+
+      <div class="comp-showcase" style="margin-top:14px;text-align:left;">
+        <div class="lbl" style="font-size:10px;color:var(--texte-doux);margin-bottom:8px;text-transform:uppercase;">Carte & Badge</div>
+        <div style="background:#fff;border:1px solid var(--bleu-clair);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-weight:700;font-size:13px;">Foot à 7 · Intermédiaire</div>
+            <div style="font-size:11px;color:var(--texte-doux);">Aujourd'hui · 19h · Terrain A</div>
+          </div>
+          <div style="background:var(--vert);color:#fff;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;">3 places</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== PAGE 5 : LOGO + DÉCLINAISONS =================== -->
+<div class="page">
+  <div class="page-head">
+    <h2>Logo & déclinaisons</h2>
+    <span class="num">04 / Identité</span>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:40px;">
+    <div style="background:var(--bleu-principal);border-radius:20px;height:220px;display:flex;align-items:center;justify-content:center;">
+      <div style="width:100px;height:100px;border-radius:50%;background:#fff;color:var(--bleu-principal);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:42px;letter-spacing:-2px;">A7</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--bleu-principal);border-radius:20px;height:220px;display:flex;align-items:center;justify-content:center;">
+      <div style="width:100px;height:100px;border-radius:50%;background:var(--bleu-principal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:42px;letter-spacing:-2px;">A7</div>
+    </div>
+    <div style="background:var(--bleu-clair);border-radius:20px;height:220px;display:flex;align-items:center;justify-content:center;">
+      <div style="width:100px;height:100px;border-radius:50%;background:var(--bleu-principal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:42px;letter-spacing:-2px;">A7</div>
+    </div>
+  </div>
+
+  <div style="font-size:14px;font-weight:800;color:var(--bleu-principal);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px;">Logo horizontal</div>
+
+  <div style="display:flex;gap:20px;align-items:center;background:var(--gris);padding:30px;border-radius:20px;justify-content:center;">
+    <div style="display:flex;align-items:center;gap:14px;font-weight:900;font-size:36px;color:var(--bleu-principal);">
+      <div style="width:60px;height:60px;border-radius:50%;background:var(--bleu-principal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;letter-spacing:-1px;">A7</div>
+      Club A7
+    </div>
+  </div>
+
+  <div style="margin-top:40px;padding:24px;background:var(--bleu-clair);border-radius:16px;">
+    <div style="font-size:14px;font-weight:800;color:var(--bleu-principal);margin-bottom:10px;">Règles d'usage</div>
+    <ul style="font-size:13px;line-height:1.9;color:var(--texte);padding-left:20px;">
+      <li>Toujours conserver une zone de respiration égale à la hauteur du monogramme « A7 »</li>
+      <li>Ne jamais déformer, incliner ou changer la couleur du logo</li>
+      <li>Fond blanc ou bleu principal uniquement</li>
+      <li>Version monochrome réservée aux impressions noir et blanc</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
