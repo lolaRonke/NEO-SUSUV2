@@ -48,7 +48,7 @@
       <button class="btn btn-primary" type="submit" id="infoBtn" data-fr="Enregistrer" data-en="Save">Enregistrer</button>
     </form>
   </div>
-  <div class="menu-item" style="cursor:default"><span class="menu-icon">🔐</span><div class="menu-text"><div class="menu-label" data-fr="Vérification d'identité (KYC)" data-en="Identity verification (KYC)">Vérification d'identité (KYC)</div><div class="menu-detail" data-fr="Bientôt disponible" data-en="Coming soon">Bientôt disponible</div></div><span class="chip chip-grey" data-fr="Bientôt" data-en="Soon">Bientôt</span></div>
+  <a class="menu-item" href="./kyc.html"><span class="menu-icon">🔐</span><div class="menu-text"><div class="menu-label" data-fr="Vérification d'identité (KYC)" data-en="Identity verification (KYC)">Vérification d'identité (KYC)</div><div class="menu-detail" id="kycDetail"></div></div><span class="menu-arrow">›</span></a>
   <div class="menu-item" style="cursor:default"><span class="menu-icon">💳</span><div class="menu-text"><div class="menu-label" data-fr="Moyens de paiement" data-en="Payment methods">Moyens de paiement</div><div class="menu-detail" data-fr="Mobile Money, carte bancaire" data-en="Mobile Money, bank card">Mobile Money, carte bancaire</div></div><span class="chip chip-grey" data-fr="Bientôt" data-en="Soon">Bientôt</span></div>
 
   <div class="section-title"><span data-fr="Sécurité" data-en="Security">Sécurité</span></div>
@@ -83,9 +83,9 @@ function render() {
   document.getElementById("pAvatar").textContent = (p.first_name || p.email || "?")[0].toUpperCase();
   document.getElementById("pName").textContent = (p.first_name + " " + p.last_name).trim();
   document.getElementById("pEmail").textContent = p.email || "";
-  const k = document.getElementById("pKyc");
-  if (p.kyc_status === "verified") { k.className = "chip chip-green"; k.textContent = t("✓ Identité vérifiée", "✓ Verified"); }
-  else { k.className = "chip chip-gold"; k.textContent = t("KYC en attente", "KYC pending"); }
+  const k = document.getElementById("pKyc"), ki = NS.kycInfo(p.kyc_status);
+  k.className = "chip " + ki.cls; k.textContent = ki.text.replace(" →", "");
+  document.getElementById("kycDetail").textContent = ki.text.replace(/^[^A-Za-zÀ-ÿ]+/, "");
   const pl = document.getElementById("pPlan");
   pl.className = "chip chip-violet"; pl.textContent = "Plan " + (NS.PLANS[p.plan] || NS.PLANS.free).name;
   document.getElementById("fFirst").value = p.first_name || "";

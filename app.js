@@ -144,7 +144,16 @@
     "PLAN_LIMIT_MEMBERS": ["Trop de membres pour votre plan (Free : 6, Premium : 20, Business : 50)", "Too many members for your plan (Free: 6, Premium: 20, Business: 50)"],
     "NOT_ENOUGH_MEMBERS": ["Il faut au moins 2 membres pour démarrer", "At least 2 members are needed to start"],
     "INVALID_INPUT": ["Vérifiez les champs du formulaire", "Please check the form fields"],
-    "FORBIDDEN": ["Accès refusé", "Access denied"]
+    "FORBIDDEN": ["Accès refusé", "Access denied"],
+    "KYC_ALREADY_VERIFIED": ["Ton identité est déjà vérifiée", "Your identity is already verified"],
+    "KYC_ALREADY_PENDING": ["Ton dossier est déjà en cours d'examen", "Your documents are already under review"],
+    "KYC_BACK_REQUIRED": ["Ajoute aussi le verso de la pièce", "Please add the back of the document too"],
+    "KYC_FILE_MISSING": ["Un fichier n'a pas été reçu, réessaie", "A file was not received, please retry"],
+    "KYC_FILE_INVALID": ["Fichier invalide", "Invalid file"],
+    "KYC_NOT_PENDING": ["Ce dossier a déjà été traité", "This file has already been reviewed"],
+    "REASON_REQUIRED": ["Indique le motif du refus", "Please give a reason for the rejection"],
+    "Payload too large": ["Fichier trop lourd (8 Mo maximum)", "File too large (8 MB max)"],
+    "mime type": ["Format non accepté (JPG, PNG, WEBP ou PDF)", "Format not accepted (JPG, PNG, WEBP or PDF)"]
   };
   function errText(err) {
     const raw = (err && (err.message || err.error_description || err)) + "";
@@ -176,7 +185,7 @@
   }
 
   const DEMO = {
-    profile: { first_name: "Aïcha", last_name: "Diallo", email: "demo@neo-susu.com", phone: "+221 77 123 45 67", country: "SN", score: 82, kyc_status: "pending", plan: "free", is_admin: false },
+    profile: { first_name: "Aïcha", last_name: "Diallo", email: "demo@neo-susu.com", phone: "+221 77 123 45 67", country: "SN", score: 82, kyc_status: "none", plan: "free", is_admin: false },
     summary: { tontine_count: 3, member_total: 22, next_turn: 1, received: [{ currency: "XOF", total: 245000 }], contributed: [{ currency: "XOF", total: 160000 }] },
     tontines: [
       { id: "demo-1", name: "Tontine Famille Diallo", amount: 25000, currency: "XOF", frequency: "monthly", max_members: 10, member_count: 8, status: "active", current_round: 4, my_turn: 5, paid_count: 6, paid_this_round: true },
@@ -261,6 +270,44 @@
     if (error) throw error;
   }
 
+  // ── Vérification d'identité (KYC) ──────────────────────────────
+  const KYC = {
+    none:     ["Vérifie ton identité →", "Verify your identity →", "chip-gold"],
+    pending:  ["⏳ Identité en cours de vérification", "⏳ Identity under review", "chip-violet"],
+    verified: ["✓ Identité vérifiée", "✓ Identity verified", "chip-green"],
+    rejected: ["✗ Vérification refusée — renvoyer", "✗ Verification rejected — resend", "chip-red"]
+  };
+  function kycInfo(status) { const x = KYC[status] || KYC.none; return { text: t(x[0], x[1]), cls: x[2] }; }
+
+  // Réduit les photos (max 2000 px, JPEG) pour accélérer l'envoi depuis un téléphone.
+  async function shrinkImage(file) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 600 * 1024) return file;
+    try {
+      const bmp = await createImageBitmap(file);
+      const k = Math.min(1, 2000 / Math.max(bmp.width, bmp.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.85));
+      return blob && blob.size < file.size ? new File([blob], "photo.jpg", { type: "image/jpeg" }) : file;
+    } catch (e) { return file; }
+  }
+  async function uploadKycFile(file, label) {
+    const u = await requireAuth();
+    const f = await shrinkImage(file);
+    if (f.size > 8 * 1024 * 1024) throw new Error("Payload too large");
+    const ext = f.type === "application/pdf" ? "pdf" : f.type === "image/png" ? "png" : f.type === "image/webp" ? "webp" : "jpg";
+    const path = u.id + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "-" + label + "." + ext;
+    const { error } = await sb.storage.from("kyc").upload(path, f, { contentType: f.type, upsert: false });
+    if (error) throw error;
+    return path;
+  }
+  async function kycSignedUrl(path) {
+    const { data, error } = await need().storage.from("kyc").createSignedUrl(path, 600);
+    if (error) throw error;
+    return data.signedUrl;
+  }
+
   // ── Démarrage commun ────────────────────────────────────────────
   function boot(opts) {
     opts = opts || {};
@@ -277,6 +324,6 @@
     esc, money, freqLabel, statusChip, PLANS, fee, toast, showMsg, hideMsg, setLoading, errText,
     isDemo, exitDemo, DEMO,
     getUser, requireAuth, signUp, signIn, signInWithGoogle, resetPassword, updatePassword, signOut,
-    rpc, getProfile, updateProfile, boot
+    rpc, getProfile, updateProfile, boot, kycInfo, uploadKycFile, kycSignedUrl
   };
 })();

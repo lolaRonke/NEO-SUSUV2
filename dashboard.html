@@ -40,7 +40,7 @@
     <div>
       <div class="welcome-text" data-fr="Bonjour 👋" data-en="Hello 👋">Bonjour 👋</div>
       <div class="user-name" id="userName">…</div>
-      <span class="chip chip-grey" id="kycBadge" style="margin-top:6px">…</span>
+      <a class="chip chip-grey" id="kycBadge" href="./kyc.html" style="margin-top:6px;text-decoration:none">…</a>
     </div>
     <a href="./profile.html" class="avatar gold lg" id="avatarEl" aria-label="Profil">?</a>
   </div>
@@ -122,10 +122,8 @@ function render() {
   document.getElementById("userName").textContent = (p.first_name + " " + p.last_name).trim() || p.email;
   document.getElementById("avatarEl").textContent = (p.first_name || p.email || "?")[0].toUpperCase();
 
-  const kyc = document.getElementById("kycBadge");
-  if (demo) { kyc.className = "chip chip-violet"; kyc.textContent = t("👁️ Mode démo", "👁️ Demo mode"); }
-  else if (p.kyc_status === "verified") { kyc.className = "chip chip-green"; kyc.textContent = t("✓ Identité vérifiée", "✓ Identity verified"); }
-  else { kyc.className = "chip chip-gold"; kyc.textContent = t("⏳ Vérification d'identité en attente", "⏳ Identity check pending"); }
+  const kyc = document.getElementById("kycBadge"), ki = NS.kycInfo(p.kyc_status);
+  kyc.className = "chip " + ki.cls; kyc.textContent = ki.text;
 
   const plan = NS.PLANS[p.plan] || NS.PLANS.free;
   document.getElementById("planName").textContent = t("Plan " + plan.name + " — commission " + String(plan.fee).replace(".", ",") + " %", plan.name + " plan — " + plan.fee + "% commission");

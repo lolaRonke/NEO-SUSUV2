@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B0912">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" href="./icons/icon-192.png">
+<title>NEO-SUSU — Vérification d'identité</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./neo-susu.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script src="./app.js"></script>
+<style>
+.steps { display: flex; gap: 6px; margin-bottom: 22px; }
+.steps div { flex: 1; height: 4px; border-radius: 4px; background: var(--raised); transition: background .3s; }
+.steps div.on { background: linear-gradient(90deg, var(--violet), var(--gold)); }
+.doc-types { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.doc-type { background: var(--card); border: 2px solid var(--stroke); border-radius: 16px; padding: 16px 10px; text-align: center; cursor: pointer; color: var(--text); font-family: var(--ff-b); transition: all .2s; }
+.doc-type:hover { border-color: var(--stroke-violet); }
+.doc-type.sel { border-color: var(--gold); background: rgba(212,175,55,.07); }
+.doc-type .ic { font-size: 26px; display: block; margin-bottom: 6px; }
+.doc-type .lb { font-size: 13px; font-weight: 700; }
+.drop { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1.5px dashed var(--stroke2); border-radius: 16px; padding: 14px; margin-bottom: 12px; cursor: pointer; transition: all .2s; }
+.drop:hover { border-color: var(--violet); }
+.drop.done { border-style: solid; border-color: rgba(16,185,129,.5); }
+.drop input { display: none; }
+.thumb { width: 64px; height: 64px; border-radius: 12px; background: var(--raised); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; overflow: hidden; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.drop-text { flex: 1; min-width: 0; }
+.drop-title { font-weight: 700; font-size: 14px; }
+.drop-sub { font-size: 12px; color: var(--text2); }
+.tips { font-size: 12px; color: var(--text2); line-height: 1.8; margin: 4px 0 16px; padding-left: 18px; }
+.status-card { text-align: center; padding: 30px 20px; }
+.status-icon { font-size: 54px; margin-bottom: 10px; position: relative; z-index: 1; }
+.status-title { font-family: var(--ff-s); font-size: 28px; font-weight: 700; margin-bottom: 8px; position: relative; z-index: 1; }
+.status-text { color: var(--text2); font-size: 14px; line-height: 1.6; position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="./profile.html" class="back-link" data-fr="← Retour au profil" data-en="← Back to profile">← Retour au profil</a>
+  <h1 class="page-title" data-fr="Vérification d'identité" data-en="Identity verification">Vérification d'identité</h1>
+  <p class="page-subtitle" data-fr="Obligatoire pour sécuriser les tontines et les versements." data-en="Required to secure tontines and payouts.">Obligatoire pour sécuriser les tontines et les versements.</p>
+
+  <div id="statusBox" class="hidden"></div>
+
+  <form id="kycForm" class="hidden" novalidate>
+    <div class="steps"><div id="st1" class="on"></div><div id="st2"></div><div id="st3"></div></div>
+    <div class="msg" id="msg" role="alert"></div>
+
+    <div class="section-title" style="margin-top:0"><span data-fr="1. Type de pièce" data-en="1. Document type">1. Type de pièce</span></div>
+    <div class="doc-types" id="docTypes">
+      <button type="button" class="doc-type" data-type="passport"><span class="ic">🛂</span><span class="lb" data-fr="Passeport" data-en="Passport">Passeport</span></button>
+      <button type="button" class="doc-type" data-type="id_card"><span class="ic">🪪</span><span class="lb" data-fr="Carte d'identité" data-en="ID card">Carte d'identité</span></button>
+      <button type="button" class="doc-type" data-type="residence_permit"><span class="ic">📄</span><span class="lb" data-fr="Titre de séjour" data-en="Residence permit">Titre de séjour</span></button>
+      <button type="button" class="doc-type" data-type="driver_license"><span class="ic">🚗</span><span class="lb" data-fr="Permis de conduire" data-en="Driving licence">Permis de conduire</span></button>
+    </div>
+    <div class="form-group">
+      <label for="docCountry" data-fr="Pays qui a délivré la pièce" data-en="Issuing country">Pays qui a délivré la pièce</label>
+      <select id="docCountry">
+        <option value="FR">🇫🇷 France</option><option value="BE">🇧🇪 Belgique</option><option value="GB">🇬🇧 United Kingdom</option>
+        <option value="SN">🇸🇳 Sénégal</option><option value="CI">🇨🇮 Côte d'Ivoire</option><option value="NG">🇳🇬 Nigeria</option>
+        <option value="GH">🇬🇭 Ghana</option><option value="CM">🇨🇲 Cameroun</option><option value="CD">🇨🇩 RD Congo</option>
+        <option value="ML">🇲🇱 Mali</option><option value="BJ">🇧🇯 Bénin</option><option value="TG">🇹🇬 Togo</option>
+        <option value="OTHER" data-fr="Autre" data-en="Other">Autre</option>
+      </select>
+    </div>
+
+    <div class="section-title"><span data-fr="2. Photos de la pièce" data-en="2. Document photos">2. Photos de la pièce</span></div>
+    <label class="drop" id="dropFront">
+      <input type="file" id="fFront" accept="image/jpeg,image/png,image/webp,application/pdf" capture="environment">
+      <div class="thumb" id="thFront">📷</div>
+      <div class="drop-text"><div class="drop-title" data-fr="Recto" data-en="Front">Recto</div><div class="drop-sub" id="sbFront" data-fr="Toucher pour prendre une photo" data-en="Tap to take a photo">Toucher pour prendre une photo</div></div>
+    </label>
+    <label class="drop" id="dropBack">
+      <input type="file" id="fBack" accept="image/jpeg,image/png,image/webp,application/pdf" capture="environment">
+      <div class="thumb" id="thBack">📷</div>
+      <div class="drop-text"><div class="drop-title" data-fr="Verso" data-en="Back">Verso</div><div class="drop-sub" id="sbBack" data-fr="Toucher pour prendre une photo" data-en="Tap to take a photo">Toucher pour prendre une photo</div></div>
+    </label>
+    <ul class="tips">
+      <li data-fr="Pièce en cours de validité, entière et lisible" data-en="Valid document, fully visible and readable">Pièce en cours de validité, entière et lisible</li>
+      <li data-fr="Sans reflet ni flou, sur un fond uni" data-en="No glare or blur, on a plain background">Sans reflet ni flou, sur un fond uni</li>
+    </ul>
+
+    <div class="section-title"><span data-fr="3. Selfie" data-en="3. Selfie">3. Selfie</span></div>
+    <label class="drop" id="dropSelfie">
+      <input type="file" id="fSelfie" accept="image/jpeg,image/png,image/webp" capture="user">
+      <div class="thumb" id="thSelfie">🤳</div>
+      <div class="drop-text"><div class="drop-title" data-fr="Photo de ton visage" data-en="Photo of your face">Photo de ton visage</div><div class="drop-sub" id="sbSelfie" data-fr="Visage dégagé, bien éclairé, sans lunettes de soleil" data-en="Face uncovered, well lit, no sunglasses">Visage dégagé, bien éclairé, sans lunettes de soleil</div></div>
+    </label>
+
+    <div class="info-box" style="margin-top:14px">🔒 <span data-fr="Tes documents sont stockés de façon privée et ne sont visibles que par l'équipe NEO-SUSU chargée de la vérification." data-en="Your documents are stored privately and only visible to the NEO-SUSU verification team.">Tes documents sont stockés de façon privée et ne sont visibles que par l'équipe NEO-SUSU chargée de la vérification.</span></div>
+    <button type="submit" class="btn btn-primary btn-submit" id="submitBtn" data-fr="Envoyer pour vérification ✦" data-en="Submit for verification ✦">Envoyer pour vérification ✦</button>
+  </form>
+</div>
+<script>
+NS.boot({ demoBanner: true });
+const t = NS.t, esc = NS.esc;
+const demo = NS.isDemo();
+let docType = null, profile = null, last = null;
+const files = { front: null, back: null, selfie: null };
+
+function renderStatus() {
+  const box = document.getElementById("statusBox"), form = document.getElementById("kycForm");
+  const s = profile ? profile.kyc_status : "none";
+  if (s === "none" || s === "rejected") {
+    form.classList.remove("hidden");
+    if (s === "rejected") {
+      box.classList.remove("hidden");
+      box.innerHTML = '<div class="msg msg-error show">✗ ' + esc(t("Ta précédente demande a été refusée", "Your previous request was rejected")) +
+        (last && last.reject_reason ? " : " + esc(last.reject_reason) : "") + ". " + esc(t("Tu peux renvoyer tes documents ci-dessous.", "You can resend your documents below.")) + "</div>";
+    } else box.classList.add("hidden");
+    return;
+  }
+  form.classList.add("hidden");
+  box.classList.remove("hidden");
+  const v = s === "verified";
+  box.innerHTML = '<div class="hero-card status-card"><div class="status-icon">' + (v ? "✅" : "⏳") + '</div>' +
+    '<div class="status-title">' + esc(v ? t("Identité vérifiée", "Identity verified") : t("Vérification en cours", "Under review")) + "</div>" +
+    '<div class="status-text">' + esc(v
+      ? t("Merci ! Ton compte est entièrement vérifié.", "Thank you! Your account is fully verified.")
+      : t("Nous avons bien reçu tes documents. L'équipe NEO-SUSU les examine, généralement sous 48 h. Le résultat apparaîtra ici et sur ton tableau de bord.", "We received your documents. The NEO-SUSU team is reviewing them, usually within 48 hours. The result will show here and on your dashboard.")) +
+    "</div></div>" + '<a href="./dashboard.html" class="btn btn-secondary" style="margin-top:16px">' + esc(t("Retour au tableau de bord", "Back to dashboard")) + "</a>";
+}
+
+function updateSteps() {
+  const needBack = docType && docType !== "passport";
+  document.getElementById("dropBack").classList.toggle("hidden", !needBack);
+  document.getElementById("st1").classList.toggle("on", true);
+  document.getElementById("st2").classList.toggle("on", !!docType && !!files.front && (!needBack || !!files.back));
+  document.getElementById("st3").classList.toggle("on", !!files.selfie);
+}
+
+document.querySelectorAll(".doc-type").forEach(b => b.addEventListener("click", () => {
+  docType = b.dataset.type;
+  document.querySelectorAll(".doc-type").forEach(x => x.classList.toggle("sel", x === b));
+  updateSteps();
+}));
+
+[["fFront", "front", "thFront", "sbFront", "dropFront"], ["fBack", "back", "thBack", "sbBack", "dropBack"], ["fSelfie", "selfie", "thSelfie", "sbSelfie", "dropSelfie"]].forEach(([inp, key, th, sb, drop]) => {
+  document.getElementById(inp).addEventListener("change", e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.size > 15 * 1024 * 1024) { NS.toast(t("Fichier trop lourd", "File too large"), "err"); e.target.value = ""; return; }
+    files[key] = f;
+    const thumb = document.getElementById(th);
+    if (f.type.startsWith("image/")) {
+      const url = URL.createObjectURL(f);
+      thumb.innerHTML = '<img alt="" src="' + url + '">';
+    } else thumb.textContent = "📄";
+    document.getElementById(sb).textContent = "✓ " + f.name;
+    document.getElementById(drop).classList.add("done");
+    updateSteps();
+  });
+});
+
+document.getElementById("kycForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  NS.hideMsg("msg");
+  if (!docType) return NS.showMsg("msg", t("Choisis le type de pièce", "Choose the document type"));
+  if (!files.front) return NS.showMsg("msg", t("Ajoute la photo du recto", "Add a photo of the front"));
+  if (docType !== "passport" && !files.back) return NS.showMsg("msg", t("Ajoute la photo du verso", "Add a photo of the back"));
+  if (!files.selfie) return NS.showMsg("msg", t("Ajoute ton selfie", "Add your selfie"));
+  const btn = document.getElementById("submitBtn");
+  if (demo) {
+    profile.kyc_status = "pending";
+    NS.toast(t("Dossier envoyé (démo) ✓", "Documents sent (demo) ✓"), "ok");
+    return renderStatus();
+  }
+  try {
+    NS.setLoading(btn, true, t("Envoi du recto…", "Uploading front…"));
+    const front = await NS.uploadKycFile(files.front, "front");
+    let back = null;
+    if (docType !== "passport") { btn.textContent = t("Envoi du verso…", "Uploading back…"); back = await NS.uploadKycFile(files.back, "back"); }
+    btn.textContent = t("Envoi du selfie…", "Uploading selfie…");
+    const selfie = await NS.uploadKycFile(files.selfie, "selfie");
+    btn.textContent = t("Finalisation…", "Finishing…");
+    await NS.rpc("submit_kyc", { p_doc_type: docType, p_doc_country: document.getElementById("docCountry").value, p_front: front, p_back: back, p_selfie: selfie });
+    profile.kyc_status = "pending";
+    NS.toast(t("Dossier envoyé ✓", "Documents sent ✓"), "ok");
+    renderStatus();
+  } catch (err) {
+    NS.showMsg("msg", NS.errText(err));
+  }
+  NS.setLoading(btn, false);
+});
+
+document.addEventListener("langchange", renderStatus);
+
+(async () => {
+  if (demo) { profile = Object.assign({}, NS.DEMO.profile); updateSteps(); return renderStatus(); }
+  try {
+    profile = await NS.getProfile();
+    if (profile.country) { const o = document.querySelector('#docCountry option[value="' + profile.country + '"]'); if (o) o.selected = true; }
+    if (profile.kyc_status === "rejected") {
+      const { data } = await NS.sb.from("kyc_submissions").select("reject_reason, created_at").order("created_at", { ascending: false }).limit(1);
+      last = data && data[0];
+    }
+    updateSteps();
+    renderStatus();
+  } catch (err) { if (err.message !== "redirect") NS.toast(NS.errText(err), "err"); }
+})();
+</script>
+</body>
+</html>

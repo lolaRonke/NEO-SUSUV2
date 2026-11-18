@@ -16,7 +16,8 @@ NEO-SUSU · SIREN 914 419 494
 | `join-tontine.html` | Rejoindre avec un code ou un lien `join-tontine.html?code=XXXXXX` |
 | `tontine-detail.html` | Membres, ordre de passage, paiement du tour, invitation |
 | `profile.html` | Infos personnelles, mot de passe, langue |
-| `admin.html` | Statistiques (réservé aux comptes `is_admin`) |
+| `kyc.html` | Vérification d'identité : pièce (recto/verso) + selfie |
+| `admin.html` | Statistiques et validation des identités (réservé aux comptes `is_admin`) |
 
 Fichiers communs : `neo-susu.css` (charte), `app.js` (langue FR/EN, Supabase, démo), `config.js` (URL et clé publique Supabase).
 
@@ -34,7 +35,17 @@ Commission par cotisation selon le plan : Free 1,5 % · Premium 0,5 % · Busines
 
 ## Base de données
 
-Le schéma complet est dans `supabase/schema.sql` (tables, sécurité RLS, fonctions). Pour l'installer sur un projet Supabase : SQL Editor → coller le fichier → Run.
+Les scripts sont dans `supabase/`, à exécuter **dans l'ordre** (SQL Editor → coller le fichier → Run) :
+
+1. `schema.sql` — tables, sécurité RLS, fonctions des tontines
+2. `002_kyc.sql` — vérification d'identité (espace de stockage privé `kyc`, dossiers, validation admin)
+
+## Vérification d'identité (KYC)
+
+- L'utilisateur choisit sa pièce (passeport, carte d'identité, titre de séjour, permis), envoie le recto, le verso (sauf passeport) et un selfie. Les photos sont réduites dans le téléphone avant l'envoi (8 Mo max ; JPG, PNG, WEBP ou PDF).
+- Les fichiers vont dans un espace privé : chacun ne voit que les siens, seuls les administrateurs voient tout. Ils ne peuvent pas être modifiés après l'envoi.
+- Statuts : non envoyé → en cours → vérifié, ou refusé (avec motif, l'utilisateur peut renvoyer).
+- La validation se fait à la main dans `admin.html` (photos affichées via des liens temporaires de 10 minutes).
 
 Pour donner les droits administrateur à un compte :
 

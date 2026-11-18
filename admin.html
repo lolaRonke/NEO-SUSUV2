@@ -22,6 +22,13 @@ table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--text3); padding: 8px 6px; border-bottom: 1px solid var(--stroke2); }
 td { padding: 10px 6px; border-bottom: 1px solid var(--stroke); vertical-align: top; }
 .tbl { overflow-x: auto; }
+.kyc-card { background: var(--card); border: 1px solid var(--stroke); border-radius: 18px; padding: 16px; margin-bottom: 12px; }
+.kyc-docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+.kyc-doc { aspect-ratio: 4/3; border-radius: 12px; background: var(--raised); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text2); text-decoration: none; text-align: center; position: relative; }
+.kyc-doc img { width: 100%; height: 100%; object-fit: cover; }
+.kyc-doc span { position: absolute; bottom: 4px; left: 4px; background: rgba(11,9,18,.75); padding: 2px 6px; border-radius: 6px; font-size: 10px; color: var(--text); }
+.kyc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.kyc-actions .btn { padding: 12px; }
 </style>
 </head>
 <body>
@@ -30,11 +37,14 @@ td { padding: 10px 6px; border-bottom: 1px solid var(--stroke); vertical-align: 
   <h1 class="page-title" data-fr="Espace administrateur" data-en="Admin space">Espace administrateur</h1>
   <p class="page-subtitle" data-fr="Vue d'ensemble de la plateforme" data-en="Platform overview">Vue d'ensemble de la plateforme</p>
   <div id="root"><div class="skel" style="height:200px"></div></div>
+  <div class="section-title"><span data-fr="Identités à vérifier" data-en="Identities to review">Identités à vérifier</span><span class="chip chip-gold" id="kycCount"></span></div>
+  <div id="kycList"><div class="skel" style="height:120px"></div></div>
 </div>
 <script>
 NS.boot();
 const t = NS.t, esc = NS.esc;
 let s = null;
+const KYC_SHORT = k => ({ none: t("Non envoyé", "Not sent"), pending: t("En cours", "In review"), verified: t("Vérifié", "Verified"), rejected: t("Refusé", "Rejected") }[k] || k);
 
 function render() {
   const root = document.getElementById("root");
@@ -53,20 +63,78 @@ function render() {
     "</tbody></table></div>" +
     '<div class="section-title"><span>' + esc(t("Derniers inscrits", "Latest sign-ups")) + "</span></div>" +
     '<div class="card tbl"><table><thead><tr><th>' + esc(t("Nom", "Name")) + "</th><th>" + esc(t("Pays", "Country")) + "</th><th>Plan</th><th>KYC</th></tr></thead><tbody>" +
-    ((s.recent_users || []).map(u => "<tr><td>" + esc(u.name) + "</td><td>" + esc(u.country || "—") + "</td><td>" + esc(u.plan) + "</td><td>" + esc(u.kyc_status) + "</td></tr>").join("") || '<tr><td colspan="4" class="hint">—</td></tr>') +
+    ((s.recent_users || []).map(u => "<tr><td>" + esc(u.name) + "</td><td>" + esc(u.country || "—") + "</td><td>" + esc(u.plan) + "</td><td>" + esc(KYC_SHORT(u.kyc_status)) + "</td></tr>").join("") || '<tr><td colspan="4" class="hint">—</td></tr>') +
     "</tbody></table></div>";
 }
 document.addEventListener("langchange", render);
 
+const DOC = { passport: ["Passeport", "Passport"], id_card: ["Carte d'identité", "ID card"], residence_permit: ["Titre de séjour", "Residence permit"], driver_license: ["Permis de conduire", "Driving licence"] };
+let kycItems = [];
+
+async function docTile(path, label) {
+  if (!path) return "";
+  try {
+    const url = await NS.kycSignedUrl(path);
+    const inner = /\.pdf$/i.test(path) ? "📄 PDF" : '<img alt="" src="' + esc(url) + '">';
+    return '<a class="kyc-doc" href="' + esc(url) + '" target="_blank" rel="noopener">' + inner + "<span>" + esc(label) + "</span></a>";
+  } catch (e) { return '<div class="kyc-doc">⚠️<span>' + esc(label) + "</span></div>"; }
+}
+
+async function renderKyc() {
+  const list = document.getElementById("kycList");
+  document.getElementById("kycCount").textContent = kycItems.length;
+  if (!kycItems.length) { list.innerHTML = '<div class="empty">' + esc(t("Aucun dossier en attente ✓", "No pending files ✓")) + "</div>"; return; }
+  const cards = await Promise.all(kycItems.map(async k => {
+    const d = DOC[k.doc_type] || [k.doc_type, k.doc_type];
+    const date = new Date(k.created_at).toLocaleString(NS.lang === "en" ? "en-GB" : "fr-FR", { dateStyle: "short", timeStyle: "short" });
+    const tiles = (await Promise.all([docTile(k.front_path, t("Recto", "Front")), docTile(k.back_path, t("Verso", "Back")), docTile(k.selfie_path, "Selfie")])).join("");
+    return '<div class="kyc-card" data-id="' + esc(k.id) + '">' +
+      '<div class="tc-head"><div><div class="member-name">' + esc(k.first_name + " " + k.last_name) + '</div><div class="member-detail">' + esc(k.email) + (k.phone ? " · " + esc(k.phone) : "") + "</div></div>" +
+      '<span class="chip chip-violet">' + esc(t(d[0], d[1])) + " · " + esc(k.doc_country || "—") + "</span></div>" +
+      '<div class="hint">' + esc(t("Envoyé le ", "Sent ") + date) + "</div>" +
+      '<div class="kyc-docs">' + tiles + "</div>" +
+      '<input class="reason" maxlength="300" placeholder="' + esc(t("Motif en cas de refus (ex. photo floue, pièce expirée)", "Reason if rejected (e.g. blurry photo, expired document)")) + '">' +
+      '<div class="kyc-actions"><button class="btn btn-ghost" data-act="reject" type="button" style="color:#F59A9A">' + esc(t("✗ Refuser", "✗ Reject")) + '</button><button class="btn btn-emerald" data-act="approve" type="button">' + esc(t("✓ Valider", "✓ Approve")) + "</button></div></div>";
+  }));
+  list.innerHTML = cards.join("");
+}
+
+async function loadKyc() {
+  try { kycItems = await NS.rpc("admin_kyc_pending") || []; await renderKyc(); }
+  catch (err) { document.getElementById("kycList").innerHTML = '<div class="empty">⚠️ ' + esc(NS.errText(err)) + "</div>"; }
+}
+
+document.getElementById("kycList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]");
+  if (!b) return;
+  const card = b.closest(".kyc-card"), approve = b.dataset.act === "approve";
+  const reason = card.querySelector(".reason").value.trim();
+  if (!approve && reason.length < 3) { card.querySelector(".reason").focus(); return NS.toast(t("Indique le motif du refus", "Please give a reason"), "err"); }
+  if (approve && !confirm(t("Valider l'identité de cette personne ?", "Approve this person's identity?"))) return;
+  NS.setLoading(b, true, "…");
+  try {
+    await NS.rpc("admin_review_kyc", { p_submission: card.dataset.id, p_approve: approve, p_reason: approve ? null : reason });
+    NS.toast(approve ? t("Identité validée ✓", "Identity approved ✓") : t("Dossier refusé", "File rejected"), "ok");
+    kycItems = kycItems.filter(k => k.id !== card.dataset.id);
+    card.remove();
+    document.getElementById("kycCount").textContent = kycItems.length;
+    if (!kycItems.length) renderKyc();
+    if (s) { s.kyc_pending = Math.max(0, s.kyc_pending - 1); render(); }
+  } catch (err) { NS.toast(NS.errText(err), "err"); NS.setLoading(b, false); }
+});
+
 (async () => {
   const root = document.getElementById("root");
-  if (NS.isDemo()) { root.innerHTML = '<div class="empty">' + esc(t("L'espace administrateur n'est pas disponible en mode démo.", "The admin space is not available in demo mode.")) + "</div>"; return; }
+  const hideKyc = () => { document.getElementById("kycList").innerHTML = ""; document.getElementById("kycCount").textContent = ""; };
+  if (NS.isDemo()) { hideKyc(); root.innerHTML = '<div class="empty">' + esc(t("L'espace administrateur n'est pas disponible en mode démo.", "The admin space is not available in demo mode.")) + "</div>"; return; }
   try {
     await NS.requireAuth();
     s = await NS.rpc("admin_stats");
     render();
+    loadKyc();
   } catch (err) {
     if (err.message === "redirect") return;
+    hideKyc();
     root.innerHTML = '<div class="empty">🔒 ' + esc(/FORBIDDEN/.test(err.message) ? t("Accès réservé aux administrateurs.", "Administrators only.") : NS.errText(err)) + "</div>";
   }
 })();
