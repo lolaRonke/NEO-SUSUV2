@@ -1,119 +1,183 @@
 <!DOCTYPE html>
-<html lang="fr" id="html-root">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1C1A17">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B0912">
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-<title>NEO-SUSU — Detail tontine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="./icons/icon-192.png">
+<title>NEO-SUSU — Détail de la tontine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script src="./app.js"></script>
 <style>
-  .tontine-header{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;}
-  .tontine-title{font-family:var(--ff-s);font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
-  .tontine-meta{color:var(--text2);font-size:13px;margin-bottom:16px;}
-  .key-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .key-stat{background:var(--raised);padding:14px;border-radius:14px;}
-  .key-stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px;font-weight:700;}
-  .key-stat-value{font-family:var(--ff-s);font-size:20px;font-weight:700;color:var(--text);}
-  .member-card{background:var(--card);border:1px solid var(--stroke);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;}
-  .member-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);display:flex;align-items:center;justify-content:center;font-family:var(--ff-s);font-size:20px;font-weight:700;flex-shrink:0;}
-  .member-info{flex:1;}.member-name{font-weight:700;font-size:15px;margin-bottom:2px;}.member-detail{font-size:12px;color:var(--text2);}
-  .member-status{font-size:10px;padding:4px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
-  .status-paid{background:rgba(43,173,122,.15);color:var(--em);}.status-pending{background:rgba(212,148,10,.15);color:var(--gold);}.status-late{background:rgba(212,82,74,.15);color:var(--red);}.status-received{background:rgba(122,171,204,.15);color:var(--sky);}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
-</style>
-
-<style>
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
+.t-title { font-family: var(--ff-s); font-size: 30px; font-weight: 700; line-height: 1.1; background: linear-gradient(135deg, var(--gold-pale), var(--gold)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+.t-meta { color: var(--text2); font-size: 13px; margin-bottom: 14px; }
+.t-desc { color: var(--text2); font-size: 13px; margin-bottom: 14px; font-style: italic; }
+.key-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: relative; z-index: 1; }
+.key-stat { background: rgba(11,9,18,.55); padding: 12px 14px; border-radius: 14px; }
+.ks-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; font-weight: 700; }
+.ks-value { font-family: var(--ff-s); font-size: 18px; font-weight: 700; white-space: nowrap; }
+.turn { font-family: var(--ff-s); font-size: 18px; font-weight: 700; color: var(--text3); width: 26px; text-align: center; }
 </style>
 </head>
 <body>
-
-<div class="lang-bar">
-  <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')" title="Francais">🇫🇷</span>
-  <div class="lang-sep"></div>
-  <span class="lang-flag" id="flag-en" onclick="setLang('en')" title="English">🇬🇧</span>
-</div>
 <div class="container">
   <a href="./dashboard.html" class="back-link" data-fr="← Retour au tableau de bord" data-en="← Back to dashboard">← Retour au tableau de bord</a>
-  <div class="tontine-header">
-    <div class="tontine-title" data-fr="Tontine Famille Diallo" data-en="Diallo Family Tontine">🌟 Tontine Famille Diallo</div>
-    <div class="tontine-meta" data-fr="Creee le 15 janvier 2026 · Mensuelle" data-en="Created Jan 15, 2026 · Monthly">Creee le 15 janvier 2026 · Mensuelle</div>
-    <div class="key-stats">
-      <div class="key-stat"><div class="key-stat-label" data-fr="Cotisation" data-en="Contribution">Cotisation</div><div class="key-stat-value">25 000 FCFA</div></div>
-      <div class="key-stat"><div class="key-stat-label" data-fr="Pot total" data-en="Total pot">Pot total</div><div class="key-stat-value">250 000 FCFA</div></div>
-      <div class="key-stat"><div class="key-stat-label" data-fr="Membres" data-en="Members">Membres</div><div class="key-stat-value">8 / 10</div></div>
-      <div class="key-stat"><div class="key-stat-label" data-fr="Tour actuel" data-en="Current round">Tour actuel</div><div class="key-stat-value">4 / 10</div></div>
-    </div>
-  </div>
-  <div class="section-title"><span data-fr="Membres et paiements" data-en="Members and payments">Membres et paiements</span></div>
-  <div class="member-card"><div class="member-avatar">A</div><div class="member-info"><div class="member-name">Aicha Diallo (<span data-fr="Toi" data-en="You">Toi</span>)</div><div class="member-detail" data-fr="Tour 4 · A recu son pot" data-en="Round 4 · Received pot">Tour 4 · A recu son pot</div></div><span class="member-status status-received" data-fr="Recu" data-en="Received">Recu</span></div>
-  <div class="member-card"><div class="member-avatar">M</div><div class="member-info"><div class="member-name">Mamadou Diallo</div><div class="member-detail" data-fr="Tour 5 · Prochain beneficiaire" data-en="Round 5 · Next beneficiary">Tour 5 · Prochain beneficiaire</div></div><span class="member-status status-paid" data-fr="Paye" data-en="Paid">Paye</span></div>
-  <div class="member-card"><div class="member-avatar">F</div><div class="member-info"><div class="member-name">Fatou Sow</div><div class="member-detail" data-fr="Tour 6" data-en="Round 6">Tour 6</div></div><span class="member-status status-paid" data-fr="Paye" data-en="Paid">Paye</span></div>
-  <div class="member-card"><div class="member-avatar">I</div><div class="member-info"><div class="member-name">Ibrahim Kone</div><div class="member-detail" data-fr="Tour 7" data-en="Round 7">Tour 7</div></div><span class="member-status status-pending" data-fr="En attente" data-en="Pending">En attente</span></div>
-  <div class="member-card"><div class="member-avatar">K</div><div class="member-info"><div class="member-name">Kadiatou Bah</div><div class="member-detail" data-fr="Tour 8" data-en="Round 8">Tour 8</div></div><span class="member-status status-late" data-fr="En retard" data-en="Late">En retard</span></div>
-  <div class="member-card"><div class="member-avatar">S</div><div class="member-info"><div class="member-name">Seydou Traore</div><div class="member-detail" data-fr="Tour 9" data-en="Round 9">Tour 9</div></div><span class="member-status status-paid" data-fr="Paye" data-en="Paid">Paye</span></div>
-  <!-- COMMISSION INFO -->
-  <div style="background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px;margin-top:20px;">
-    <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;" data-fr="Detail du paiement" data-en="Payment breakdown">Detail du paiement</div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
-      <span data-fr="Cotisation" data-en="Contribution">Cotisation</span>
-      <span style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">25 000 FCFA</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;" id="feeRow">
-      <span id="feeLabel">Commission NEO-SUSU (Free 1,5%)</span>
-      <span id="feeAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">375 FCFA</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;">
-      <span data-fr="Total a payer" data-en="Total to pay">Total a payer</span>
-      <span id="totalAmt" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:var(--gold);">25 375 FCFA</span>
-    </div>
-    <div style="font-size:11px;color:var(--text2);margin-top:8px;padding:8px;background:rgba(212,148,10,.05);border-radius:8px;">
-      💡 <span id="feeHint" data-fr="Passez Premium pour reduire la commission a 0,5%" data-en="Go Premium to reduce commission to 0.5%">Passez Premium pour reduire la commission a 0,5%</span>
-    </div>
-  </div>
+  <div id="root"><div class="skel" style="height:220px;margin-bottom:16px"></div><div class="skel" style="height:60px;margin-bottom:8px"></div><div class="skel" style="height:60px"></div></div>
+</div>
 
-  <div class="actions" style="margin-top:14px;">
-    <a href="#" class="btn btn-primary" onclick="showPayConfirm();return false;" data-fr="💳 Payer ma part" data-en="💳 Pay my share">💳 Payer ma part</a>
-    <a href="#" class="btn btn-secondary" onclick="return false;" data-fr="📤 Inviter" data-en="📤 Invite">📤 Inviter</a>
-  </div>
-
-  <!-- PAY CONFIRM TOAST -->
-  <div id="payConfirm" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;align-items:flex-end;justify-content:center;">
-    <div style="background:var(--surf);border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;">
-      <div style="font-family:var(--ff-s);font-size:22px;font-weight:700;margin-bottom:6px;" data-fr="Confirmer le paiement" data-en="Confirm payment">Confirmer le paiement</div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:18px;" id="confirmSub">25 375 FCFA au total (dont 375 FCFA de commission)</div>
-      <div style="display:flex;gap:10px;">
-        <button onclick="document.getElementById('payConfirm').style.display='none'" style="flex:1;padding:14px;background:var(--raised);border:1px solid var(--stroke2);color:var(--text);border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Annuler" data-en="Cancel">Annuler</button>
-        <button onclick="doPayment()" style="flex:1;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);border:none;border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Confirmer" data-en="Confirm">Confirmer ✦</button>
-      </div>
+<!-- Confirmation de paiement -->
+<div class="modal-bg" id="payModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" data-fr="Confirmer ma cotisation" data-en="Confirm my contribution">Confirmer ma cotisation</div>
+    <div class="modal-sub" id="paySub"></div>
+    <div class="info-box gold" data-fr="Le paiement en ligne (carte, Mobile Money) n'est pas encore activé : ce bouton enregistre que tu as payé ta part à l'organisateur·rice, pour que tout le groupe suive les versements." data-en="Online payment (card, Mobile Money) is not live yet: this records that you paid your share to the organiser, so the whole group can track payments.">Le paiement en ligne (carte, Mobile Money) n'est pas encore activé : ce bouton enregistre que tu as payé ta part à l'organisateur·rice, pour que tout le groupe suive les versements.</div>
+    <div class="actions" style="margin-top:8px">
+      <button class="btn btn-ghost" id="payCancel" type="button" data-fr="Annuler" data-en="Cancel">Annuler</button>
+      <button class="btn btn-emerald" id="payConfirm" type="button" data-fr="Confirmer ✦" data-en="Confirm ✦">Confirmer ✦</button>
     </div>
   </div>
 </div>
 
 <script>
-let currentLang = localStorage.getItem("ns_lang") || "fr";
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
-  document.querySelectorAll("[data-fr]").forEach(el => {
-    const val = el.getAttribute("data-" + lang);
-    if (val) el.textContent = val;
-  });
-  const fFr = document.getElementById("flag-fr");
-  const fEn = document.getElementById("flag-en");
-  if(fFr) fFr.classList.toggle("active", lang === "fr");
-  if(fEn) fEn.classList.toggle("active", lang === "en");
+NS.boot({ demoBanner: true });
+const t = NS.t, esc = NS.esc;
+const demo = NS.isDemo();
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+let d = null;
+
+function inviteLink() { return NS.BASE + "join-tontine.html?code=" + encodeURIComponent(d.invite_code); }
+
+function render() {
+  if (!d) return;
+  const root = document.getElementById("root");
+  const me = d.members.find(m => m.is_me) || {};
+  const n = d.members.length;
+  const myFee = NS.fee(d.amount, d.my_plan);
+  const beneficiary = d.members.find(m => m.turn_order === d.current_round);
+  const started = new Date(d.start_date + "T00:00:00").toLocaleDateString(NS.lang === "en" ? "en-GB" : "fr-FR", { day: "numeric", month: "long", year: "numeric" });
+
+  let html = '<div class="hero-card">' +
+    '<div class="tc-head" style="position:relative;z-index:1"><div class="t-title">' + esc(d.name) + "</div>" + NS.statusChip(d.status) + "</div>" +
+    '<div class="t-meta">' + esc(NS.freqLabel(d.frequency) + " · " + t("1er tour le ", "First round ") + started) + "</div>" +
+    (d.description ? '<div class="t-desc">' + esc(d.description) + "</div>" : "") +
+    '<div class="key-stats">' +
+      '<div class="key-stat"><div class="ks-label">' + esc(t("Cotisation", "Contribution")) + '</div><div class="ks-value">' + esc(NS.money(d.amount, d.currency)) + "</div></div>" +
+      '<div class="key-stat"><div class="ks-label">' + esc(t("Pot par tour", "Pot per round")) + '</div><div class="ks-value" style="color:var(--em-pale)">' + esc(NS.money(d.amount * (d.status === "waiting" ? d.max_members : n), d.currency)) + "</div></div>" +
+      '<div class="key-stat"><div class="ks-label">' + esc(t("Membres", "Members")) + '</div><div class="ks-value">' + n + " / " + d.max_members + "</div></div>" +
+      '<div class="key-stat"><div class="ks-label">' + esc(t("Tour actuel", "Current round")) + '</div><div class="ks-value">' + (d.status === "waiting" ? "—" : Math.min(d.current_round, n) + " / " + n) + "</div></div>" +
+    "</div></div>";
+
+  // Bloc d'action principal selon l'état
+  if (d.status === "waiting") {
+    html += '<div class="card" style="margin-bottom:16px">' +
+      '<div class="fee-title">' + esc(t("Invite tes proches", "Invite your people")) + "</div>" +
+      '<div class="code-display">' + esc(d.invite_code) + "</div>" +
+      '<div class="actions" style="margin-top:10px"><button class="btn btn-secondary" id="copyCode" type="button">' + esc(t("Copier le code", "Copy code")) + '</button><button class="btn btn-primary" id="shareBtn" type="button">' + esc(t("📤 Partager le lien", "📤 Share link")) + "</button></div>" +
+      (d.is_owner ? '<p class="hint" style="margin-top:12px">' + esc(t("La tontine démarre automatiquement quand elle est complète. Tu peux aussi la lancer maintenant avec les membres déjà inscrits (2 minimum).", "The tontine starts automatically when full. You can also start it now with the current members (2 minimum).")) + '</p><button class="btn btn-emerald" id="startBtn" type="button" style="margin-top:10px"' + (n < 2 ? " disabled" : "") + ">" + esc(t("▶ Démarrer avec " + n + " membres", "▶ Start with " + n + " members")) + "</button>" : "") +
+      "</div>";
+  } else if (d.status === "active") {
+    html += '<div class="fee-box"><div class="fee-title">' + esc(t("Tour " + d.current_round + " — bénéficiaire : ", "Round " + d.current_round + " — beneficiary: ") + (beneficiary ? beneficiary.first_name + " " + beneficiary.last_name : "—")) + "</div>" +
+      '<div class="fee-row"><span>' + esc(t("Ma cotisation", "My contribution")) + '</span><span class="fee-val">' + esc(NS.money(d.amount, d.currency)) + "</span></div>" +
+      '<div class="fee-row"><span>' + esc(t("Commission NEO-SUSU (plan ", "NEO-SUSU fee (") + NS.PLANS[d.my_plan].name + " " + String(NS.PLANS[d.my_plan].fee).replace(".", NS.lang === "en" ? "." : ",") + " %)") + '</span><span class="fee-val" style="color:var(--violet-pale)">' + esc(NS.money(myFee, d.currency)) + "</span></div>" +
+      '<div class="fee-row"><span>' + esc(t("Total à payer", "Total to pay")) + '</span><span class="fee-val" style="color:var(--gold)">' + esc(NS.money(d.amount + myFee, d.currency)) + "</span></div></div>" +
+      (me.paid
+        ? '<div class="msg msg-ok show">✓ ' + esc(t("Tu as payé ta part pour ce tour. Merci !", "You paid your share for this round. Thank you!")) + "</div>"
+        : '<button class="btn btn-primary" id="payBtn" type="button">' + esc(t("💳 J'ai payé ma part", "💳 I paid my share")) + "</button>");
+  } else {
+    html += '<div class="msg msg-ok show">🎉 ' + esc(t("Cycle terminé : chaque membre a reçu le pot. Bravo à tout le groupe !", "Cycle complete: every member received the pot. Well done everyone!")) + "</div>";
+  }
+
+  // Membres
+  const paidCount = d.members.filter(m => m.paid).length;
+  html += '<div class="section-title"><span>' + esc(t("Membres et ordre de passage", "Members and turn order")) + "</span>" +
+    (d.status === "active" ? '<span class="chip chip-green">' + paidCount + "/" + n + " " + esc(t("payé", "paid")) + "</span>" : "") + "</div>";
+  html += d.members.map(m => {
+    let chip;
+    if (m.received) chip = '<span class="chip chip-violet">' + esc(t("A reçu", "Received")) + "</span>";
+    else if (d.status !== "active") chip = "";
+    else if (m.paid) chip = '<span class="chip chip-green">' + esc(t("Payé", "Paid")) + "</span>";
+    else chip = '<span class="chip chip-gold">' + esc(t("En attente", "Pending")) + "</span>";
+    const detail = m.turn_order === d.current_round && d.status === "active"
+      ? t("Reçoit le pot ce tour-ci", "Receives the pot this round")
+      : t("Reçoit au tour " + m.turn_order, "Receives in round " + m.turn_order);
+    return '<div class="member-card' + (m.is_me ? " me" : "") + '"><div class="turn">' + m.turn_order + '</div><div class="avatar' + (m.is_me ? " gold" : "") + '">' + esc((m.first_name || "?")[0].toUpperCase()) + "</div>" +
+      '<div class="member-info"><div class="member-name">' + esc(m.first_name + " " + m.last_name) + (m.is_me ? " (" + esc(t("toi", "you")) + ")" : "") + '</div><div class="member-detail">' + esc(detail) + "</div></div>" + chip + "</div>";
+  }).join("");
+
+  if (d.status === "active") {
+    html += '<div class="actions"><button class="btn btn-secondary" id="shareBtn" type="button">' + esc(t("📤 Partager", "📤 Share")) + '</button><button class="btn btn-ghost" id="copyCode" type="button">' + esc(t("Code : ", "Code: ") + d.invite_code) + "</button></div>";
+  }
+  root.innerHTML = html;
+  document.title = "NEO-SUSU — " + d.name;
+  bind();
 }
-setLang(currentLang);
-initCommission();
+
+function bind() {
+  const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
+  on("copyCode", async () => {
+    try { await navigator.clipboard.writeText(d.invite_code); NS.toast(t("Code copié ✓", "Code copied ✓"), "ok"); }
+    catch (e) { NS.toast(d.invite_code); }
+  });
+  on("shareBtn", async () => {
+    const text = t("Rejoins ma tontine « " + d.name + " » sur NEO-SUSU avec le code " + d.invite_code + " :", "Join my tontine \"" + d.name + "\" on NEO-SUSU with code " + d.invite_code + ":");
+    if (navigator.share) { try { await navigator.share({ title: "NEO-SUSU", text, url: inviteLink() }); } catch (e) {} }
+    else { try { await navigator.clipboard.writeText(text + " " + inviteLink()); NS.toast(t("Lien d'invitation copié ✓", "Invitation link copied ✓"), "ok"); } catch (e) { NS.toast(inviteLink()); } }
+  });
+  on("payBtn", () => {
+    document.getElementById("paySub").textContent = t("Total : ", "Total: ") + NS.money(d.amount + NS.fee(d.amount, d.my_plan), d.currency) + t(" (dont commission ", " (incl. fee ") + NS.money(NS.fee(d.amount, d.my_plan), d.currency) + ")";
+    document.getElementById("payModal").classList.add("open");
+  });
+  on("startBtn", async () => {
+    if (!confirm(t("Démarrer la tontine maintenant ? Plus personne ne pourra la rejoindre.", "Start the tontine now? Nobody else will be able to join."))) return;
+    if (demo) return NS.toast(t("Démo : la tontine démarrerait ici", "Demo: the tontine would start here"));
+    try { await NS.rpc("start_tontine", { p_tontine: d.id }); NS.toast(t("Tontine démarrée ✦", "Tontine started ✦"), "ok"); await load(); }
+    catch (e) { NS.toast(NS.errText(e), "err"); }
+  });
+}
+
+document.getElementById("payCancel").addEventListener("click", () => document.getElementById("payModal").classList.remove("open"));
+document.getElementById("payModal").addEventListener("click", e => { if (e.target.id === "payModal") e.target.classList.remove("open"); });
+document.getElementById("payConfirm").addEventListener("click", async () => {
+  const btn = document.getElementById("payConfirm");
+  if (demo) {
+    document.getElementById("payModal").classList.remove("open");
+    const me = d.members.find(m => m.is_me); if (me) me.paid = true;
+    render();
+    return NS.toast(t("Paiement enregistré (démo) ✓", "Payment recorded (demo) ✓"), "ok");
+  }
+  NS.setLoading(btn, true, "…");
+  try {
+    const r = await NS.rpc("pay_contribution", { p_tontine: d.id });
+    document.getElementById("payModal").classList.remove("open");
+    NS.toast(r && r.payout ? t("Paiement enregistré ✓ — tout le monde a payé, le pot est versé !", "Payment recorded ✓ — everyone paid, the pot is paid out!") : t("Paiement enregistré ✓", "Payment recorded ✓"), "ok");
+    await load();
+  } catch (e) { NS.toast(NS.errText(e), "err"); }
+  NS.setLoading(btn, false);
+});
+document.addEventListener("langchange", render);
+
+async function load() {
+  if (!id) { location.replace("./dashboard.html"); return; }
+  if (demo) { d = NS.DEMO.detail(id); return render(); }
+  try {
+    await NS.requireAuth();
+    d = await NS.rpc("tontine_detail", { p_tontine: id });
+    d.amount = Number(d.amount);
+    render();
+    if (params.get("new") === "1") { NS.toast(t("Tontine créée ✦ Partage le code avec tes membres", "Tontine created ✦ Share the code with your members"), "ok"); history.replaceState(null, "", "?id=" + encodeURIComponent(id)); }
+  } catch (err) {
+    if (err.message === "redirect") return;
+    document.getElementById("root").innerHTML = '<div class="empty">⚠️ ' + esc(NS.errText(err)) + "</div>";
+  }
+}
+load();
 </script>
 </body>
 </html>
