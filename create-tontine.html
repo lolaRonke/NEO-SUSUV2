@@ -1,66 +1,56 @@
 <!DOCTYPE html>
-<html lang="fr" id="html-root">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#1C1A17">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B0912">
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-<title>NEO-SUSU — Creer une tontine</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="./icons/icon-192.png">
+<title>NEO-SUSU — Créer une tontine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
-
-<style>
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
-</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script src="./app.js"></script>
 </head>
 <body>
-
-<div class="lang-bar">
-  <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')" title="Francais">🇫🇷</span>
-  <div class="lang-sep"></div>
-  <span class="lang-flag" id="flag-en" onclick="setLang('en')" title="English">🇬🇧</span>
-</div>
 <div class="container">
   <a href="./dashboard.html" class="back-link" data-fr="← Retour au tableau de bord" data-en="← Back to dashboard">← Retour au tableau de bord</a>
-  <h1 class="page-title" data-fr="Creer une tontine" data-en="Create a tontine">Creer une tontine</h1>
-  <p class="page-subtitle" data-fr="Configure ta tontine en quelques etapes" data-en="Set up your tontine in a few steps">Configure ta tontine en quelques etapes</p>
-  <div class="info-box">
-    💡 <strong data-fr="Mode demo" data-en="Demo mode">Mode demo</strong> —
-    <span data-fr="Cette tontine ne sera pas reellement enregistree." data-en="This tontine will not be actually saved.">Cette tontine ne sera pas reellement enregistree.</span>
-  </div>
-  <form id="tontineForm">
+  <h1 class="page-title" data-fr="Créer une tontine" data-en="Create a tontine">Créer une tontine</h1>
+  <p class="page-subtitle" data-fr="Tu deviens l'organisateur·rice et tu reçois le pot au tour n°1." data-en="You become the organiser and receive the pot in round 1.">Tu deviens l'organisateur·rice et tu reçois le pot au tour n°1.</p>
+
+  <div class="info-box" id="demoInfo" style="display:none"><strong data-fr="Mode démo" data-en="Demo mode">Mode démo</strong> — <span data-fr="cette tontine ne sera pas enregistrée." data-en="this tontine will not be saved.">cette tontine ne sera pas enregistrée.</span></div>
+  <div class="msg" id="msg" role="alert"></div>
+
+  <form id="tontineForm" novalidate>
     <div class="form-group">
-      <label data-fr="Nom de la tontine" data-en="Tontine name">Nom de la tontine</label>
-      <input type="text" id="name" placeholder="Ex: Tontine Famille Diallo" required>
+      <label for="name" data-fr="Nom de la tontine" data-en="Tontine name">Nom de la tontine</label>
+      <input type="text" id="name" data-ph-fr="Ex : Tontine Famille Diallo" data-ph-en="E.g. Diallo Family Tontine" placeholder="Ex : Tontine Famille Diallo" required maxlength="80">
     </div>
     <div class="form-group">
-      <label data-fr="Description (optionnel)" data-en="Description (optional)">Description (optionnel)</label>
-      <textarea id="description" placeholder="..."></textarea>
+      <label for="description" data-fr="Description (facultatif)" data-en="Description (optional)">Description (facultatif)</label>
+      <textarea id="description" maxlength="500" data-ph-fr="Objectif, règles du groupe…" data-ph-en="Goal, group rules…" placeholder="Objectif, règles du groupe…"></textarea>
     </div>
     <div class="row">
       <div class="form-group">
-        <label data-fr="Montant par membre" data-en="Amount per member">Montant par membre</label>
-        <input type="number" id="amount" placeholder="25 000" required>
+        <label for="amount" data-fr="Cotisation / membre" data-en="Contribution / member">Cotisation / membre</label>
+        <input type="number" id="amount" placeholder="25000" min="1" step="any" inputmode="decimal" required>
       </div>
       <div class="form-group">
-        <label data-fr="Devise" data-en="Currency">Devise</label>
+        <label for="currency" data-fr="Devise" data-en="Currency">Devise</label>
         <select id="currency">
           <option value="XOF">FCFA (XOF)</option>
           <option value="XAF">FCFA (XAF)</option>
-          <option value="NGN">Naira (NGN)</option>
           <option value="EUR">Euro (EUR)</option>
           <option value="GBP">Pound (GBP)</option>
+          <option value="NGN">Naira (NGN)</option>
         </select>
       </div>
     </div>
     <div class="row">
       <div class="form-group">
-        <label data-fr="Frequence" data-en="Frequency">Frequence</label>
+        <label for="frequency" data-fr="Fréquence" data-en="Frequency">Fréquence</label>
         <select id="frequency">
           <option value="weekly" data-fr="Hebdomadaire" data-en="Weekly">Hebdomadaire</option>
           <option value="biweekly" data-fr="Bimensuelle" data-en="Biweekly">Bimensuelle</option>
@@ -68,90 +58,85 @@
         </select>
       </div>
       <div class="form-group">
-        <label data-fr="Nb max membres" data-en="Max members">Nb max membres</label>
-        <input type="number" id="maxMembers" placeholder="10" min="2" max="50" value="10" required>
+        <label for="maxMembers" data-fr="Nombre de membres" data-en="Number of members">Nombre de membres</label>
+        <input type="number" id="maxMembers" min="2" max="50" value="6" required inputmode="numeric">
+        <div class="hint" id="maxHint"></div>
       </div>
     </div>
     <div class="form-group">
-      <label data-fr="Date de debut" data-en="Start date">Date de debut</label>
+      <label for="startDate" data-fr="Date du premier tour" data-en="First round date">Date du premier tour</label>
       <input type="date" id="startDate" required>
     </div>
-    <!-- APERCU COMMISSION -->
-    <div id="commPreview" style="display:none;background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px;margin-bottom:16px;">
-      <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;" data-fr="Apercu des frais par cotisation" data-en="Fee preview per contribution">Apercu des frais</div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
-        <span data-fr="Cotisation membre" data-en="Member contribution">Cotisation membre</span>
-        <span id="prevAmt" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:var(--text);">0 FCFA</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;">
-        <span id="prevFeeLabel">Commission NEO-SUSU (Free 1,5%)</span>
-        <span id="prevFee" style="font-family:var(--ff-s);font-size:15px;font-weight:700;color:#D4524A;">0 FCFA</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;">
-        <span data-fr="Montant net recu par beneficiaire" data-en="Net amount received by beneficiary">Montant net recu</span>
-        <span id="prevNet" style="font-family:var(--ff-s);font-size:16px;font-weight:700;color:#2BAD7A;">0 FCFA</span>
-      </div>
-      <div style="background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.15);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:11px;color:var(--text2);line-height:1.6;">
-        💡 <span data-fr="Passez Premium (4,99€/mois) pour reduire la commission a 0,5% et Business (14,99€) pour 0%." data-en="Go Premium (€4.99/mo) to reduce to 0.5% or Business (€14.99) for 0%.">Passez Premium (4,99€/mois) pour reduire a 0,5% — Business (14,99€) pour 0%.</span>
-      </div>
+
+    <div class="fee-box" id="preview" style="display:none">
+      <div class="fee-title" data-fr="Aperçu" data-en="Preview">Aperçu</div>
+      <div class="fee-row"><span data-fr="Cotisation par membre" data-en="Contribution per member">Cotisation par membre</span><span class="fee-val" id="pvAmt"></span></div>
+      <div class="fee-row"><span id="pvFeeLabel"></span><span class="fee-val" id="pvFee" style="color:var(--violet-pale)"></span></div>
+      <div class="fee-row"><span data-fr="Pot reçu à chaque tour" data-en="Pot received each round">Pot reçu à chaque tour</span><span class="fee-val" id="pvPot" style="color:var(--em-pale)"></span></div>
     </div>
 
-    <button type="submit" class="btn-submit" data-fr="Creer la tontine" data-en="Create tontine">Creer la tontine ✦</button>
+    <button type="submit" class="btn btn-primary btn-submit" id="submitBtn" data-fr="Créer la tontine ✦" data-en="Create tontine ✦">Créer la tontine ✦</button>
   </form>
-  <div class="success-msg" id="successMsg">
-    <span data-fr="Tontine creee avec succes ! Redirection..." data-en="Tontine created successfully! Redirecting...">✅ Tontine creee avec succes ! Redirection...</span>
-  </div>
 </div>
 <script>
-document.getElementById("startDate").valueAsDate = new Date();
+NS.boot({ demoBanner: true });
+const t = NS.t;
+const demo = NS.isDemo();
+let plan = "free";
+document.getElementById("startDate").value = new Date().toISOString().slice(0, 10);
+if (demo) document.getElementById("demoInfo").style.display = "block";
 
-// ── COMMISSION PREVIEW ──
-const PLAN_FEES_CT = {free:1.5, premium:0.5, business:0};
-const userPlanCT = localStorage.getItem("ns_plan") || "free";
-const feeRateCT = PLAN_FEES_CT[userPlanCT] || 1.5;
-
-function updateCommPreview(){
-  const amt = parseInt(document.getElementById("amount").value) || 0;
-  const curr = document.getElementById("currency").value || "FCFA";
-  const prev = document.getElementById("commPreview");
-  if(amt <= 0){ prev.style.display="none"; return; }
-  prev.style.display="block";
-  const fee = Math.round(amt * feeRateCT / 100);
-  const net = amt - fee;
-  const lang = localStorage.getItem("ns_lang") || "fr";
-  document.getElementById("prevAmt").textContent = amt.toLocaleString("fr-FR") + " " + curr;
-  document.getElementById("prevFee").textContent = fee.toLocaleString("fr-FR") + " " + curr;
-  document.getElementById("prevNet").textContent = net.toLocaleString("fr-FR") + " " + curr;
-  const planLabel = userPlanCT==="premium" ? "Premium 0,5%" : userPlanCT==="business" ? "Business 0%" : "Free 1,5%";
-  document.getElementById("prevFeeLabel").textContent = (lang==="en" ? "NEO-SUSU fee (" : "Commission NEO-SUSU (") + planLabel + ")";
-  document.getElementById("prevFee").style.color = userPlanCT==="business" ? "#2BAD7A" : userPlanCT==="premium" ? "var(--gold)" : "#D4524A";
+function maxForPlan() { return (NS.PLANS[plan] || NS.PLANS.free).maxMembers; }
+function updatePreview() {
+  const amt = parseFloat(document.getElementById("amount").value) || 0;
+  const cur = document.getElementById("currency").value;
+  const n = parseInt(document.getElementById("maxMembers").value) || 0;
+  document.getElementById("maxHint").textContent = t("Max. " + maxForPlan() + " avec ton plan", "Max " + maxForPlan() + " on your plan");
+  const box = document.getElementById("preview");
+  if (amt <= 0) { box.style.display = "none"; return; }
+  box.style.display = "block";
+  const rate = NS.PLANS[plan].fee;
+  document.getElementById("pvAmt").textContent = NS.money(amt, cur);
+  document.getElementById("pvFeeLabel").textContent = t("Commission NEO-SUSU payée par chaque membre (" + String(rate).replace(".", ",") + " % selon son plan)", "NEO-SUSU fee paid by each member (" + rate + "% depending on their plan)");
+  document.getElementById("pvFee").textContent = "+ " + NS.money(NS.fee(amt, plan), cur);
+  document.getElementById("pvPot").textContent = n >= 2 ? NS.money(amt * n, cur) : "—";
 }
-document.getElementById("amount")?.addEventListener("input", updateCommPreview);
-document.getElementById("currency")?.addEventListener("change", updateCommPreview);
+["amount", "currency", "maxMembers"].forEach(id => document.getElementById(id).addEventListener("input", updatePreview));
+document.addEventListener("langchange", updatePreview);
 
-document.getElementById("tontineForm").addEventListener("submit", function(e) {
+(async () => {
+  if (demo) return updatePreview();
+  try { plan = (await NS.getProfile()).plan || "free"; } catch (e) { if (e.message === "redirect") return; }
+  updatePreview();
+})();
+
+document.getElementById("tontineForm").addEventListener("submit", async e => {
   e.preventDefault();
-  document.getElementById("successMsg").classList.add("active");
-  setTimeout(() => { window.location.href = "./dashboard.html"; }, 2000);
-});
-</script>
+  NS.hideMsg("msg");
+  const v = id => document.getElementById(id).value.trim();
+  const amount = parseFloat(v("amount")), max = parseInt(v("maxMembers"));
+  if (v("name").length < 2) return NS.showMsg("msg", t("Donne un nom à ta tontine (2 caractères min.)", "Give your tontine a name (2 characters min.)"));
+  if (!(amount > 0)) return NS.showMsg("msg", t("Indique un montant de cotisation", "Enter a contribution amount"));
+  if (!(max >= 2 && max <= maxForPlan())) return NS.showMsg("msg", t("Nombre de membres : entre 2 et " + maxForPlan() + " avec ton plan", "Members: between 2 and " + maxForPlan() + " on your plan"));
+  if (!v("startDate")) return NS.showMsg("msg", t("Choisis une date de début", "Choose a start date"));
 
-<script>
-let currentLang = localStorage.getItem("ns_lang") || "fr";
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem("ns_lang", lang);
-  document.getElementById("html-root").lang = lang;
-  document.querySelectorAll("[data-fr]").forEach(el => {
-    const val = el.getAttribute("data-" + lang);
-    if (val) el.textContent = val;
-  });
-  const fFr = document.getElementById("flag-fr");
-  const fEn = document.getElementById("flag-en");
-  if(fFr) fFr.classList.toggle("active", lang === "fr");
-  if(fEn) fEn.classList.toggle("active", lang === "en");
-}
-setLang(currentLang);
+  const btn = document.getElementById("submitBtn");
+  NS.setLoading(btn, true, t("Création…", "Creating…"));
+  if (demo) {
+    NS.showMsg("msg", t("Tontine créée (démo) ! Redirection…", "Tontine created (demo)! Redirecting…"), true);
+    return setTimeout(() => location.href = "./tontine-detail.html?id=demo-3", 1200);
+  }
+  try {
+    const id = await NS.rpc("create_tontine", {
+      p_name: v("name"), p_description: v("description") || null, p_amount: amount,
+      p_currency: v("currency"), p_frequency: v("frequency"), p_max_members: max, p_start_date: v("startDate")
+    });
+    location.href = "./tontine-detail.html?id=" + encodeURIComponent(id) + "&new=1";
+  } catch (err) {
+    NS.showMsg("msg", NS.errText(err));
+    NS.setLoading(btn, false);
+  }
+});
 </script>
 </body>
 </html>

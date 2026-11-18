@@ -1,383 +1,207 @@
 <!DOCTYPE html>
-<html lang="fr" id="html-root">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1C1A17">
+<meta name="theme-color" content="#0B0912">
 <link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <title>NEO-SUSU — Mon espace</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./neo-susu.css">
-<!-- Supabase SDK (charge uniquement si configure) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script src="./app.js"></script>
 <style>
-body{padding:0 0 40px;}.container{padding:30px 20px;}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
-.welcome-text{font-size:13px;color:var(--text2);margin-bottom:4px;font-weight:500;}
-.user-name{font-family:var(--ff-s);font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;}
-.avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;color:var(--void);font-family:var(--ff-s);font-size:24px;font-weight:700;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(212,148,10,.35);}
-.kyc-badge{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-top:6px;background:rgba(122,171,204,.15);color:var(--sky);}
-.kyc-badge.verified{background:rgba(43,173,122,.15);color:#2BAD7A;}
-.balance-card{background:linear-gradient(135deg,rgba(212,148,10,.12),var(--card));border:1px solid rgba(212,148,10,.25);border-radius:24px;padding:28px 24px;margin-bottom:24px;position:relative;overflow:hidden;}
-.balance-card::before{content:"";position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(212,148,10,.3),transparent 70%);filter:blur(40px);}
-.balance-label{font-size:11px;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;position:relative;z-index:1;}
-.balance-amount{font-family:var(--ff-s);font-size:44px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;position:relative;z-index:1;letter-spacing:.5px;}
-.balance-currency{font-size:13px;color:var(--text2);font-weight:500;position:relative;z-index:1;}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
-.stat-card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:16px 12px;text-align:center;}
-.stat-value{font-family:var(--ff-s);font-size:26px;font-weight:700;color:var(--text);margin-bottom:2px;}
-.stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
-.tontine-card{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .3s;text-decoration:none;display:block;color:inherit;}
-.tontine-card:hover{transform:translateY(-2px);border-color:rgba(212,148,10,.3);background:var(--raised);}
-.tontine-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:10px;}
-.tontine-name{font-size:16px;font-weight:700;color:var(--text);}
-.tontine-status{font-size:10px;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
-.status-active{background:rgba(43,173,122,.15);color:#2BAD7A;}
-.status-waiting{background:rgba(212,148,10,.15);color:var(--gold);}
-.tontine-info{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:10px;}
-.tontine-info strong{font-family:var(--ff-s);color:var(--gold);font-weight:700;font-size:14px;}
-.tontine-progress{height:6px;background:var(--raised);border-radius:10px;overflow:hidden;}
-.tontine-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#2BAD7A);border-radius:10px;}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
-/* Skeleton loading */
-.skel{background:linear-gradient(90deg,var(--card) 25%,var(--raised) 50%,var(--card) 75%);background-size:200% 100%;animation:skelAnim 1.5s infinite;border-radius:12px;}
-@keyframes skelAnim{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-/* Lang bar */
-.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
-.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
-.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
-.lang-sep{width:1px;height:16px;background:var(--stroke2);}
-.score-bar{height:5px;background:var(--stroke);border-radius:3px;overflow:hidden;margin:8px 0 4px;}
-.score-fill{height:100%;background:linear-gradient(90deg,#2BAD7A,var(--gold));border-radius:3px;transition:width 1s ease;}
-/* ── COMMISSION PLAN BANNER ── */
-.plan-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:14px 18px;margin-bottom:20px;cursor:pointer;transition:all .3s;}
-.plan-banner:hover{border-color:rgba(212,148,10,.3);background:var(--raised);}
-.plan-ico{font-size:24px;flex-shrink:0;}
-.plan-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
-.plan-fee{font-size:11px;color:var(--text2);}
-.plan-badge{font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-.badge-free{background:rgba(212,82,74,.12);color:#D4524A;}
-.badge-premium{background:rgba(212,148,10,.12);color:var(--gold);}
-.badge-business{background:rgba(43,173,122,.12);color:#2BAD7A;}
-/* ── COMMISSION MODAL ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:800;display:none;align-items:flex-end;justify-content:center;}
-.modal-bg.open{display:flex;}
-.modal-sheet{background:var(--surf);border-radius:28px 28px 0 0;padding:0 20px 40px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto;}
-.modal-handle{width:36px;height:4px;background:var(--stroke2);border-radius:2px;margin:14px auto 22px;}
-.modal-title{font-family:var(--ff-s);font-size:24px;font-weight:700;margin-bottom:6px;}
-.modal-sub{font-size:13px;color:var(--text2);margin-bottom:22px;line-height:1.6;}
-.plan-row{display:flex;align-items:stretch;gap:10px;margin-bottom:10px;}
-.plan-card{flex:1;background:var(--card);border:2px solid var(--stroke);border-radius:20px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .3s;position:relative;}
-.plan-card:active{transform:scale(.97);}
-.plan-card.current{border-color:var(--gold);background:rgba(212,148,10,.06);}
-.plan-card.best{border-color:#2BAD7A;background:rgba(43,173,122,.05);}
-.plan-card .best-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#2BAD7A;color:var(--void);font-size:9px;font-weight:800;padding:2px 10px;border-radius:20px;white-space:nowrap;}
-.pc-name{font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
-.pc-price{font-family:var(--ff-s);font-size:26px;font-weight:700;color:var(--text);line-height:1;margin-bottom:2px;}
-.pc-per{font-size:10px;color:var(--text2);margin-bottom:10px;}
-.pc-comm{font-size:13px;font-weight:800;margin-bottom:6px;}
-.pc-feat{font-size:10px;color:var(--text2);line-height:1.6;}
-.pc-cta{display:block;margin-top:12px;padding:9px;border-radius:14px;font-family:var(--ff-b);font-size:12px;font-weight:700;border:none;cursor:pointer;width:100%;}
-.pc-cta-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);}
-.pc-cta-e{background:linear-gradient(135deg,#2BAD7A,#1F8A60);color:var(--void);}
-.pc-cta-ghost{background:var(--raised);color:var(--text2);}
-/* ── TRANSACTION FEE PREVIEW ── */
-.fee-preview{background:rgba(212,148,10,.06);border:1px solid rgba(212,148,10,.18);border-radius:16px;padding:16px;margin-top:18px;}
-.fee-title{font-size:12px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px;}
-.fee-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
-.fee-row:last-child{border-bottom:none;font-weight:700;}
-.fee-val{font-family:var(--ff-s);font-size:15px;font-weight:700;}
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; gap: 12px; }
+.welcome-text { font-size: 13px; color: var(--text2); font-weight: 500; }
+.user-name { font-family: var(--ff-s); font-size: 30px; font-weight: 700; line-height: 1.1; background: linear-gradient(135deg, var(--gold-pale), var(--gold)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.plan-banner { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--stroke); border-radius: 18px; padding: 14px 16px; margin-bottom: 18px; cursor: pointer; transition: all .2s; width: 100%; text-align: left; color: var(--text); font-family: var(--ff-b); }
+.plan-banner:hover { border-color: var(--stroke-violet); background: var(--raised); }
+.plan-name { font-size: 13px; font-weight: 800; }
+.plan-fee { font-size: 11px; color: var(--text2); }
+.other-cur { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.plan-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.plan-card { background: var(--card); border: 2px solid var(--stroke); border-radius: 18px; padding: 16px 10px; text-align: center; position: relative; }
+.plan-card.current { border-color: var(--gold); background: rgba(212,175,55,.06); }
+.plan-card .tag { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: var(--violet); color: #fff; font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+.pc-name { font-size: 10px; font-weight: 800; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 6px; }
+.pc-price { font-family: var(--ff-s); font-size: 24px; font-weight: 700; }
+.pc-per { font-size: 10px; color: var(--text2); margin-bottom: 8px; }
+.pc-comm { font-size: 12px; font-weight: 800; margin-bottom: 6px; }
+.pc-feat { font-size: 10px; color: var(--text2); line-height: 1.6; }
 </style>
 </head>
 <body>
-<div class="lang-bar">
-  <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')">🇫🇷</span>
-  <div class="lang-sep"></div>
-  <span class="lang-flag" id="flag-en" onclick="setLang('en')">🇬🇧</span>
-</div>
-<div class="demo-banner" id="demoBanner">
-  <span data-fr="MODE DEMO — Les donnees sont fictives" data-en="DEMO MODE — Data is fictitious">MODE DEMO</span>
-  <a href="./signup.html" class="cta-signup" data-fr="Creer mon vrai compte" data-en="Create my real account">Creer mon vrai compte →</a>
-</div>
-<!-- COMMISSION MODAL -->
-<div class="modal-bg" id="planModal" onclick="if(event.target===this)closePlanModal()">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title" data-fr="Mes abonnements & commissions" data-en="Plans & commissions">Mes abonnements & commissions</div>
-    <div class="modal-sub" data-fr="Plus ton plan est eleve, moins tu paies de commission sur chaque transaction." data-en="The higher your plan, the less commission you pay per transaction.">Plus ton plan est eleve, moins tu paies de commission sur chaque transaction.</div>
-
-    <div class="plan-row">
-      <!-- FREE -->
-      <div class="plan-card current" id="pc-free">
-        <div class="pc-name">Free</div>
-        <div class="pc-price">0€</div>
-        <div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
-        <div class="pc-comm" style="color:#D4524A;">1,5% <span data-fr="par transaction" data-en="per transaction">par tx</span></div>
-        <div class="pc-feat">
-          1 tontine<br>6 membres max<br>Carte & SEPA
-        </div>
-        <button class="pc-cta pc-cta-ghost" data-fr="Plan actuel" data-en="Current plan">Plan actuel</button>
-      </div>
-      <!-- PREMIUM -->
-      <div class="plan-card best" id="pc-premium">
-        <div class="best-tag" data-fr="LE PLUS POPULAIRE" data-en="MOST POPULAR">LE PLUS POPULAIRE</div>
-        <div class="pc-name">Premium</div>
-        <div class="pc-price">4,99€</div>
-        <div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
-        <div class="pc-comm" style="color:var(--gold);">0,5% <span data-fr="par transaction" data-en="per transaction">par tx</span></div>
-        <div class="pc-feat">
-          Tontines <strong>illimitees</strong><br>20 membres<br>IA Vocale 5 langues
-        </div>
-        <button class="pc-cta pc-cta-g" onclick="showToast('Upgrade Premium bientot disponible !','ok')" data-fr="Passer Premium" data-en="Go Premium">Passer Premium</button>
-      </div>
-      <!-- BUSINESS -->
-      <div class="plan-card" id="pc-business">
-        <div class="pc-name">Business</div>
-        <div class="pc-price">14,99€</div>
-        <div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
-        <div class="pc-comm" style="color:#2BAD7A;">0% <span data-fr="inclus" data-en="included">inclus</span></div>
-        <div class="pc-feat">
-          50 membres<br>API complète<br>Support 24/7
-        </div>
-        <button class="pc-cta pc-cta-e" onclick="showToast('Contactez-nous : contact@neo-susu.com','ok')" data-fr="Contacter" data-en="Contact us">Contacter</button>
-      </div>
-    </div>
-
-    <!-- Simulateur de commission -->
-    <div class="fee-preview">
-      <div class="fee-title" data-fr="Simulateur — Tontine de 25 000 FCFA" data-en="Simulator — 25,000 FCFA tontine">Simulateur — Tontine de 25 000 FCFA</div>
-      <div class="fee-row">
-        <span data-fr="Cotisation" data-en="Contribution">Cotisation</span>
-        <span class="fee-val">25 000 FCFA</span>
-      </div>
-      <div class="fee-row">
-        <span data-fr="Commission Free (1,5%)" data-en="Free commission (1.5%)">Commission Free (1,5%)</span>
-        <span class="fee-val" style="color:#D4524A;">375 FCFA</span>
-      </div>
-      <div class="fee-row">
-        <span data-fr="Commission Premium (0,5%)" data-en="Premium commission (0.5%)">Commission Premium (0,5%)</span>
-        <span class="fee-val" style="color:var(--gold);">125 FCFA</span>
-      </div>
-      <div class="fee-row">
-        <span data-fr="Commission Business (0%)" data-en="Business commission (0%)">Commission Business (0%)</span>
-        <span class="fee-val" style="color:#2BAD7A;">0 FCFA ✓</span>
-      </div>
-      <div class="fee-row" style="margin-top:6px;">
-        <span style="color:var(--gold);font-size:12px;" data-fr="Economie Premium vs Free/an" data-en="Premium savings vs Free/year">Economie Premium vs Free / an</span>
-        <span class="fee-val" style="color:var(--gold);">~30 000 FCFA</span>
-      </div>
-    </div>
-
-    <button onclick="closePlanModal()" style="width:100%;margin-top:16px;padding:14px;background:var(--raised);border:1px solid var(--stroke2);color:var(--text);border-radius:18px;font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" data-fr="Fermer" data-en="Close">Fermer</button>
-  </div>
-</div>
-
 <div class="container">
   <div class="header">
-    <div class="welcome">
-      <div class="welcome-text" data-fr="Bonjour" data-en="Hello">Bonjour 👋</div>
-      <div class="user-name" id="userName">...</div>
-      <span class="kyc-badge" id="kycBadge">Chargement...</span>
+    <div>
+      <div class="welcome-text" data-fr="Bonjour 👋" data-en="Hello 👋">Bonjour 👋</div>
+      <div class="user-name" id="userName">…</div>
+      <span class="chip chip-grey" id="kycBadge" style="margin-top:6px">…</span>
     </div>
-    <a href="./profile.html" class="avatar" id="avatarEl">?</a>
-  </div>
-  <!-- PLAN BANNER -->
-  <div class="plan-banner" onclick="openPlanModal()">
-    <span class="plan-ico">🏷️</span>
-    <div style="flex:1;">
-      <div class="plan-name" id="planName" data-fr="Plan Free — Commission 1,5% / transaction" data-en="Free Plan — 1.5% commission / transaction">Plan Free — Commission 1,5% / transaction</div>
-      <div class="plan-fee" id="planFee" data-fr="Passez Premium a 4,99€/mois pour reduire a 0,5%" data-en="Go Premium at €4.99/mo to reduce to 0.5%">Passez Premium a 4,99€/mois pour reduire a 0,5%</div>
-    </div>
-    <span class="plan-badge badge-free" id="planBadge">FREE</span>
-    <span style="color:var(--text3);font-size:16px;">›</span>
+    <a href="./profile.html" class="avatar gold lg" id="avatarEl" aria-label="Profil">?</a>
   </div>
 
-  <div class="balance-card">
-    <div class="balance-label" data-fr="Solde total epargne" data-en="Total savings">Solde total epargne</div>
-    <div class="balance-amount" id="walletAmt">0</div>
-    <div class="balance-currency">FCFA</div>
-    <div class="score-bar"><div class="score-fill" id="scoreBar" style="width:50%"></div></div>
-    <div style="font-size:11px;color:rgba(255,255,255,.35);" data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite : <span id="scoreVal">50</span>/100</div>
+  <button class="plan-banner" id="planBanner" type="button">
+    <span style="font-size:22px">🏷️</span>
+    <div style="flex:1"><div class="plan-name" id="planName"></div><div class="plan-fee" id="planFee"></div></div>
+    <span class="chip" id="planBadge"></span>
+    <span style="color:var(--text3)">›</span>
+  </button>
+
+  <div class="hero-card">
+    <div class="hero-label" data-fr="Total reçu de mes tontines" data-en="Total received from my tontines">Total reçu de mes tontines</div>
+    <div class="hero-amount" id="received">0</div>
+    <div class="other-cur" id="receivedOther"></div>
+    <div class="hero-sub"><span data-fr="Total cotisé :" data-en="Total contributed:">Total cotisé :</span> <span id="contributed">0</span></div>
+    <div class="score-bar"><div class="score-fill" id="scoreBar" style="width:0"></div></div>
+    <div class="hero-sub"><span data-fr="Score de fiabilité" data-en="Reliability score">Score de fiabilité</span> : <strong id="scoreVal">—</strong>/100</div>
   </div>
+
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-value" id="tontineCount">0</div><div class="stat-label" data-fr="Tontines" data-en="Tontines">Tontines</div></div>
     <div class="stat-card"><div class="stat-value" id="memberCount">0</div><div class="stat-label" data-fr="Membres" data-en="Members">Membres</div></div>
-    <div class="stat-card"><div class="stat-value" id="nextTurn">—</div><div class="stat-label" data-fr="Mon tour" data-en="My turn">Mon tour</div></div>
+    <div class="stat-card"><div class="stat-value" id="nextTurn">—</div><div class="stat-label" data-fr="Mon tour dans" data-en="My turn in">Mon tour dans</div></div>
   </div>
+
   <div class="section-title"><span data-fr="Mes tontines" data-en="My tontines">Mes tontines</span></div>
   <div id="tontinesList">
-    <!-- Skeleton -->
-    <div class="skel" style="height:90px;margin-bottom:12px;"></div>
-    <div class="skel" style="height:90px;margin-bottom:12px;"></div>
+    <div class="skel" style="height:96px;margin-bottom:12px"></div>
+    <div class="skel" style="height:96px;margin-bottom:12px"></div>
   </div>
+
   <div class="actions">
-    <a href="./create-tontine.html" class="btn btn-primary" data-fr="+ Creer une tontine" data-en="+ Create a tontine">+ Creer une tontine</a>
+    <a href="./create-tontine.html" class="btn btn-primary" data-fr="+ Créer une tontine" data-en="+ Create a tontine">+ Créer une tontine</a>
     <a href="./join-tontine.html" class="btn btn-secondary" data-fr="Rejoindre" data-en="Join">Rejoindre</a>
   </div>
-  <button class="logout-btn" onclick="handleLogout()" data-fr="Se deconnecter" data-en="Sign out">Se deconnecter</button>
+  <div id="adminLink" class="hidden" style="margin-top:12px"><a href="./admin.html" class="btn btn-ghost" data-fr="💻 Espace administrateur" data-en="💻 Admin space">💻 Espace administrateur</a></div>
+  <button class="logout-btn" id="logoutBtn" type="button" data-fr="Se déconnecter" data-en="Sign out">Se déconnecter</button>
 </div>
+
+<!-- Modale des plans -->
+<div class="modal-bg" id="planModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" data-fr="Plans & commissions" data-en="Plans & commissions">Plans & commissions</div>
+    <div class="modal-sub" data-fr="Plus ton plan est élevé, moins tu paies de commission sur chaque cotisation." data-en="The higher your plan, the lower the commission on each contribution.">Plus ton plan est élevé, moins tu paies de commission sur chaque cotisation.</div>
+    <div class="plan-row">
+      <div class="plan-card" data-plan="free">
+        <div class="pc-name">Free</div><div class="pc-price">0 €</div><div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
+        <div class="pc-comm" style="color:#F59A9A">1,5 %</div>
+        <div class="pc-feat"><span data-fr="1 tontine en cours" data-en="1 ongoing tontine">1 tontine en cours</span><br><span data-fr="6 membres max" data-en="6 members max">6 membres max</span></div>
+      </div>
+      <div class="plan-card" data-plan="premium">
+        <div class="tag" data-fr="POPULAIRE" data-en="POPULAR">POPULAIRE</div>
+        <div class="pc-name">Premium</div><div class="pc-price">4,99 €</div><div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
+        <div class="pc-comm" style="color:var(--gold)">0,5 %</div>
+        <div class="pc-feat"><span data-fr="Tontines illimitées" data-en="Unlimited tontines">Tontines illimitées</span><br><span data-fr="20 membres max" data-en="20 members max">20 membres max</span></div>
+      </div>
+      <div class="plan-card" data-plan="business">
+        <div class="pc-name">Business</div><div class="pc-price">14,99 €</div><div class="pc-per" data-fr="par mois" data-en="per month">par mois</div>
+        <div class="pc-comm" style="color:var(--em-pale)">0 %</div>
+        <div class="pc-feat"><span data-fr="50 membres max" data-en="50 members max">50 membres max</span><br><span data-fr="Support prioritaire" data-en="Priority support">Support prioritaire</span></div>
+      </div>
+    </div>
+    <div class="info-box gold" style="margin:14px 0" data-fr="Le changement de plan en ligne arrive bientôt. Pour passer Premium ou Business dès maintenant, écris-nous à contact@neo-susu.com." data-en="Online plan upgrades are coming soon. To upgrade now, email contact@neo-susu.com.">Le changement de plan en ligne arrive bientôt. Pour passer Premium ou Business dès maintenant, écris-nous à contact@neo-susu.com.</div>
+    <button class="btn btn-ghost" id="closeModal" type="button" data-fr="Fermer" data-en="Close">Fermer</button>
+  </div>
+</div>
+
 <script>
-// ── STUB SUPABASE (evite les erreurs si pas configure) ──
-const SUPABASE_URL = (typeof window._SB_URL !== "undefined") ? window._SB_URL : "https://TON-PROJECT-ID.supabase.co";
-const SUPABASE_ANON_KEY = "TON-ANON-PUBLIC-KEY";
-const APP_URL = "https://lolaronke.github.io/neo-susu";
-// Fonctions stub - remplacees par supabase.js quand configure
-async function getCurrentUser(){return null;}
-async function requireAuth(){return null;}
-async function getUserProfile(){return null;}
-async function getMyTontines(){return [];}
-async function signOut(){sessionStorage.clear();window.location.href="./index.html";}
-</script>
-<script>
-let currentLang=localStorage.getItem("ns_lang")||"fr";
-function setLang(lang){currentLang=lang;localStorage.setItem("ns_lang",lang);document.getElementById("html-root").lang=lang;document.querySelectorAll("[data-fr]").forEach(el=>{const v=el.getAttribute("data-"+lang);if(v)el.textContent=v;});document.getElementById("flag-fr").classList.toggle("active",lang==="fr");document.getElementById("flag-en").classList.toggle("active",lang==="en");updatePlanUI();}
-setLang(currentLang);
+NS.boot({ demoBanner: true });
+const t = NS.t, esc = NS.esc;
+const demo = NS.isDemo();
+let state = { profile: null, summary: null, tontines: [] };
 
-async function loadDashboard(){
-  // ── DEMO MODE : verifie EN PREMIER avant tout appel Supabase ──
-  const urlParams = new URLSearchParams(window.location.search);
-  const demoSession = sessionStorage.getItem("neo_susu_demo_user");
-  const isDemo = urlParams.get("mode") === "demo" || !!demoSession;
+function render() {
+  const p = state.profile, s = state.summary;
+  if (!p) return;
+  document.getElementById("userName").textContent = (p.first_name + " " + p.last_name).trim() || p.email;
+  document.getElementById("avatarEl").textContent = (p.first_name || p.email || "?")[0].toUpperCase();
 
-  if (isDemo) {
-    document.getElementById("demoBanner").classList.add("active");
-    loadDemoData();
-    return; // stop ici, aucun appel Supabase
-  }
+  const kyc = document.getElementById("kycBadge");
+  if (demo) { kyc.className = "chip chip-violet"; kyc.textContent = t("👁️ Mode démo", "👁️ Demo mode"); }
+  else if (p.kyc_status === "verified") { kyc.className = "chip chip-green"; kyc.textContent = t("✓ Identité vérifiée", "✓ Identity verified"); }
+  else { kyc.className = "chip chip-gold"; kyc.textContent = t("⏳ Vérification d'identité en attente", "⏳ Identity check pending"); }
 
-  // ── SUPABASE PAS ENCORE CONFIGURE → demo automatique ──
-  const supabaseReady = (
-    typeof SUPABASE_URL !== "undefined" &&
-    SUPABASE_URL !== "https://TON-PROJECT-ID.supabase.co" &&
-    SUPABASE_URL.includes("supabase.co")
-  );
+  const plan = NS.PLANS[p.plan] || NS.PLANS.free;
+  document.getElementById("planName").textContent = t("Plan " + plan.name + " — commission " + String(plan.fee).replace(".", ",") + " %", plan.name + " plan — " + plan.fee + "% commission");
+  document.getElementById("planFee").textContent = p.plan === "free"
+    ? t("Passe Premium (4,99 €/mois) pour descendre à 0,5 %", "Go Premium (€4.99/mo) to drop to 0.5%")
+    : t("Merci de ta confiance ✦", "Thank you for your trust ✦");
+  const badge = document.getElementById("planBadge");
+  badge.textContent = plan.name.toUpperCase();
+  badge.className = "chip " + ({ free: "chip-grey", premium: "chip-gold", business: "chip-green" }[p.plan] || "chip-grey");
+  document.querySelectorAll(".plan-card").forEach(c => c.classList.toggle("current", c.dataset.plan === p.plan));
 
-  if (!supabaseReady) {
-    loadDemoData();
+  document.getElementById("scoreVal").textContent = p.score;
+  document.getElementById("scoreBar").style.width = p.score + "%";
+
+  // Montants : devise principale en grand, les autres en dessous
+  const rec = (s.received || []).slice().sort((a, b) => b.total - a.total);
+  document.getElementById("received").textContent = rec.length ? NS.money(rec[0].total, rec[0].currency) : NS.money(0, "XOF");
+  document.getElementById("receivedOther").textContent = rec.slice(1).map(r => "+ " + NS.money(r.total, r.currency)).join("  ");
+  const con = s.contributed || [];
+  document.getElementById("contributed").textContent = con.length ? con.map(r => NS.money(r.total, r.currency)).join(" · ") : NS.money(0, "XOF");
+
+  document.getElementById("tontineCount").textContent = s.tontine_count || 0;
+  document.getElementById("memberCount").textContent = s.member_total || 0;
+  document.getElementById("nextTurn").textContent = s.next_turn == null ? "—" : (s.next_turn === 0 ? t("Ce tour", "Now") : s.next_turn + " " + t("tour" + (s.next_turn > 1 ? "s" : ""), "round" + (s.next_turn > 1 ? "s" : "")));
+  if (p.is_admin) document.getElementById("adminLink").classList.remove("hidden");
+
+  const list = document.getElementById("tontinesList");
+  if (!state.tontines.length) {
+    list.innerHTML = '<div class="empty">' + esc(t("Aucune tontine pour l'instant. Crée la première ou rejoins celle d'un proche avec son code.", "No tontines yet. Create one or join a friend's with their code.")) + "</div>";
     return;
   }
-
-  // ── DONNEES REELLES SUPABASE ──
-  try{
-    const user=await requireAuth();
-    if(!user)return;
-    const profile=await getUserProfile(user.id);
-
-    // Update UI with real data
-    document.getElementById("userName").textContent=profile.first_name+" "+profile.last_name;
-    document.getElementById("avatarEl").textContent=profile.first_name[0].toUpperCase();
-    document.getElementById("walletAmt").textContent=profile.wallet.toLocaleString("fr-FR");
-
-    const score=profile.score||50;
-    document.getElementById("scoreVal").textContent=score;
-    document.getElementById("scoreBar").style.width=score+"%";
-
-    const kycEl=document.getElementById("kycBadge");
-    if(profile.kyc_status==="verified"){kycEl.textContent="✓ KYC Verifie";kycEl.classList.add("verified");}
-    else{kycEl.textContent="⏳ KYC en attente";}
-
-    // Load tontines
-    const tontineData=await getMyTontines();
-    document.getElementById("tontineCount").textContent=tontineData.length;
-    let totalMembers=0;
-    tontineData.forEach(m=>{totalMembers+=(m.tontines?.tontine_members?.[0]?.count||0);});
-    document.getElementById("memberCount").textContent=totalMembers;
-
-    // Render tontines
-    renderTontines(tontineData,false);
-  }catch(err){
-    console.warn("Supabase not configured, using demo:",err.message);
-    loadDemoData();
-  }
-}
-
-function loadDemoData(){
-  document.getElementById("userName").textContent="Aicha Diallo";
-  document.getElementById("avatarEl").textContent="A";
-  document.getElementById("walletAmt").textContent="245 000";
-  document.getElementById("scoreVal").textContent="82";
-  document.getElementById("scoreBar").style.width="82%";
-  document.getElementById("tontineCount").textContent="3";
-  document.getElementById("memberCount").textContent="24";
-  document.getElementById("nextTurn").textContent="T4";
-  const kycEl=document.getElementById("kycBadge");
-  kycEl.textContent="👁️ Mode demo";
-  const demoTontines=[
-    {name:"Tontine Famille Diallo",amount:25000,currency:"FCFA",members:8,max:10,progress:80,freq:"Mensuelle",status:"active",id:"1"},
-    {name:"Collegues du bureau",amount:50000,currency:"FCFA",members:6,max:6,progress:100,freq:"Hebdomadaire",status:"active",id:"2"},
-    {name:"Projet scolarite",amount:10000,currency:"FCFA",members:4,max:8,progress:50,freq:"Bimensuelle",status:"waiting",id:"3"}
-  ];
-  renderDemoTontines(demoTontines);
-  updatePlanUI();
-}
-
-function renderTontines(data,real){
-  const list=document.getElementById("tontinesList");
-  if(!data||!data.length){list.innerHTML='<div style="text-align:center;padding:24px;color:var(--text3);">'+(currentLang==="en"?"No tontines yet":"Aucune tontine pour l'instant")+'</div>';return;}
-  list.innerHTML=data.map(m=>{
-    const t=m.tontines||{};
-    const count=t.tontine_members?.[0]?.count||0;
-    const pct=Math.round((count/(t.max_members||10))*100);
-    return `<a href="./tontine-detail.html?id=${t.id}" class="tontine-card">
-      <div class="tontine-header"><div class="tontine-name">🌟 ${t.name}</div><span class="tontine-status status-active" data-fr="Active" data-en="Active">Active</span></div>
-      <div class="tontine-info"><span>${t.amount?.toLocaleString("fr-FR")} ${t.currency}</span><span>${count}/${t.max_members} <span data-fr="membres" data-en="members">membres</span></span></div>
-      <div class="tontine-progress"><div class="tontine-progress-fill" style="width:${pct}%"></div></div>
-    </a>`;
+  list.innerHTML = state.tontines.map(x => {
+    const pct = x.status === "waiting"
+      ? Math.round(x.member_count / x.max_members * 100)
+      : Math.round(x.paid_count / x.member_count * 100);
+    const line2 = x.status === "waiting"
+      ? t("Inscriptions : ", "Sign-ups: ") + x.member_count + "/" + x.max_members
+      : x.status === "completed" ? t("Cycle terminé", "Cycle complete")
+      : t("Tour ", "Round ") + x.current_round + "/" + x.member_count + " · " + x.paid_count + "/" + x.member_count + t(" ont payé", " paid");
+    const mine = x.status === "active" && !x.paid_this_round ? ' <span class="chip chip-red">' + esc(t("À payer", "To pay")) + "</span>" : "";
+    return '<a class="tontine-card" href="./tontine-detail.html?id=' + encodeURIComponent(x.id) + '">' +
+      '<div class="tc-head"><div class="tc-name">' + esc(x.name) + "</div><div>" + NS.statusChip(x.status) + mine + "</div></div>" +
+      '<div class="tc-info"><span>' + esc(t("Cotisation", "Contribution")) + " : <strong>" + esc(NS.money(x.amount, x.currency)) + "</strong></span><span>" + esc(NS.freqLabel(x.frequency)) + "</span></div>" +
+      '<div class="tc-info"><span>' + esc(line2) + "</span><span>" + esc(t("Mon tour : ", "My turn: ") + "#" + x.my_turn) + "</span></div>" +
+      '<div class="progress"><div class="progress-fill" style="width:' + pct + '%"></div></div></a>';
   }).join("");
 }
 
-function renderDemoTontines(data){
-  const list=document.getElementById("tontinesList");
-  list.innerHTML=data.map(t=>`<a href="./tontine-detail.html?id=${t.id}" class="tontine-card">
-    <div class="tontine-header"><div class="tontine-name">🌟 ${t.name}</div><span class="tontine-status status-${t.status}" data-fr="${t.status==="active"?"Active":"En attente"}" data-en="${t.status==="active"?"Active":"Pending"}">${t.status==="active"?"Active":"En attente"}</span></div>
-    <div class="tontine-info"><span><span data-fr="Cotisation" data-en="Contribution">Cotisation</span> : <strong>${t.amount.toLocaleString("fr-FR")} ${t.currency}</strong></span><span>${t.members}/${t.max} <span data-fr="membres" data-en="members">membres</span></span></div>
-    <div class="tontine-info"><span data-fr="${t.freq}" data-en="${t.freq}">${t.freq}</span><span><strong>${t.progress}%</strong></span></div>
-    <div class="tontine-progress"><div class="tontine-progress-fill" style="width:${t.progress}%"></div></div>
-  </a>`).join("");
+async function load() {
+  if (demo) {
+    state = { profile: NS.DEMO.profile, summary: NS.DEMO.summary, tontines: NS.DEMO.tontines };
+    return render();
+  }
+  try {
+    await NS.requireAuth();
+    // Invitation ouverte avant inscription → on reprend là où on en était
+    let pending = null;
+    try { pending = sessionStorage.getItem("ns_pending_code"); } catch (e) {}
+    if (pending) return location.replace("./join-tontine.html?code=" + encodeURIComponent(pending));
+    const [profile, summary, tontines] = await Promise.all([NS.getProfile(), NS.rpc("my_summary"), NS.rpc("my_tontines")]);
+    state = { profile, summary: summary || {}, tontines: tontines || [] };
+    render();
+  } catch (err) {
+    if (err.message === "redirect") return;
+    document.getElementById("tontinesList").innerHTML = '<div class="empty">⚠️ ' + esc(NS.errText(err)) + "</div>";
+  }
 }
 
-// ── PLAN MODAL ──
-function openPlanModal(){document.getElementById("planModal").classList.add("open");}
-function closePlanModal(){document.getElementById("planModal").classList.remove("open");}
-
-// ── USER PLAN (stocké en localStorage pour la démo) ──
-const USER_PLAN = localStorage.getItem("ns_plan") || "free";
-const PLANS = {
-  free:     { name:"Free",     fee:1.5, badge:"FREE",     color:"badge-free",     label_fr:"Plan Free — Commission 1,5% / transaction",    label_en:"Free Plan — 1.5% commission / transaction",    sub_fr:"Passez Premium a 4,99€/mois pour reduire a 0,5%", sub_en:"Go Premium at €4.99/mo to reduce to 0.5%" },
-  premium:  { name:"Premium",  fee:0.5, badge:"PREMIUM",  color:"badge-premium",  label_fr:"Plan Premium — Commission 0,5% / transaction",  label_en:"Premium Plan — 0.5% commission / transaction", sub_fr:"Vous economisez 1% vs Free sur chaque cotisation", sub_en:"You save 1% vs Free on every contribution" },
-  business: { name:"Business", fee:0,   badge:"BUSINESS", color:"badge-business", label_fr:"Plan Business — 0% de commission",              label_en:"Business Plan — 0% commission",                sub_fr:"Aucune commission sur vos transactions",          sub_en:"No commission on your transactions" }
-};
-
-function updatePlanUI(){
-  const p = PLANS[USER_PLAN];
-  const lang = localStorage.getItem("ns_lang") || "fr";
-  const nameEl = document.getElementById("planName");
-  const feeEl  = document.getElementById("planFee");
-  const badge  = document.getElementById("planBadge");
-  if(nameEl) nameEl.textContent = lang === "en" ? p.label_en : p.label_fr;
-  if(feeEl)  feeEl.textContent  = lang === "en" ? p.sub_en   : p.sub_fr;
-  if(badge){ badge.textContent = p.badge; badge.className = "plan-badge " + p.color; }
-  // Highlight current plan card
-  ["free","premium","business"].forEach(pl => {
-    const el = document.getElementById("pc-"+pl);
-    if(el){ el.classList.toggle("current", pl === USER_PLAN); }
-  });
-}
-
-// ── CALCUL COMMISSION ──
-function calcCommission(amount){
-  const p = PLANS[USER_PLAN];
-  return Math.round(amount * p.fee / 100);
-}
-
-async function handleLogout(){
-  const msg=currentLang==="en"?"Are you sure you want to sign out?":"Voulez-vous vraiment vous deconnecter ?";
-  if(!confirm(msg))return;
-  try{await signOut();}catch(e){sessionStorage.removeItem("neo_susu_demo_user");window.location.href="./index.html";}
-}
-
-loadDashboard();
+document.addEventListener("langchange", render);
+document.getElementById("planBanner").addEventListener("click", () => document.getElementById("planModal").classList.add("open"));
+document.getElementById("closeModal").addEventListener("click", () => document.getElementById("planModal").classList.remove("open"));
+document.getElementById("planModal").addEventListener("click", e => { if (e.target.id === "planModal") e.target.classList.remove("open"); });
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  if (confirm(t("Voulez-vous vraiment vous déconnecter ?", "Are you sure you want to sign out?"))) NS.signOut();
+});
+load();
 </script>
 </body>
 </html>

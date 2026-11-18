@@ -1,0 +1,16 @@
+{
+  "name": "NEO-SUSU — L'épargne communautaire",
+  "short_name": "NEO-SUSU",
+  "description": "Tontines digitales pour la diaspora africaine.",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0B0912",
+  "theme_color": "#0B0912",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
