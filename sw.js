@@ -1,11 +1,11 @@
 // Service worker NEO-SUSU : réseau d'abord, cache en secours (mode hors-ligne basique).
 // Les appels à Supabase ne sont jamais mis en cache.
-const CACHE = "neo-susu-v4";
+const CACHE = "neo-susu-v5";
 const ASSETS = [
   "./", "./index.html", "./login.html", "./signup.html", "./dashboard.html",
   "./create-tontine.html", "./join-tontine.html", "./tontine-detail.html", "./profile.html",
   "./reset-password.html", "./kyc.html", "./neo-susu.css", "./app.js", "./config.js", "./manifest.json",
-  "./icons/icon-192.png", "./icons/icon-512.png"
+  "./icons/icon-192.png", "./icons/icon-512.png", "./icons/favicon.png", "./assets/logo-full.png", "./assets/logo-emblem.png"
 ];
 
 self.addEventListener("install", e => {

@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="./manifest.json">
-<link rel="icon" type="image/png" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" href="./icons/favicon.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <title>NEO-SUSU — L'épargne communautaire intelligente</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,10 +23,11 @@ body { padding: 0; }
 .splash { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 80px 24px 28px; position: relative; overflow: hidden; }
 .splash::before { content: ""; position: absolute; top: 38%; left: 50%; transform: translate(-50%,-50%); width: 460px; height: 460px; background: radial-gradient(circle, rgba(139,92,246,.28) 0%, rgba(212,175,55,.10) 40%, transparent 70%); filter: blur(50px); pointer-events: none; }
 .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 1; padding: 20px 0; }
-.splash-logo { width: 108px; height: 108px; border-radius: 28px; background: linear-gradient(135deg, var(--gold-pale), var(--gold) 55%, var(--gold2)); display: flex; align-items: center; justify-content: center; font-family: var(--ff-s); font-size: 64px; font-weight: 700; color: var(--void); margin-bottom: 26px; box-shadow: 0 16px 48px rgba(212,175,55,.30), 0 0 80px rgba(139,92,246,.30); animation: pop .6s cubic-bezier(.34,1.56,.64,1) both, glow 4s ease-in-out 1s infinite; }
-@keyframes pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
-@keyframes glow { 50% { box-shadow: 0 16px 60px rgba(212,175,55,.45), 0 0 100px rgba(139,92,246,.45); } }
-.splash-name { font-family: var(--ff-s); font-size: 48px; font-weight: 700; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-pale), var(--gold)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; animation: up .8s .2s both; }
+.splash-brand { margin: 0 0 18px; width: min(340px, 86vw); animation: pop .7s cubic-bezier(.34,1.56,.64,1) both; }
+.splash-brand img { width: 100%; height: auto; display: block; filter: drop-shadow(0 10px 40px rgba(139,92,246,.35)); animation: glow 5s ease-in-out 1s infinite; }
+@keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes glow { 50% { filter: drop-shadow(0 10px 50px rgba(212,175,55,.35)); } }
+@media (prefers-reduced-motion: reduce) { .splash-brand, .splash-brand img { animation: none; } }
 .splash-sub { font-size: 15px; color: var(--text2); margin-bottom: 22px; animation: up .8s .35s both; }
 .features { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 380px; margin-bottom: 20px; animation: up .8s .5s both; }
 .flags { display: flex; gap: 14px; font-size: 26px; animation: up .8s .65s both; }
@@ -41,8 +42,7 @@ body { padding: 0; }
 <body>
 <div class="splash">
   <div class="hero">
-    <div class="splash-logo">N</div>
-    <h1 class="splash-name">NEO-SUSU</h1>
+    <h1 class="splash-brand"><img src="./assets/logo-full.png" alt="NEOSUSU Tontine — Épargner, financer, bâtir demain" width="720" height="486"></h1>
     <p class="splash-sub" data-fr="L'épargne communautaire intelligente 🌍" data-en="Intelligent community savings 🌍">L'épargne communautaire intelligente 🌍</p>
     <div class="features">
       <span class="chip chip-gold" data-fr="Tontines digitales" data-en="Digital tontines">Tontines digitales</span>

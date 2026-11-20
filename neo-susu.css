@@ -101,6 +101,11 @@ a { color: inherit; }
   box-shadow: 0 12px 36px rgba(212,175,55,.30), 0 0 0 1px rgba(212,175,55,.2), 0 0 60px rgba(139,92,246,.18);
 }
 .logo-section { text-align: center; margin-bottom: 28px; }
+.logo-emblem { display: block; width: 104px; height: auto; margin: 0 auto 14px; filter: drop-shadow(0 8px 28px rgba(139,92,246,.40)); }
+.brand-row { display: flex; align-items: center; gap: 10px; margin: -40px 0 22px; min-height: 40px; }
+.brand-row img { width: 40px; height: auto; filter: drop-shadow(0 4px 14px rgba(139,92,246,.35)); }
+.brand-row span { font-family: var(--ff-s); font-size: 20px; font-weight: 700; letter-spacing: 1px; background: linear-gradient(90deg, var(--violet-pale) 0%, var(--violet) 45%, var(--sky) 55%, #A9D3F5 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.brand-row small { font-family: var(--ff-b); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; -webkit-text-fill-color: var(--gold); margin-left: 4px; }
 
 /* ===================== TYPOGRAPHIE ===================== */
 .page-title {
