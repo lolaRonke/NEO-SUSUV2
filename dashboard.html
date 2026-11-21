@@ -141,10 +141,10 @@ function render() {
 
   // Montants : devise principale en grand, les autres en dessous
   const rec = (s.received || []).slice().sort((a, b) => b.total - a.total);
-  document.getElementById("received").textContent = rec.length ? NS.money(rec[0].total, rec[0].currency) : NS.money(0, "XOF");
+  document.getElementById("received").textContent = rec.length ? NS.money(rec[0].total, rec[0].currency) : NS.money(0, "EUR");
   document.getElementById("receivedOther").textContent = rec.slice(1).map(r => "+ " + NS.money(r.total, r.currency)).join("  ");
   const con = s.contributed || [];
-  document.getElementById("contributed").textContent = con.length ? con.map(r => NS.money(r.total, r.currency)).join(" · ") : NS.money(0, "XOF");
+  document.getElementById("contributed").textContent = con.length ? con.map(r => NS.money(r.total, r.currency)).join(" · ") : NS.money(0, "EUR");
 
   document.getElementById("tontineCount").textContent = s.tontine_count || 0;
   document.getElementById("memberCount").textContent = s.member_total || 0;

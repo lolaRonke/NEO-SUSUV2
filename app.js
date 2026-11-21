@@ -185,12 +185,12 @@
   }
 
   const DEMO = {
-    profile: { first_name: "Aïcha", last_name: "Diallo", email: "demo@neo-susu.com", phone: "+221 77 123 45 67", country: "SN", score: 82, kyc_status: "none", plan: "free", is_admin: false },
-    summary: { tontine_count: 3, member_total: 22, next_turn: 1, received: [{ currency: "XOF", total: 245000 }], contributed: [{ currency: "XOF", total: 160000 }] },
+    profile: { first_name: "Aïcha", last_name: "Diallo", email: "demo@neo-susu.com", phone: "+33 6 12 34 56 78", country: "FR", score: 82, kyc_status: "none", plan: "free", is_admin: false },
+    summary: { tontine_count: 3, member_total: 22, next_turn: 1, received: [{ currency: "EUR", total: 800 }], contributed: [{ currency: "EUR", total: 450 }] },
     tontines: [
-      { id: "demo-1", name: "Tontine Famille Diallo", amount: 25000, currency: "XOF", frequency: "monthly", max_members: 10, member_count: 8, status: "active", current_round: 4, my_turn: 5, paid_count: 6, paid_this_round: true },
-      { id: "demo-2", name: "Collègues du bureau", amount: 50000, currency: "XOF", frequency: "weekly", max_members: 6, member_count: 6, status: "active", current_round: 2, my_turn: 3, paid_count: 2, paid_this_round: false },
-      { id: "demo-3", name: "Projet scolarité", amount: 10000, currency: "XOF", frequency: "biweekly", max_members: 8, member_count: 4, status: "waiting", current_round: 1, my_turn: 2, paid_count: 0, paid_this_round: false }
+      { id: "demo-1", name: "Tontine Famille Diallo", amount: 100, currency: "EUR", frequency: "monthly", max_members: 10, member_count: 8, status: "active", current_round: 4, my_turn: 5, paid_count: 6, paid_this_round: true },
+      { id: "demo-2", name: "Collègues du bureau", amount: 50, currency: "EUR", frequency: "weekly", max_members: 6, member_count: 6, status: "active", current_round: 2, my_turn: 3, paid_count: 2, paid_this_round: false },
+      { id: "demo-3", name: "Projet scolarité", amount: 20, currency: "EUR", frequency: "biweekly", max_members: 8, member_count: 4, status: "waiting", current_round: 1, my_turn: 2, paid_count: 0, paid_this_round: false }
     ],
     detail: function (id) {
       const base = DEMO.tontines.find(x => x.id === id) || DEMO.tontines[0];
