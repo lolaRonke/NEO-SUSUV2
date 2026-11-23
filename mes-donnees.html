@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1C1A17">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<title>NEO-SUSU — Mes données</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./neo-susu.css">
+<style>
+.lang-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--stroke2);border-radius:40px;padding:5px 10px;position:fixed;top:16px;right:16px;z-index:200;}
+.lang-flag{font-size:22px;cursor:pointer;border-radius:50%;padding:3px 5px;transition:all .25s;border:2px solid transparent;line-height:1;}
+.lang-flag.active{border-color:var(--gold);background:rgba(212,148,10,.12);transform:scale(1.12);}
+.lang-sep{width:1px;height:16px;background:var(--stroke2);}
+.card{background:var(--card);border:1px solid var(--stroke);border-radius:22px;padding:20px;margin-bottom:16px;}
+.card h2{font-family:var(--ff-s);font-size:24px;color:var(--gold-pale);margin-bottom:4px;}
+.card .sub{color:var(--text2);font-size:13px;margin-bottom:14px;line-height:1.5;}
+.toggle-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--stroke);}
+.toggle-row:first-of-type{border-top:none;}
+.toggle-text{flex:1;}.toggle-label{font-weight:600;font-size:14px;}.toggle-hint{font-size:12px;color:var(--text2);margin-top:2px;}
+.switch{position:relative;width:48px;height:28px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:var(--raised);border:1px solid var(--stroke2);border-radius:20px;cursor:pointer;transition:.25s;}
+.slider::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:var(--grey);border-radius:50%;transition:.25s;}
+.switch input:checked+.slider{background:rgba(43,173,122,.25);border-color:var(--em);}
+.switch input:checked+.slider::before{transform:translateX(20px);background:var(--em);}
+.switch input:disabled+.slider{opacity:.55;cursor:not-allowed;}
+.score-big{display:flex;align-items:baseline;gap:10px;margin:6px 0 4px;}
+.score-num{font-family:var(--ff-s);font-size:56px;font-weight:700;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.tier{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(155,126,204,.15);color:var(--violet);}
+.crit{margin-top:12px;}
+.crit-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
+.crit-head b{font-weight:600;}.crit-head span{color:var(--text2);}
+.crit-bar{height:6px;background:var(--raised);border-radius:4px;overflow:hidden;}
+.crit-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold-pale));border-radius:4px;}
+.crit-hint{font-size:11px;color:var(--text3);margin-top:4px;}
+.btn{display:block;width:100%;padding:14px;border-radius:16px;border:1px solid var(--stroke2);background:var(--raised);color:var(--text);font-family:var(--ff-b);font-weight:700;font-size:14px;cursor:pointer;margin-top:10px;text-align:center;text-decoration:none;}
+.btn:hover{border-color:var(--gold);}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--void);border:none;}
+.btn.danger{color:var(--red);border-color:rgba(212,82,74,.35);}
+.note{font-size:12px;color:var(--text2);line-height:1.5;margin-top:10px;}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--card);border:1px solid var(--em);color:var(--text);padding:12px 18px;border-radius:14px;font-size:13px;z-index:9999;display:none;}
+.toast.show{display:block;}
+</style>
+</head>
+<body>
+<div class="lang-bar">
+  <span class="lang-flag active" id="flag-fr" onclick="setLang('fr')">🇫🇷</span>
+  <div class="lang-sep"></div>
+  <span class="lang-flag" id="flag-en" onclick="setLang('en')">🇬🇧</span>
+</div>
+<div class="container">
+  <a href="./profile.html" class="back-link" data-fr="← Retour" data-en="← Back">← Retour</a>
+  <h1 class="page-title" data-fr="Mes données" data-en="My data">Mes données</h1>
+  <p class="page-subtitle" data-fr="Vous gardez la main sur vos informations." data-en="You stay in control of your information.">Vous gardez la main sur vos informations.</p>
+
+  <!-- 1. Consentements -->
+  <div class="card">
+    <h2 data-fr="Mes consentements" data-en="My consents">Mes consentements</h2>
+    <p class="sub" data-fr="Modifiables à tout moment. Le fonctionnement du service est nécessaire à votre contrat et ne peut pas être désactivé." data-en="You can change these anytime. Service operation is required by your contract and cannot be turned off.">Modifiables à tout moment.</p>
+    <div id="consentList"></div>
+    <button class="btn gold" id="saveConsents" data-fr="Enregistrer mes choix" data-en="Save my choices">Enregistrer mes choix</button>
+  </div>
+
+  <!-- 2. Score NEO expliqué -->
+  <div class="card">
+    <h2 data-fr="Mon Score NEO" data-en="My NEO Score">Mon Score NEO</h2>
+    <p class="sub" data-fr="Calculé uniquement à partir de votre historique sur NEO-SUSU. Jamais votre pays, votre langue ou votre origine." data-en="Based only on your NEO-SUSU history. Never your country, language or origin.">Calculé uniquement à partir de votre historique.</p>
+    <div class="score-big"><span class="score-num" id="scoreNum">–</span><span style="color:var(--text2)">/100</span><span class="tier" id="scoreTier">–</span></div>
+    <div id="scoreDetails"></div>
+    <p class="note" id="scoreCap"></p>
+    <button class="btn" id="reviewBtn" data-fr="Demander une revue humaine de mon score" data-en="Request a human review of my score">Demander une revue humaine de mon score</button>
+    <p class="note" data-fr="Aucune décision défavorable (refus d'un cercle, rang, plafond) n'est prise par l'algorithme seul : un membre de l'équipe la valide et vous pouvez la contester." data-en="No adverse decision (circle refusal, turn, cap) is made by the algorithm alone: a team member validates it and you can contest it.">Aucune décision défavorable n'est prise par l'algorithme seul.</p>
+  </div>
+
+  <!-- 3. Droits -->
+  <div class="card">
+    <h2 data-fr="Mes droits" data-en="My rights">Mes droits</h2>
+    <p class="sub" data-fr="Réponse sous un mois. Vous pouvez aussi saisir la CNIL (cnil.fr)." data-en="Answer within one month. You can also contact the CNIL (cnil.fr).">Réponse sous un mois.</p>
+    <button class="btn" id="exportBtn" data-fr="Télécharger mes données (JSON)" data-en="Download my data (JSON)">Télécharger mes données (JSON)</button>
+    <button class="btn" id="rectifBtn" data-fr="Corriger une information" data-en="Correct some information">Corriger une information</button>
+    <button class="btn" id="objectBtn" data-fr="M'opposer à un traitement" data-en="Object to a processing">M'opposer à un traitement</button>
+    <button class="btn danger" id="eraseBtn" data-fr="Supprimer mon compte" data-en="Delete my account">Supprimer mon compte</button>
+    <p class="note" data-fr="Après suppression, la loi nous oblige à conserver 5 ans vos données d'identité (lutte anti-blanchiment) et 10 ans les pièces comptables, en archive à accès restreint." data-en="After deletion, the law requires us to keep identity data for 5 years (anti-money laundering) and accounting records for 10 years, in restricted archives.">Après suppression, certaines données restent archivées.</p>
+    <a class="btn" href="./confidentialite.html" data-fr="Lire la politique de confidentialité" data-en="Read the privacy policy">Lire la politique de confidentialité</a>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="./neo-rgpd.js"></script>
+<script src="./neo-score.js"></script>
+<script>
+let currentLang = localStorage.getItem("ns_lang") || "fr";
+const L = (fr, en) => currentLang === "en" ? en : fr;
+function setLang(lang){
+  currentLang = lang; localStorage.setItem("ns_lang", lang);
+  document.getElementById("html-root").lang = lang;
+  document.querySelectorAll("[data-fr]").forEach(el => { const v = el.getAttribute("data-" + lang); if (v) el.textContent = v; });
+  document.getElementById("flag-fr").classList.toggle("active", lang === "fr");
+  document.getElementById("flag-en").classList.toggle("active", lang === "en");
+  renderConsents(); renderScore();
+}
+function toast(m){ const t = document.getElementById("toast"); t.textContent = m; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 3200); }
+
+const HINTS = {
+  essential:    ["Compte, tontines, paiements, sécurité, obligations légales.", "Account, circles, payments, security, legal duties."],
+  analytics:    ["Statistiques anonymisées pour améliorer l'app.", "Anonymised statistics to improve the app."],
+  voice_ai:     ["Vos échanges vocaux passent par OpenAI (États-Unis). Audio supprimé sous 30 jours, jamais utilisé pour l'entraînement.", "Voice chats go through OpenAI (USA). Audio deleted within 30 days, never used for training."],
+  marketing:    ["Nouveautés et offres par e-mail. Désinscription en un clic.", "News and offers by email. One-click unsubscribe."],
+  open_banking: ["Lecture de vos flux bancaires via un agrégateur agréé, pour enrichir votre score. Disponible en phase 4.", "Read-only bank data via a licensed aggregator to enrich your score. Available in phase 4."]
+};
+
+function renderConsents(){
+  const cur = (NEO_RGPD.getConsents() || {}).choices || {};
+  const box = document.getElementById("consentList"); box.innerHTML = "";
+  Object.entries(NEO_RGPD.PURPOSES).forEach(([key, p]) => {
+    const row = document.createElement("div"); row.className = "toggle-row";
+    const checked = p.required || !!cur[key];
+    row.innerHTML = `<div class="toggle-text"><div class="toggle-label"></div><div class="toggle-hint"></div></div>
+      <label class="switch"><input type="checkbox" data-purpose="${key}" ${checked ? "checked" : ""} ${p.required ? "disabled" : ""}><span class="slider"></span></label>`;
+    row.querySelector(".toggle-label").textContent = L(p.fr, p.en) + (p.required ? L(" (obligatoire)", " (required)") : "");
+    row.querySelector(".toggle-hint").textContent = L(HINTS[key][0], HINTS[key][1]);
+    box.appendChild(row);
+  });
+}
+
+async function loadStats(){
+  // Données réelles si supabase.js expose getUserProfile / score_neo ; sinon profil démo.
+  try {
+    const c = window.supabaseClient || window.sb || window._supabase || window.neoSupabase;
+    if (c && c.auth) {
+      const { data } = await c.auth.getUser();
+      if (data && data.user) {
+        const r = await c.from("score_neo").select("stats").eq("user_id", data.user.id).order("computed_at", { ascending: false }).limit(1);
+        if (r.data && r.data[0] && r.data[0].stats) return r.data[0].stats;
+      }
+    }
+  } catch (e) {}
+  return { payments_total: 18, payments_on_time: 17, avg_days_late: 2, circles_completed: 2, months_since_signup: 9, kyc_verified: true, sponsor_score: 76 };
+}
+
+let lastScore = null;
+async function renderScore(){
+  if (!lastScore) lastScore = NEO_SCORE.compute(await loadStats());
+  const s = lastScore;
+  document.getElementById("scoreNum").textContent = s.score;
+  document.getElementById("scoreTier").textContent = L(s.tier_fr, s.tier_en);
+  const box = document.getElementById("scoreDetails"); box.innerHTML = "";
+  s.details.forEach(d => {
+    const el = document.createElement("div"); el.className = "crit";
+    el.innerHTML = `<div class="crit-head"><b></b><span>${d.points} / ${d.max}</span></div><div class="crit-bar"><div class="crit-fill" style="width:${Math.round(100 * d.points / d.max)}%"></div></div><div class="crit-hint"></div>`;
+    el.querySelector("b").textContent = L(d.fr, d.en);
+    el.querySelector(".crit-hint").textContent = L(d.hint_fr, d.hint_en);
+    box.appendChild(el);
+  });
+  document.getElementById("scoreCap").textContent = L(
+    `Palier ${s.tier_fr} : cagnotte jusqu'à ${s.max_pot_eur.toLocaleString("fr-FR")} € par cercle.`,
+    `${s.tier_en} tier: pot up to €${s.max_pot_eur.toLocaleString("en-GB")} per circle.`);
+}
+
+document.getElementById("saveConsents").onclick = async () => {
+  const choices = {};
+  document.querySelectorAll("#consentList input[data-purpose]").forEach(i => choices[i.dataset.purpose] = i.checked);
+  await NEO_RGPD.setConsents(choices, "mes-donnees");
+  const b = document.getElementById("neoCookie"); if (b) b.remove();
+  toast(L("Vos choix sont enregistrés.", "Your choices are saved."));
+};
+document.getElementById("exportBtn").onclick = async () => { await NEO_RGPD.exportMyData(); toast(L("Export téléchargé.", "Export downloaded.")); };
+async function ask(type, promptFr, promptEn, confirmFr, confirmEn){
+  const msg = window.prompt(L(promptFr, promptEn), "");
+  if (msg === null) return;
+  if (confirmFr && !window.confirm(L(confirmFr, confirmEn))) return;
+  try { const via = await NEO_RGPD.requestRight(type, msg);
+        if (via === "db") toast(L("Demande envoyée. Réponse sous un mois.", "Request sent. Answer within one month.")); }
+  catch (e) { toast(L("Envoi impossible, écrivez à dpo@neo-susu.com", "Could not send, email dpo@neo-susu.com")); }
+}
+document.getElementById("reviewBtn").onclick = () => ask("score_review", "Expliquez ce que vous contestez (facultatif) :", "Explain what you contest (optional):");
+document.getElementById("rectifBtn").onclick = () => ask("rectification", "Quelle information faut-il corriger ?", "Which information should be corrected?");
+document.getElementById("objectBtn").onclick = () => ask("objection", "À quel traitement vous opposez-vous ?", "Which processing do you object to?");
+document.getElementById("eraseBtn").onclick = () => ask("erasure", "Raison (facultatif) :", "Reason (optional):",
+  "Confirmer la suppression de votre compte ? Les cercles en cours doivent être terminés ou soldés.",
+  "Confirm account deletion? Ongoing circles must be completed or settled.");
+
+setLang(currentLang);
+</script>
+</body>
+</html>

@@ -198,7 +198,7 @@ body{padding:0 0 40px;}.container{padding:30px 20px;}
     <div class="balance-amount" id="walletAmt">0</div>
     <div class="balance-currency">FCFA</div>
     <div class="score-bar"><div class="score-fill" id="scoreBar" style="width:50%"></div></div>
-    <div style="font-size:11px;color:rgba(255,255,255,.35);" data-fr="Score de fiabilite" data-en="Reliability score">Score de fiabilite : <span id="scoreVal">50</span>/100</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.35);"><span data-fr="Score NEO" data-en="NEO Score">Score NEO</span> : <span id="scoreVal">50</span>/100 · <a href="./mes-donnees.html" style="color:var(--gold-pale);text-decoration:none;" data-fr="Comprendre mon score" data-en="Understand my score">Comprendre mon score</a></div>
   </div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-value" id="tontineCount">0</div><div class="stat-label" data-fr="Tontines" data-en="Tontines">Tontines</div></div>
@@ -296,8 +296,8 @@ function loadDemoData(){
   document.getElementById("userName").textContent="Aicha Diallo";
   document.getElementById("avatarEl").textContent="A";
   document.getElementById("walletAmt").textContent="245 000";
-  document.getElementById("scoreVal").textContent="82";
-  document.getElementById("scoreBar").style.width="82%";
+  document.getElementById("scoreVal").textContent="76";
+  document.getElementById("scoreBar").style.width="76%";
   document.getElementById("tontineCount").textContent="3";
   document.getElementById("memberCount").textContent="24";
   document.getElementById("nextTurn").textContent="T4";
@@ -379,5 +379,6 @@ async function handleLogout(){
 
 loadDashboard();
 </script>
+<script src="./neo-rgpd.js"></script>
 </body>
 </html>
