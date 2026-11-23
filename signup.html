@@ -28,6 +28,11 @@
 .loading{opacity:.7;pointer-events:none;}
 .pwd-strength{height:4px;background:var(--stroke);border-radius:2px;margin-top:6px;overflow:hidden;}
 .pwd-bar{height:100%;border-radius:2px;transition:all .3s;width:0;}
+.consent-box{background:var(--card);border:1px solid var(--stroke);border-radius:16px;padding:14px;margin:6px 0 16px;}
+.consent-line{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.5;color:var(--text);margin-bottom:10px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;}
+.consent-line input{width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex-shrink:0;}
+.consent-line a{color:var(--gold-pale);}
+.consent-note{font-size:11.5px;color:var(--text2);line-height:1.5;margin:0;}
 </style>
 </head>
 <body>
@@ -51,7 +56,7 @@
       <div class="form-group"><label data-fr="Nom" data-en="Last name">Nom</label><input type="text" id="lastName" placeholder="Diallo" required></div>
     </div>
     <div class="form-group">
-      <label data-fr="Pays" data-en="Country">Pays</label>
+      <label data-fr="Pays de residence" data-en="Country of residence">Pays de residence</label>
       <select id="country" required>
         <option value="" data-fr="Selectionner" data-en="Select">Selectionner</option>
         <option value="SN">🇸🇳 Senegal</option>
@@ -71,6 +76,16 @@
       <label data-fr="Mot de passe (min. 8 caracteres)" data-en="Password (min. 8 characters)">Mot de passe</label>
       <input type="password" id="password" placeholder="••••••••" minlength="8" required autocomplete="new-password" oninput="checkPwd(this.value)">
       <div class="pwd-strength"><div class="pwd-bar" id="pwdBar"></div></div>
+    </div>
+    <!-- RGPD : consentements separes, aucune case precochee -->
+    <div class="consent-box">
+      <label class="consent-line"><input type="checkbox" id="cTerms" required>
+        <span><span data-fr="J'accepte les conditions d'utilisation et j'ai lu la" data-en="I accept the terms of use and have read the">J'accepte les conditions d'utilisation et j'ai lu la</span> <a href="./confidentialite.html" target="_blank" data-fr="politique de confidentialite" data-en="privacy policy">politique de confidentialite</a> *</span></label>
+      <label class="consent-line"><input type="checkbox" id="cVoice">
+        <span data-fr="Activer l'assistant vocal IA (OpenAI, Etats-Unis). Facultatif." data-en="Enable the AI voice assistant (OpenAI, USA). Optional.">Activer l'assistant vocal IA (OpenAI, Etats-Unis). Facultatif.</span></label>
+      <label class="consent-line"><input type="checkbox" id="cMarketing">
+        <span data-fr="Recevoir les actualites NEO-SUSU par e-mail. Facultatif." data-en="Receive NEO-SUSU news by email. Optional.">Recevoir les actualites NEO-SUSU par e-mail. Facultatif.</span></label>
+      <p class="consent-note" data-fr="Votre Score NEO est calcule a partir de votre historique de cotisations, jamais de votre pays ou de votre langue. Vous pouvez demander une revue humaine a tout moment." data-en="Your NEO Score is based on your contribution history, never your country or language. You can request a human review anytime.">Votre Score NEO est calcule a partir de votre historique de cotisations, jamais de votre pays ou de votre langue.</p>
     </div>
     <button type="submit" class="btn-submit" id="submitBtn" data-fr="Creer mon compte" data-en="Create my account">Creer mon compte ✦</button>
   </form>
@@ -111,9 +126,17 @@ document.getElementById("signupForm").addEventListener("submit",async(e)=>{
     showErr(currentLang==="en"?"Please fill in all fields":"Remplissez tous les champs");return;
   }
   if(pw.length<8){showErr(currentLang==="en"?"Password must be at least 8 characters":"Mot de passe trop court (8 min)");return;}
+  if(!document.getElementById("cTerms").checked){showErr(currentLang==="en"?"Please accept the terms and privacy policy":"Acceptez les conditions et la politique de confidentialite");return;}
   setLoad(true);
   try{
     await signUp(email,pw,firstName,lastName,phone,country);
+    if(window.NEO_RGPD){
+      // Consentements memorises puis synchronises a la premiere connexion. Les traceurs
+      // restent geres par le bandeau cookies.
+      const prev=(NEO_RGPD.getConsents()||{}).choices||{};
+      await NEO_RGPD.setConsents({analytics:!!prev.analytics,voice_ai:document.getElementById("cVoice").checked,marketing:document.getElementById("cMarketing").checked},"signup");
+      NEO_RGPD.track("signup",{method:"email"});
+    }
     showOk(currentLang==="en"?"Account created! Check your email to confirm.":"Compte cree ! Verifiez votre email pour confirmer.");
     setLoad(false);
     setTimeout(()=>{window.location.href="./login.html";},3000);
@@ -124,10 +147,13 @@ document.getElementById("signupForm").addEventListener("submit",async(e)=>{
 });
 
 document.getElementById("googleBtn").addEventListener("click",async()=>{
+  if(!document.getElementById("cTerms").checked){showErr(currentLang==="en"?"Please accept the terms and privacy policy":"Acceptez les conditions et la politique de confidentialite");return;}
+  if(window.NEO_RGPD){const prev=(NEO_RGPD.getConsents()||{}).choices||{};await NEO_RGPD.setConsents({analytics:!!prev.analytics,voice_ai:document.getElementById("cVoice").checked,marketing:document.getElementById("cMarketing").checked},"signup-google");}
   try{await signInWithGoogle();}catch(err){showErr(err.message);}
 });
 
 (async()=>{const u=await getCurrentUser();if(u)window.location.href="./dashboard.html";})();
 </script>
+<script src="./neo-rgpd.js"></script>
 </body>
 </html>
